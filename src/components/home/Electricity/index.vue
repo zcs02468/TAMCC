@@ -1,0 +1,226 @@
+<!-- T1航站楼用电占比 -->
+<template>
+    <div class="panel left-container-angle">
+        <div class="title">T1航站楼用电占比</div>
+        <div class="content">
+            <div class="select">
+                <ul>
+                    <li>电力</li>
+                    <li>市政水</li>
+                    <li>天然气</li>
+                    <li>中水</li>
+                </ul>
+            </div>
+            <div class="ping-box">
+                <div class="charts" id="chart_electricity"></div>
+            </div>
+        </div>
+        <div class="info-box general-border">
+            <div class="name">
+                <span>当日总用量</span>
+            </div>
+            <div class="info">
+                <div class="top">
+                    <div class="block-box">
+                        <span>电：</span>
+                        <span>XXXXKWH</span>
+                    </div>
+                    <div class="block-box">
+                        <span class="max">水：</span>
+                        <span>XXXXm²</span>
+                    </div>
+                </div>
+                <div class="bottom">
+                    <div class="block-box">
+                        <span>气：</span>
+                        <span>XXXXm²</span>
+                    </div>
+                    <div class="block-box">
+                        <span class="max">中水：</span>
+                        <span>XXXXm²</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+    mounted() {
+        this.drawLine();
+    },
+    methods: {
+        drawLine() {
+            this.option = {
+                tooltip: {
+                    trigger: "item",
+                    formatter: "用电量 <br/>{b} : {c} ({d}%)",
+                },
+                series: [
+                    {
+                        name: "访问来源",
+                        type: "pie",
+                        radius: "70%",
+                        center: ["50%", "50%"],
+                        data: [
+                            {
+                                value: 32.61,
+                                name: "小于2万",
+                            },
+                            {
+                                value: 19.52,
+                                name: "2万至5万",
+                            },
+                            {
+                                value: 18.96,
+                                name: "10万至20万",
+                            },
+                            {
+                                value: 18.77,
+                                name: "5万至10万",
+                            },
+                            {
+                                value: 9.27,
+                                name: "20万至40万",
+                            },
+                            {
+                                value: 0.87,
+                                name: "40万至70万",
+                            },
+                        ],
+                        roseType: "radius",
+                        label: {
+                            color: "#fff",
+                        },
+                        labelLine: {
+                            lineStyle: {
+                                color: "#888",
+                            },
+                        },
+                        // itemStyle: {
+                        //     normal: {
+                        //         color: function(params) {
+                        //             var colorList = [
+                        //                 "#ffff99",
+                        //                 "#00ffcc",
+                        //                 "#00ff99",
+                        //                 "#33ccff",
+                        //                 "#388df6",
+                        //             ];
+                        //             return colorList[
+                        //                 params.dataIndex % colorList.length
+                        //             ];
+                        //         },
+                        //     },
+                        // },
+                        animationType: "scale",
+                        animationEasing: "elasticOut",
+                        animationDelay: function(idx) {
+                            return Math.random() * 200;
+                        },
+                    },
+                ],
+            };
+            // 基于准备好的dom，初始化this.$echarts实例
+            this.myChart = this.$echarts.init(
+                document.getElementById("chart_electricity")
+            );
+            // 绘制图表
+            this.myChart.setOption(this.option);
+            window.addEventListener("resize", () => {
+                this.myChart.resize();
+            });
+        },
+    },
+};
+</script>
+
+<style lang="scss" scoped>
+.panel {
+    padding-left: 19px;
+    width: 535.5px;
+    height: 353px;
+    position: relative;
+    margin-top: 15px;
+}
+.title {
+    font-size: 22px;
+    color: #c6d6fb;
+    padding: 11.5px 0 0 233px;
+}
+.content {
+    margin-top: 12.5px;
+    display: flex;
+}
+.ping-box {
+    width: 537px;
+    height: 192px;
+    .charts {
+        width: 100%;
+        height: 100%;
+    }
+}
+.select {
+    li {
+        width: 99px;
+        height: 33px;
+        font-size: 20px;
+        border: 1px solid #4f85ff;
+        background: rgba(119, 161, 255, 0.14);
+        box-shadow: 0.5px 0.5px 17.5px 0px rgba(88, 185, 255, 0.41) inset;
+        text-align: center;
+        line-height: 33px;
+        margin-bottom: 20px;
+    }
+}
+.ping-box {
+    width: 419.5px;
+}
+.info-box {
+    width: 500px;
+    height: 75px;
+    // border: 1px solid #4f85ff;
+    color: #72a4ff;
+    display: flex;
+    background: rgba(119, 161, 255, 0.04);
+    // box-shadow: 0.5px 0.5px 17.5px 0px rgba(88, 185, 255, 0.41) inset;
+    .name {
+        width: 156px;
+        height: 100%;
+        font-size: 22px;
+        text-align: center;
+        line-height: 73px;
+    }
+    .info {
+        margin-left: 6px;
+        display: flex;
+        flex-wrap: wrap;
+        width: 342px;
+        padding-top: 6px;
+        .top {
+            display: flex;
+        }
+        .bottom {
+            display: flex;
+        }
+    }
+    .block-box {
+        font-size: 18px;
+        span:nth-child(1) {
+            display: inline-block;
+            width: 42px;
+            // height: 20px;
+        }
+        span:nth-child(2) {
+            display: inline-block;
+            width: 116px;
+            height: 20px;
+        }
+        .max {
+            width: 63px !important;
+            // text-align: right;
+        }
+    }
+}
+</style>
