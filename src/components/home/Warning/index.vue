@@ -9,11 +9,21 @@
             <div class="info general-border">
                 <div class="left">
                     <div class="name">维修遗留问题</div>
-                    <div class="btn">明细</div>
+                    <div class="btn general-border">明细</div>
                 </div>
                 <div class="right">
-                    <span class="max"></span>
-                    <span class="unit"></span>
+                    <span class="max">6</span>
+                    <span class="unit">单</span>
+                </div>
+            </div>
+            <div class="info general-border spacing">
+                <div class="left">
+                    <div class="name">环保指标问题</div>
+                    <div class="btn general-border">明细</div>
+                </div>
+                <div class="right">
+                    <span class="max">6</span>
+                    <span class="unit">单</span>
                 </div>
             </div>
         </div>
@@ -51,16 +61,51 @@ export default {};
 }
 .content-box {
     display: flex;
+    margin-top: 7px;
+    justify-content: center;
+}
+.spacing {
+    margin-left: 16px;
 }
 .info {
     width: 245px;
     height: 71px;
+    display: flex;
     .left {
-        width: 270px;
+        width: 135px;
         height: 100%;
+        font-size: 18px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         .name {
             width: 100%;
-
+        }
+        .btn {
+            width: 112px;
+            height: 30px;
+            border-radius: 5px;
+            text-align: center;
+            line-height: 30px;
+            margin-top: 7.5px;
+        }
+    }
+    .right {
+        margin-left: 24px;
+        span {
+            display: inline-block;
+            height: 100%;
+            line-height: 71px;
+        }
+        .max {
+            font-size: 48px;
+            vertical-align: bottom;
+        }
+        .unit {
+            font-size: 18px;
+            vertical-align: bottom;
+            margin-left: 13px;
         }
     }
 }
