@@ -1,11 +1,163 @@
+<!-- T1航站楼排放指标 -->
 <template>
     <div class="panel right-container-angle">
-        T1航站楼排放指标
+        <div class="title">T1航站楼排放指标</div>
+        <div class="content">
+            <div class="select-box">
+                <ul>
+                    <li class="default">类目1</li>
+                    <li class="default">类目2</li>
+                    <li class="default">类目3</li>
+                    <li class="default">类目4</li>
+                    <li class="default">类目5</li>
+                    <li class="default">类目6</li>
+                    <li class="default">类目7</li>
+                    <li class="default">类目8</li>
+                    <li class="default">类目9</li>
+                    <li class="default">类目10</li>
+                    <li class="default">类目11</li>
+                    <li class="default">类目12</li>
+                </ul>
+            </div>
+            <div class="charts-box">
+                <div class="charts" id="chart_emissions"></div>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
-export default {};
+export default {
+    mounted() {
+        this.drawRadarCharts()
+    },
+    methods: {
+        drawRadarCharts() {
+            this.option = {
+                color: ["#385CA5", "#FFFAFA"],
+                legend: {
+                    data: ["类目1", "类目2"],
+                    orient: "vertical",
+                    // icon: "circle",
+                    left: "10%",
+                    top: "6%",
+                    itemWidth: 10,
+                    itemHeight: 10,
+                    // itemGap: 24,
+                    textStyle: {
+                        color: "#fff",
+                        fontSize: 12,
+                    },
+                },
+                radar: [
+                    {
+                        radius: "70%",
+                        name: {
+                            textStyle: {
+                                color: "#C6D6FB",
+                                fontSize: 12,
+                            },
+                        },
+                        indicator: [
+                            {
+                                name: "指标A",
+                                min: 0,
+                            },
+                            {
+                                name: "指标B",
+                                min: 0,
+                            },
+                            {
+                                name: "指标C",
+                                min: 0,
+                            },
+                        ],
+                        center: ["50%", "60%"], // 位置
+                        shape: "circle", //形状
+                        splitArea: {
+                            areaStyle: {
+                                color: "transparent", //圆环颜色
+                                shadowColor: "aqua", // 圆颜色
+                                shadowBlur: 10,
+                            },
+                        },
+                        axisLine: {
+                            lineStyle: {
+                                color: "#fff", // 分割线
+                            },
+                        },
+                        splitLine: {
+                            lineStyle: {
+                                color: "rgba(163, 196, 255, 0.22)", //圆线
+                                width: 1,
+                            },
+                        },
+                    },
+                ],
+                series: [
+                    {
+                        type: "radar",
+                        data: [
+                            {
+                                value: [100, 90, 84],
+                                name: "类目1",
+                                itemStyle: {
+                                    normal: {
+                                        borderColor: "#5B8FF9",
+                                        borderWidth: 1,
+                                    },
+                                },
+                                symbolSize: "5",
+                                lineStyle: {
+                                    normal: {
+                                        color: "#5B8FF9",
+                                        width: 2,
+                                    },
+                                },
+                                areaStyle: {
+                                    normal: {
+                                        color: "RGBA(91, 143, 249, .5)",
+                                    },
+                                },
+                            },
+                            {
+                                value: [56, 70, 100],
+                                name: "类目2",
+                                itemStyle: {
+                                    normal: {
+                                        borderColor: "#5AD2A5",
+                                        borderWidth: 1,
+                                    },
+                                },
+                                symbolSize: "5",
+                                lineStyle: {
+                                    normal: {
+                                        color: "RGBA(189, 26, 26, 1)",
+                                        width: 2,
+                                    },
+                                },
+                                areaStyle: {
+                                    normal: {
+                                        color: "RGBA(205, 33, 33, .5)",
+                                    },
+                                },
+                            },
+                        ],
+                    },
+                ],
+            };
+            // 基于准备好的dom，初始化this.$echarts实例
+            this.myChart = this.$echarts.init(
+                document.getElementById("chart_emissions")
+            );
+            // 绘制图表
+            this.myChart.setOption(this.option);
+            window.addEventListener("resize", () => {
+                this.myChart.resize();
+            });
+        },
+    },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -14,5 +166,59 @@ export default {};
     height: 277.5px;
     position: relative;
     margin-top: 15px;
+}
+.title {
+    color: #c6d6fb;
+    font-size: 22px;
+    height: 34px;
+    line-height: 34px;
+    margin: 15px 0 0 21px;
+}
+.content {
+    display: flex;
+}
+.select-box {
+    width: 257px;
+    height: 226.5px;
+    padding-left: 24.5px;
+    ul {
+        display: flex;
+        flex-wrap: wrap;
+        li {
+            width: 67.5px;
+            height: 36px;
+            border: 1.5px solid #61afff;
+            text-align: center;
+            line-height: 36px;
+            color: #fff;
+            font-size: 16px;
+            margin-top: 15px;
+            &:nth-child(2) {
+                margin: 15px 15px 0 15px;
+            }
+            &:nth-child(5) {
+                margin: 15px 15px 0 15px;
+            }
+            &:nth-child(8) {
+                margin: 15px 15px 0 15px;
+            }
+            &:nth-child(11) {
+                margin: 15px 15px 0 15px;
+            }
+        }
+        .default {
+            border-radius: 4.5px;
+            background: rgba(119, 161, 255, 0.18);
+            box-shadow: 0px -4.5px 17.5px 5.5px rgba(27, 128, 255, 0.84) inset;
+        }
+    }
+}
+.charts-box {
+    width: 278px;
+    height: 222px;
+    .charts {
+        width: 100%;
+        height: 100%;
+    }
 }
 </style>
