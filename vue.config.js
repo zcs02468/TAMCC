@@ -40,6 +40,14 @@ module.exports = {
         );
         // }
     },
+    pluginOptions: {
+        'style-resources-loader': {
+            preProcessor: 'less',
+            patterns: [
+    
+            ]
+        }
+    }
     // // 压缩图片
     // chainWebpack: (config) => {
     //     config.module

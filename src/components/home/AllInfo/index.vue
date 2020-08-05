@@ -95,12 +95,11 @@ export default {};
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     margin-right: 14.5px;
     .time-box {
         font-size: 18px;
-        height: 47.5px;
-        line-height: 47.5px;
+        height: 38.5px;
+        line-height: 38.5px;
         display: flex;
         justify-content: space-between;
         color: #fff;
@@ -149,6 +148,7 @@ export default {};
     .weather-bottom {
         font-size: 20px;
         display: flex;
+        line-height: 20px;
         .marginTop15 {
             margin-top: 13px;
         }
