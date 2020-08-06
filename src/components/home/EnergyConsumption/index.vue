@@ -2,11 +2,13 @@
 <template>
     <div class="panel right-container-angle">
         <div class="title">T1航站楼能耗指标</div>
-        <div class="radar-charts-box">
-            <div class="charts" id="energy_consumption_radar"></div>
-        </div>
-        <div class="line-charts-box">
-            <div class="charts" id="energy_consumption_line"></div>
+        <div class="box">
+            <div class="radar-charts-box">
+                <div class="charts" id="energy_consumption_radar"></div>
+            </div>
+            <div class="line-charts-box">
+                <div class="charts" id="energy_consumption_line"></div>
+            </div>
         </div>
     </div>
 </template>
@@ -143,10 +145,204 @@ export default {
             });
         },
         drawLineCharts() {
-            this.lineOption = {};
+            this.lineOption = {
+                tooltip: {
+                    trigger: "axis",
+                },
+                grid: {
+                    top: "10%",
+                    left: "5%",
+                    right: "10%",
+                    bottom: "10%",
+                    // containLabel: true
+                },
+                xAxis: [
+                    {
+                        type: "category",
+                        axisLine: {
+                            show: false,
+                        },
+                        axisLabel: {
+                            show: false,
+                            color: "#fff",
+                        },
+                        splitLine: {
+                            show: false,
+                        },
+                        boundaryGap: false,
+                        axisTick: {
+                            show: false,
+                        },
+                        data: ["A", "B", "C", "D", "E", "F"],
+                    },
+                ],
+                yAxis: [
+                    {
+                        type: "value",
+                        min: 0,
+                        // max: 140,
+                        splitNumber: 4,
+                        splitLine: {
+                            show: false,
+                        },
+                        axisLine: {
+                            show: false,
+                        },
+                        axisLabel: {
+                            show: false,
+                        },
+                        axisTick: {
+                            show: false,
+                        },
+                    },
+                ],
+                series: [
+                    {
+                        name: "数据1",
+                        type: "line",
+                        // smooth: true, //是否平滑
+                        showAllSymbol: true,
+                        // symbol: 'image://./static/images/guang-circle.png',
+                        symbol: "circle",
+                        symbolSize: 5,
+                        lineStyle: {
+                            normal: {
+                                color: "#5B8FF9",
+                            },
+                        },
+                        label: {
+                            show: false,
+                        },
+                        itemStyle: {
+                            color: "#2C7AFA",
+                            borderColor: "#5B8FF9",
+                            borderWidth: 1,
+                        },
+                        tooltip: {
+                            show: true,
+                        },
+                        areaStyle: {
+                            normal: {
+                                color: new this.$echarts.graphic.LinearGradient(
+                                    0,
+                                    0,
+                                    0,
+                                    1,
+                                    [
+                                        {
+                                            offset: 0,
+                                            color: "RGBA(72, 116, 204, .3)",
+                                        },
+                                        {
+                                            offset: 1,
+                                            color: "rgba(0,179,244,0)",
+                                        },
+                                    ],
+                                    false
+                                ),
+                            },
+                        },
+                        data: [100, 120, 110, 120, 130, 140],
+                    },
+                    {
+                        name: "数据2",
+                        type: "line",
+                        // smooth: true, //是否平滑
+                        showAllSymbol: true,
+                        // symbol: 'image://./static/images/guang-circle.png',
+                        symbol: "circle",
+                        symbolSize: 5,
+                        lineStyle: {
+                            normal: {
+                                color: "#5AD8A6",
+                            },
+                        },
+                        label: {
+                            show: false,
+                        },
+                        itemStyle: {
+                            color: "#67C3A2",
+                            borderColor: "#5AD8A6",
+                            borderWidth: 3,
+                        },
+                        tooltip: {
+                            show: true,
+                        },
+                        areaStyle: {
+                            normal: {
+                                color: new this.$echarts.graphic.LinearGradient(
+                                    0,
+                                    0,
+                                    0,
+                                    1,
+                                    [
+                                        {
+                                            offset: 0,
+                                            color: "RGBA(90, 216, 166, .3)",
+                                        },
+                                        {
+                                            offset: 1,
+                                            color: "rgba(0,202,149,0)",
+                                        },
+                                    ],
+                                    false
+                                ),
+                            },
+                        },
+                        data: [150, 170, 160, 170, 180, 190],
+                    },
+                    {
+                        name: "数据1",
+                        type: "line",
+                        // smooth: true, //是否平滑
+                        showAllSymbol: true,
+                        // symbol: 'image://./static/images/guang-circle.png',
+                        symbol: "circle",
+                        symbolSize: 5,
+                        lineStyle: {
+                            normal: {
+                                color: "#5B8FF9",
+                            },
+                        },
+                        label: {
+                            show: false,
+                        },
+                        itemStyle: {
+                            color: "#2C7AFA",
+                            borderColor: "#5B8FF9",
+                            borderWidth: 1,
+                        },
+                        tooltip: {
+                            show: true,
+                        },
+                        areaStyle: {
+                            normal: {
+                                color: new this.$echarts.graphic.LinearGradient(
+                                    0,
+                                    0,
+                                    0,
+                                    1,
+                                    [
+                                        {
+                                            offset: 0,
+                                            color: "RGBA(72, 116, 204, .3)",
+                                        },
+                                        {
+                                            offset: 1,
+                                            color: "rgba(0,179,244,0)",
+                                        },
+                                    ],
+                                    false
+                                ),
+                            },
+                        },
+                        data: [200, 220, 210, 220, 230, 240],
+                    },
+                ],
+            };
             // 基于准备好的dom，初始化this.$echarts实例
             this.myLineChart = this.$echarts.init(
-                document.getElementById("energy_consumption_radar")
+                document.getElementById("energy_consumption_line")
             );
             // 绘制图表
             this.myLineChart.setOption(this.lineOption);
@@ -169,18 +365,23 @@ export default {
     font-size: 22px;
     height: 34px;
     line-height: 34px;
+    margin-top: 12.5px;
+    margin-left: 21.5px;
+}
+.box {
+    display: flex;
 }
 .radar-charts-box {
     width: 269px;
-    height: 202px;
+    height: 190px;
     .charts {
         width: 100%;
         height: 100%;
     }
 }
 .line-charts-box {
-    width: 335px;
-    height: 202px;
+    width: 268px;
+    height: 190px;
     .charts {
         width: 100%;
         height: 100%;

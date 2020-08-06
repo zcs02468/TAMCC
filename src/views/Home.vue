@@ -13,6 +13,7 @@
                     <Warning />
                 </div>
                 <div class="colum center">
+                    <Map />
                     <Energy />
                 </div>
                 <div class="colum">
@@ -32,6 +33,7 @@ import Electricity from "../components/home/Electricity"
 import MaintainInfo from "../components/home/MaintainInfo"
 import Warning from "../components/home/Warning"
 
+import Map from "../components/home/Map"
 import Energy from "../components/home/Energy"
 
 import EnergyConsumption from "../components/home/EnergyConsumption"
@@ -47,7 +49,8 @@ export default {
         Electricity,
         MaintainInfo,
         Warning,
-
+        
+        Map,
         Energy,
 
         EnergyConsumption,
@@ -74,7 +77,7 @@ export default {
         flex: 3;
     }
     .center {
-        margin: 60px 20px 0 20px;
+        margin: 0px 20px 0 20px;
     }
 }
 header{

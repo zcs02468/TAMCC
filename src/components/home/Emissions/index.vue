@@ -15,8 +15,8 @@
                     <li class="default">类目8</li>
                     <li class="default">类目9</li>
                     <li class="default">类目10</li>
-                    <li class="default">类目11</li>
-                    <li class="default">类目12</li>
+                    <li class="dashed"></li>
+                    <li class="dashed"></li>
                 </ul>
             </div>
             <div class="charts-box">
@@ -187,7 +187,6 @@ export default {
         li {
             width: 67.5px;
             height: 36px;
-            border: 1.5px solid #61afff;
             text-align: center;
             line-height: 36px;
             color: #fff;
@@ -209,7 +208,13 @@ export default {
         .default {
             border-radius: 4.5px;
             background: rgba(119, 161, 255, 0.18);
+            border: 1.5px solid #61afff;
             box-shadow: 0px -4.5px 17.5px 5.5px rgba(27, 128, 255, 0.84) inset;
+        }
+        .dashed {
+            border-radius: 4.5px;
+            background: transparent;
+            border: 1.5px dashed rgba(97,175,255,0.65);
         }
     }
 }

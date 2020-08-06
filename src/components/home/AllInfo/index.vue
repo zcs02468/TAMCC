@@ -93,8 +93,7 @@ export default {};
 .right-panel {
     width: 285px;
     height: 100%;
-    display: flex;
-    flex-direction: column;
+    // display: flex;
     margin-right: 14.5px;
     .time-box {
         font-size: 18px;
