@@ -1,5 +1,5 @@
 <template>
-    <div class="panel left-container-angle">
+    <div class="panel right-container-angle">
         <div class="panel-header">
             <div class="title">T1能源系统设备状态</div>
             <div class="name general-border">中心4#冷水机组停机维修</div>
