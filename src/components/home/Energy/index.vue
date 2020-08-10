@@ -158,6 +158,7 @@ export default {
     width: 765px;
     height: 292.5px;
     position: relative;
+    margin-top: 15px;
 }
 .select-box {
     padding-top: 15px;
