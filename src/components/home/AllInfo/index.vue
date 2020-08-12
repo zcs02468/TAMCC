@@ -16,9 +16,9 @@
         </div>
         <div class="right-panel">
             <div class="time-box">
-                <span>2020-07-27</span>
-                <span>09:15:55</span>
-                <span>星期一</span>
+                <span>{{date.day}}</span>
+                <span>{{date.time}}</span>
+                <span>{{date.week}}</span>
             </div>
             <div class="weather-box">
                 <div class="weather-top">
@@ -49,7 +49,37 @@
 </template>
 
 <script>
-export default {};
+export default {
+    data() {
+        return {
+            date:{
+                day:'2020-07-27',
+                time:'09:15:55',
+                week:'星期一',
+            }
+        }
+    },
+    created() {
+        this.showTime();
+    },
+    methods:{
+        showTime() {
+            var now = new Date();
+            var year = now.getFullYear();
+            var month = now.getMonth() + 1;
+            var day = now.getDate();
+            var hours = now.getHours();
+            var minutes = now.getMinutes();
+            var seconds = now.getSeconds();
+            var dd = now.getDay();
+            var d = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
+            this.date.day = `${year}-${String(month).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+            this.date.time = `${String(hours).padStart(2,"0")}:${String(minutes).padStart(2,"0")}:${String(seconds).padStart(2,"0")}`;
+            this.date.week = `${d[dd]}`;
+            var timeID = setTimeout(this.showTime, 1000);
+        },
+    }
+};
 </script>
 
 <style lang="scss" scoped>
