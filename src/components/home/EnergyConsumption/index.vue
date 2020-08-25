@@ -14,17 +14,74 @@
 </template>
 
 <script>
+import {getEnergyIndex} from "../../../axios"
 export default {
     mounted() {
+        this.getData()
         this.drawRadarCharts();
         this.drawLineCharts();
     },
     methods: {
+        async getData() {
+            let [res] = await getEnergyIndex();
+            let {quotaList,realisticList} = JSON.parse( res.message );
+            let {radarIndicator,radarChartsSeries0,radarChartsSeries1} = this.getRadarChartsData(quotaList);
+            this.radarOption.series[0].data[0].value = radarChartsSeries0;
+            this.radarOption.series[0].data[1].value = radarChartsSeries1;
+            this.myRadarChart.setOption(this.radarOption);
+
+            let {xAxisLine,yAxisLine} = this.getLineChartsData(realisticList,radarIndicator);
+            this.lineOption.xAxis[0].data = xAxisLine;
+            let index = 0;
+            for (const key in yAxisLine) {
+                if (yAxisLine.hasOwnProperty(key)) {
+                    const element = yAxisLine[key];
+                    this.lineOption.series[index].name = key;
+                    this.lineOption.series[index].data = element;
+                    index++;
+                }
+            }
+            this.myLineChart.setOption(this.lineOption);
+            setTimeout(()=> {
+                this.getData();
+            },60000)
+        },
+        getRadarChartsData(data) {
+            let radarChartsSeries0 = [];
+            let radarChartsSeries1 = [];
+            let radarIndicator = []
+            data.forEach(item => {
+                radarChartsSeries0.push(item.quotaValue);
+                radarChartsSeries1.push(item.factValue);
+                radarIndicator.push({
+                    name: item.quotaKey,
+                    min: 0,
+                })
+            });
+            return {radarIndicator,radarChartsSeries0,radarChartsSeries1};
+            
+        },
+        getLineChartsData(data,radarIndicator) {
+            let xArr = []
+            let obj = {}
+            data.forEach(item => {
+                if( !obj[item.quotaKey] ) {
+                    obj[item.quotaKey] = []
+                }
+                xArr.unshift(item.collectionDate)
+                obj[item.quotaKey].unshift(item.realisticValue)
+            });
+            let xAxis = [...new Set(xArr)];
+            return {
+                yAxisLine: obj,
+                xAxisLine: xAxis
+            }
+        },
         drawRadarCharts() {
             this.radarOption = {
-                color: ["#385CA5", "#FFFAFA"],
+                color: ["#385CA5", "RGBA(189, 26, 26, 1)"],
                 legend: {
-                    data: ["类目1", "类目2"],
+                    data: ["指标值", "实际值"],
                     orient: "vertical",
                     // icon: "circle",
                     left: "10%",
@@ -88,7 +145,7 @@ export default {
                         data: [
                             {
                                 value: [100, 90, 84],
-                                name: "类目1",
+                                name: "指标值",
                                 itemStyle: {
                                     normal: {
                                         borderColor: "#5B8FF9",
@@ -110,7 +167,7 @@ export default {
                             },
                             {
                                 value: [56, 70, 100],
-                                name: "类目2",
+                                name: "实际值",
                                 itemStyle: {
                                     normal: {
                                         borderColor: "#5AD2A5",

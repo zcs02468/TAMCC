@@ -3,7 +3,7 @@
         <div class="charts-box">
             <div class="charts" :id="name"></div>
         </div>
-        <div class="btn general-border">15件</div>
+        <div class="btn general-border">{{prop.finishSum}}</div>
     </div>
 </template>
 
@@ -13,17 +13,34 @@ export default {
         name:{
             type:String,
             default:''
+        },
+        prop:{
+            type: Object
         }
     },
     mounted() {
+        
         this.drawLine();
+        this.reloadLine()
     },
     methods: {
+        reloadLine() {
+            let a;
+            if(this.prop.finishSum == 0 &&  this.prop.allSum == 0 ) {
+                 a = 0
+            }else {
+                 a = Math.round(this.prop.finishSum / this.prop.allSum * 10000) / 100.00
+            }
+            this.option.series[0].data[0].value = this.prop.finishSum
+            this.option.series[0].data[1].value = Number(this.prop.allSum) - Number(this.prop.finishSum)
+            this.option.title.text = this.prop.title + "\n" + a + "%",
+            this.myChart.setOption(this.option);
+        },
         drawLine() {
             var tot = "70%";
             this.option = {
                 title: {
-                    text: "占比" + "\n" + 80 + "%",
+                    text: this.prop.title + "\n" + 80 + "%",
                     textStyle: {
                         color: "#fff",
                         fontWeight: "400",

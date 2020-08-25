@@ -1,25 +1,32 @@
 <!-- 警示信息 -->
 <template>
-    <div class="panel left-container-angle">
+    <div class="panel left-container-angle panel-warning">
         <div class="panel-header">
             <div class="title">警示信息</div>
-            <div class="name general-border">检区照明灯具故障</div>
+            <!-- <div class="name general-border">检区照明灯具故障</div> -->
+            <div class="name general-border">
+                <div class="text-box">
+                    <div class="text-content">
+                        <p class="text">{{ todayWarnInfo }}</p>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="content-box">
             <div class="info general-border">
                 <div class="left">
                     <div class="name">维修遗留问题</div>
-                    <div class="btn general-border">明细</div>
+                    <div class="btn general-border" @click="openDialog('work')">明细</div>
                 </div>
                 <div class="right">
-                    <span class="max">6</span>
+                    <span class="max">{{ maintainNum }}</span>
                     <span class="unit">单</span>
                 </div>
             </div>
             <div class="info general-border spacing">
                 <div class="left">
                     <div class="name">环保指标问题</div>
-                    <div class="btn general-border">明细</div>
+                    <div class="btn general-border" @click="openDialog('order')">明细</div>
                 </div>
                 <div class="right">
                     <span class="max">6</span>
@@ -27,11 +34,94 @@
                 </div>
             </div>
         </div>
+        <div>
+            <workDialog :propList="getDialogData" v-if="dialogType" @closeDailog="closeDailog"/>
+            <!-- <workDialog :propList="workList" v-if="dialogType" @closeDailog="closeWorkDailog"/> -->
+        </div>
     </div>
 </template>
 
 <script>
-export default {};
+import { getLastWarn } from "../../../axios";
+import workDialog from "./dialog/workDialog"
+export default {
+    data() {
+        return {
+            todayWarnInfo:"",
+            maintainNum: 0,
+            workList: [],
+            orderList: [],
+            showWorkDialog: false,
+            showWarnDialog: false,
+            dialogType:null
+        };
+    },
+    components:{
+        workDialog
+    },
+    created() {
+        this.getData();
+    },
+    methods: {
+        async getData() {
+            let [res, err] = await getLastWarn();
+            let data = JSON.parse(res.message);
+            let {workList,orderList,todayWarnInfo} = data;
+            this.maintainNum = workList.length;
+            this.workList = workList;
+            this.orderList = orderList;
+            this.textScroll()
+            setTimeout(()=> {
+                this.getData();
+            },6000)
+        },
+        textScroll() {
+            let [box, content, text] = [
+                document.querySelector(".panel-warning .text-box"),
+                document.querySelector(".panel-warning .text-content"),
+                document.querySelector(".panel-warning .text"),
+            ];
+            let [textWidth, boxWidth] = [text.offsetWidth, box.offsetWidth];
+            // 判断文字长度是否大于盒子长度
+            if (boxWidth > textWidth) {
+                return false;
+            }
+            content.innerHTML += content.innerHTML;
+            document.querySelector(".panel-warning .text").classList.add("padding");
+            // 更新
+            textWidth = document.querySelector(".panel-warning .text").offsetWidth;
+            toScrollLeft();
+            function toScrollLeft() {
+                //  如果文字长度大于滚动条距离，则递归拖动
+                if (textWidth > box.scrollLeft) {
+                    box.scrollLeft++;
+                    setTimeout(toScrollLeft, 20);
+                } else {
+                    setTimeout(fun2, 0);
+                }
+            }
+            function fun2() {
+                box.scrollLeft = 0;
+                toScrollLeft();
+            }
+        },
+        openDialog(val) {
+            this.dialogType = val
+        },
+        closeDailog() {
+            this.dialogType = null
+        }
+    },
+    computed:{
+        getDialogData() {
+            if( this.dialogType ) {
+                return this[`${this.dialogType}List`];
+            }else {
+                return [];
+            }
+        }
+    }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -50,13 +140,38 @@ export default {};
         height: 34px;
         line-height: 34px;
     }
-    .name {
-        font-size: 18px;
+    // .name {
+    //     font-size: 18px;
+    //     width: 356px;
+    //     height: 34px;
+    //     line-height: 34px;
+    //     margin-left: 15px;
+    //     padding-left: 10px;
+    // }
+
+    .general-border {
         width: 356px;
         height: 34px;
-        line-height: 34px;
+        position: relative;
         margin-left: 15px;
-        padding-left: 10px;
+        padding: 0 10px;
+    }
+    .text-box {
+        width: 100%;
+        height: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+    .text-content {
+        display: inline-block;
+    }
+    .text-content p {
+        display: inline-block;
+        font-size: 18px;
+        line-height: 34px;
+    }
+    .text-content p.padding {
+        padding-right: 300px;
     }
 }
 .content-box {
@@ -89,10 +204,11 @@ export default {};
             text-align: center;
             line-height: 30px;
             margin-top: 7.5px;
+            cursor: pointer;
         }
     }
     .right {
-        margin-left: 24px;
+        // margin-left: 24px;
         span {
             display: inline-block;
             height: 100%;
@@ -101,12 +217,27 @@ export default {};
         .max {
             font-size: 48px;
             vertical-align: bottom;
+            width: 75px;
+            text-align: center;
         }
         .unit {
             font-size: 18px;
             vertical-align: bottom;
-            margin-left: 13px;
+            // margin-left: 13px;
         }
+    }
+}
+@keyframes marginLeft {
+    0% {
+        left: 100%;
+    }
+
+    50% {
+        left: 0%;
+    }
+
+    100% {
+        right: 100%;
     }
 }
 </style>

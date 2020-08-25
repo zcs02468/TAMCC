@@ -1,12 +1,32 @@
 <template>
     <div class="panel">
         <div class="map-box"></div>
-        <div class="footer-panel">今日航班数<span class="max">&nbsp;&nbsp;715&nbsp;&nbsp;</span>单</div>
+        <div class="footer-panel">今日航班数<span class="max">&nbsp;&nbsp;{{flights}}&nbsp;&nbsp;</span>单</div>
     </div>
 </template>
 
 <script>
-export default {};
+import {getTodayFlightsNumber} from "../../../axios"
+export default {
+    data() {
+        return {
+            flights: 0
+        }
+    },
+    created() {
+        this.getData()
+    },
+    methods:{
+        async getData() {
+            let [res] = await getTodayFlightsNumber();
+            let data = JSON.parse(res.message).flights;
+            this.flights = data;
+            setTimeout(()=> {
+                this.getData();
+            },60000)
+        }
+    }
+};
 </script>
 
 <style lang="scss" scoped>

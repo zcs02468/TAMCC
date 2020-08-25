@@ -1,24 +1,33 @@
 import { get } from "./tools";
 
+// const baseUrl = 'http://47.110.226.205:8980'
+// const baseUrl = 'https://www.easy-mock.com/mock/5f3942727c850a226dfc1fbd'
 const baseUrl = 'http://47.110.226.205:8980'
 
-//供水检测率接口
-export const getDetectionRate = async () => await get({ url: baseUrl + "/smartEnergy/detectionrate" });
+//T1航站楼能耗占比接口
+export const getEnergyProportion = async () => await get({ url: baseUrl + "/smartEnergy/energyProportion" });
 
-//施工信息情况接口
-export const getConstructionInfo = async () => await get({ url: baseUrl + "/smartEnergy/build" });
+// T1航站楼能耗趋势接口
+export const getSumElectricList = async () => await get({url:baseUrl + '/smartEnergy/sumElectricList'});
 
-//蓄水池水位接口
-export const getReservoirLevel = async () => await get({ url: baseUrl + "/smartEnergy/reservoirLevel" });
+// 当前维修信息接口
+export const getLastRepair = async () => await get({url:baseUrl + '/smartEnergy/lastRepair'});
 
-//实时播报内容接口
-export const getBroadcastContent = async () => await get({ url: baseUrl + "/smartEnergy/broadcastContent" });
+//今日航班数接口
+export const getTodayFlightsNumber = async () => await get({url:baseUrl + '/smartEnergy/todayflightsNumber'});
 
-//出水瞬时流量接口
-export const getEffluentFlow = async () => await get({ url: baseUrl + "/smartEnergy/effluentFlow" });
+//当前警示信息接口
+export const getLastWarn = async () => await get({url:baseUrl + '/smartEnergy/lastWarn'});
 
-//进水/出水压力趋势接口
-export const getWaterPressure = async () => await get({ url: baseUrl + "/smartEnergy/waterPressure" });
+//二十二、	T1航站楼能耗指标接口
+export const getEnergyIndex = async () => await get({url:baseUrl + '/smartEnergy/energyIndex'});
 
-//泵站供水量接口
-export const getWaterVolume = async () => await get({ url: baseUrl + "/smartEnergy/waterVolume" });
+//二十三、	T1航站楼排放指标接口
+export const getEmissionIndex = async () => await get({url:baseUrl + '/smartEnergy/emissionIndex'});
+
+
+//T1能源系统设备状态接口 
+export const getDeviceStatus = async () => await get({url:baseUrl + '/smartEnergy/deviceStatus'});
+
+//T1气象信息接口
+export const getMetaInfo = async () => await get({url:baseUrl + '/smartEnergy/metarInfo'})

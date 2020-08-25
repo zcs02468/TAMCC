@@ -23,24 +23,26 @@
             <div class="weather-box">
                 <div class="weather-top">
                     <div>
-                        <span class="img-box"></span>
+                        <span class="img-box">
+                            <img :src="weatherImagePath" alt="" srcset="">
+                        </span>
                         <span class="temperature">35℃</span>
                     </div>
                     <div>
-                        <span>晴</span>
-                        <span>25～35℃</span>
+                        <span>{{weather}}</span>
+                        <span>{{lowTemperature}}～{{highTemperature}}℃</span>
                     </div>
                 </div>
                 <div class="weather-bottom">
                     <div class="weather-left">
                         <div>湿度：55%</div>
-                        <div class="marginTop15">雨量：0mm</div>
-                        <div class="marginTop15">AQI：130</div>
+                        <div class="marginTop15">雨量：{{rainfall}}mm</div>
+                        <div class="marginTop15">AQI：{{aqi}}</div>
                     </div>
                     <div class="weather-right">
-                        <div>照度：20klux</div>
-                        <div class="marginTop15">风向：正北</div>
-                        <span class="btn marginTop15">轻度污染</span>
+                        <div>照度：{{illuminance}}klux</div>
+                        <div class="marginTop15">风向：{{windDirection}}</div>
+                        <span class="btn marginTop15" :style="{ background: colorArr[btnBgindex] }">轻度污染</span>
                     </div>
                 </div>
             </div>
@@ -49,6 +51,7 @@
 </template>
 
 <script>
+import {getMetaInfo} from "../../../axios"
 export default {
     data() {
         return {
@@ -56,13 +59,70 @@ export default {
                 day:'2020-07-27',
                 time:'09:15:55',
                 week:'星期一',
-            }
+            },
+            weather:null,
+            highTemperature:null,
+            lowTemperature:null,
+            illuminance:null,
+            rainfall:null,
+            windDirection:null,
+            aqi:null,
+            weatherImagePath:null,
+            colorArr:['green','yellow','orange','red','purple','#964B00'],
+            btnBgindex: 0
         }
     },
     created() {
         this.showTime();
+        this.getData()
     },
     methods:{
+        async getData() {
+            let [res] = await getMetaInfo();
+            let data = JSON.parse(res.message);
+            console.log('resfffffffff', data);
+            let {weather,highTemperature,lowTemperature,illuminance,rainfall,windDirection,aqi,weatherImagePath} = data.metar;
+            this.weather = weather;
+            this.highTemperature = highTemperature;
+            this.lowTemperature = lowTemperature;
+            this.illuminance = illuminance;
+            this.rainfall = rainfall;
+            this.windDirection = windDirection;
+            this.aqi = aqi;
+            this.weatherImagePath = weatherImagePath;
+            // metar	气象信息对象
+            // weather	天气
+            // highTemperature	最高温度
+            // lowTemperature	最低温度
+            // illuminance	照度
+            // rainfall	雨量
+            // windDirection	风向
+            // aqi	空气质量指数值
+            // weatherImagePath	天气图片地址
+            // airList	空气质量指数信息对象
+            // description	空气质量指数值范围
+            // dictLabel	空气质量指数类别
+            // remarks	空气质量指数颜色
+            this.getAqiData(data.airList,aqi)
+
+        },
+        getAqiData(data,aqi) {
+            
+            for (let i = 0; i < data.length; i++) {
+                const item = data[i];
+                let description = item.description.split("~");
+                if(description.length == 1 ) {
+                    this.btnBgindex = i;
+                }else {
+                    let min = description[0];
+                    let max = description[1];
+                    if( min <= aqi && aqi <= max  ) {
+                        this.btnBgindex = i;
+                        return;
+                    }
+                }
+            }
+        },
         showTime() {
             var now = new Date();
             var year = now.getFullYear();
@@ -153,6 +213,11 @@ export default {
             border: 1px solid #4f85ff;
             border-radius: 4px;
             background: rgba(119, 161, 255, 0.14);
+            overflow: hidden;
+            img{
+                width: 100%;
+                height: 100%;
+            }
         }
         .temperature {
             font-size: 28px;
@@ -191,7 +256,7 @@ export default {
             width: 109px;
             height: 28px;
             border-radius: 5px;
-            background: #f2a625;
+            // background: #f2a625;
             color: #000;
             text-align: center;
             line-height: 28px;

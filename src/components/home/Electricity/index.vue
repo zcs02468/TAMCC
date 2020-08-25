@@ -3,12 +3,12 @@
     <div class="panel left-container-angle">
         <div class="title">T1航站楼用电占比</div>
         <div class="content">
-            <div class="select">
+            <div class="select-box">
                 <ul>
-                    <li>电力</li>
-                    <li>市政水</li>
-                    <li>天然气</li>
-                    <li>中水</li>
+                    <li :class="selectType == 'electric'? 'select':''" @click="selectClick('electric')">电力</li>
+                    <li :class="selectType == 'water'? 'select':''" @click="selectClick('water')">市政水</li>
+                    <li :class="selectType == 'gas'? 'select':''" @click="selectClick('gas')">天然气</li>
+                    <li :class="selectType == 'awater'? 'select':''" @click="selectClick('awater')">中水</li>
                 </ul>
             </div>
             <div class="ping-box">
@@ -46,20 +46,68 @@
 </template>
 
 <script>
+import {getEnergyProportion} from "../../../axios/index"
 export default {
+    data() {
+        return {
+            selectType:'electric', //electric---电力    water---市政水   gas---天然气
+            list:{
+                electricList:[],
+                waterList:[]
+            }
+        }
+    },
     mounted() {
         this.drawLine();
     },
+    created() {
+        this.getData()
+    },
     methods: {
+        selectClick(type) {
+            this.selectType = type;
+            this.option.series[0].data = this.list[`${this.selectType}List`];
+            this.option.tooltip.formatter = this.tooltipTitle;
+            this.myChart.setOption(this.option);
+        },
+        async getData() {
+            let [res] = await getEnergyProportion();
+            let data =  JSON.parse(res.message);
+            // electricList	电力对象
+            // waterList	市政水对象
+            // fengitemname	分项名称
+            // fusedvalue	日用能
+            // let {electricList,waterList} = data;
+            let obj = {
+                electricList: this.sortingData(data.electricList),
+                waterList: this.sortingData(data.waterList),
+            }
+            Object.assign(this.list, obj);
+            this.option.series[0].data = this.list[`${this.selectType}List`];
+            this.myChart.setOption(this.option);
+            setTimeout(()=> {
+                this.getData()
+            },60000)
+        },
+        sortingData(data) {
+            let arr = [];
+            data.forEach(item => {
+                arr.push({
+                    name: item.fengitemname,
+                    value:item.fusedvalue
+                })
+            });
+            return arr;
+        },
         drawLine() {
             this.option = {
                 tooltip: {
                     trigger: "item",
-                    formatter: "用电量 <br/>{b} : {c} ({d}%)",
+                    formatter: "用量 <br/>{b} : {c} ({d}%)",
                 },
                 series: [
                     {
-                        name: "访问来源",
+                        name: "使用量",
                         type: "pie",
                         radius: "70%",
                         center: ["50%", "50%"],
@@ -161,7 +209,7 @@ export default {
         height: 100%;
     }
 }
-.select {
+.select-box {
     li {
         width: 99px;
         height: 33px;
@@ -172,6 +220,9 @@ export default {
         text-align: center;
         line-height: 33px;
         margin-bottom: 20px;
+    }
+    li.select {
+        background:linear-gradient(to right,rgba(1,77,204,1),rgba(3,55,152,1)) !important;
     }
 }
 .ping-box {

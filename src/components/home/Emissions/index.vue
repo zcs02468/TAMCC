@@ -5,8 +5,8 @@
         <div class="content">
             <div class="select-box">
                 <ul>
-                    <li class="default">类目1</li>
-                    <li class="default">类目2</li>
+                    <li v-for="(item,i) in typeArr" :key="`${i}emissions`" :class="[item == 'none' ? 'dashed':'default',selectType == i ? 'select':'']" @click="selectTypeClick(item,i)">{{item == 'none'?'':item}}</li>
+                    <!-- <li class="default">类目2</li>
                     <li class="default">类目3</li>
                     <li class="default">类目4</li>
                     <li class="default">类目5</li>
@@ -16,7 +16,7 @@
                     <li class="default">类目9</li>
                     <li class="default">类目10</li>
                     <li class="dashed"></li>
-                    <li class="dashed"></li>
+                    <li class="dashed"></li> -->
                 </ul>
             </div>
             <div class="charts-box">
@@ -27,16 +27,88 @@
 </template>
 
 <script>
+import {getEmissionIndex} from "../../../axios"
 export default {
+    data() {
+        return {
+            dataList: null,
+            typeArr:["none","none","none","none","none","none","none","none","none","none","none","none",],
+            selectIndex: 0,
+            selectType: null
+        }
+    },
     mounted() {
         this.drawRadarCharts()
+        this.getData();
     },
     methods: {
+        selectTypeClick(item,i) {
+            this.selectType = item;
+            this.selectIndex = i;
+            this.option.radar[0].indicator = this.dataList[this.selectType].radarIndicator;
+            this.option.series[0].data[0].value = this.dataList[this.selectType].indexValueArr;
+            this.option.series[0].data[1].value = this.dataList[this.selectType].factValueArr;
+            this.myChart.setOption(this.option);
+        },
+        async getData() {
+            try {
+                let [res] = await getEmissionIndex();
+                // let res = {"result":"true","message":"{\"emissionIndexList\":[{\"pageNo\":null,\"pageSize\":null,\"id\":\"1296621640815190016\",\"isNewRecord\":false,\"orderBy\":null,\"createByName\":null,\"updateByName\":null,\"updateBy\":null,\"lastUpdateDateTime\":null,\"status\":null,\"createDate\":null,\"updateDate\":null,\"remarks\":null,\"createBy\":null,\"emissionId\":\"1296621640815190016\",\"indexName\":\"指标A\",\"type\":\"类目1\",\"indexValue\":12.23,\"factValue\":123.21,\"createTime\":\"2020-08-21 09:38:46\",\"createDate_lte\":null,\"createDate_between\":null,\"createDate_gte\":null,\"updateDate_lte\":null,\"updateDate_between\":null,\"status_in\":null,\"updateDate_gte\":null,\"id_in\":null},{\"pageNo\":null,\"pageSize\":null,\"id\":\"1296683509832265728\",\"isNewRecord\":false,\"orderBy\":null,\"createByName\":null,\"updateByName\":null,\"updateBy\":null,\"lastUpdateDateTime\":null,\"status\":null,\"createDate\":null,\"updateDate\":null,\"remarks\":null,\"createBy\":null,\"emissionId\":\"1296683509832265728\",\"indexName\":\"指标B\",\"type\":\"类目1\",\"indexValue\":23.23,\"factValue\":23.21,\"createTime\":\"2020-08-21 13:40:14\",\"createDate_lte\":null,\"createDate_between\":null,\"createDate_gte\":null,\"updateDate_lte\":null,\"updateDate_between\":null,\"status_in\":null,\"updateDate_gte\":null,\"id_in\":null},{\"pageNo\":null,\"pageSize\":null,\"id\":\"1296683624714252288\",\"isNewRecord\":false,\"orderBy\":null,\"createByName\":null,\"updateByName\":null,\"updateBy\":null,\"lastUpdateDateTime\":null,\"status\":null,\"createDate\":null,\"updateDate\":null,\"remarks\":null,\"createBy\":null,\"emissionId\":\"1296683624714252288\",\"indexName\":\"指标C\",\"type\":\"类目1\",\"indexValue\":55.32,\"factValue\":53.23,\"createTime\":\"2020-08-21 13:40:42\",\"createDate_lte\":null,\"createDate_between\":null,\"createDate_gte\":null,\"updateDate_lte\":null,\"updateDate_between\":null,\"status_in\":null,\"updateDate_gte\":null,\"id_in\":null}]}"}
+                let data = JSON.parse(res.message);
+                let { emissionIndexList } = data;
+                let typeArr = [];
+                let dataList = [];
+                emissionIndexList.forEach((item,i) => {
+                    typeArr.push( item.type );
+                    if( !dataList.hasOwnProperty(item.type) ) {
+                        dataList[item.type] = {};
+                        dataList[item.type].radarIndicator = []
+                        dataList[item.type].indexValueArr= []
+                        dataList[item.type].factValueArr= []
+                    }
+                    // indexValue   指标
+                    // factValue    实际
+                    dataList[item.type].radarIndicator.push({
+                        name: item.indexName,
+                        min: 0,
+                    })
+                    dataList[item.type].indexValueArr.push(item.indexValue);
+                    dataList[item.type].factValueArr.push(item.factValue);
+
+                });
+                typeArr = [...new Set(typeArr)];
+                if( !this.selectType ) {
+                    this.selectType = typeArr[0]
+                }
+                this.typeArr = this.gertNewTypeArr(typeArr);
+                this.dataList = dataList;
+                this.option.radar[0].indicator = this.dataList[this.selectType].radarIndicator;
+                this.option.series[0].data[0].value = this.dataList[this.selectType].indexValueArr;
+                this.option.series[0].data[1].value = this.dataList[this.selectType].factValueArr;
+                this.myChart.setOption(this.option);
+                setTimeout(()=> {
+                    this.getData();
+                },60000)
+            } catch (error) {
+                setTimeout(()=> {
+                    this.getData();
+                },60000)
+            }
+        },
+        gertNewTypeArr(data) {
+            let len = data.length;
+            let targetLen = 12;
+            let arr = [...data];
+            for (let i = 0; i < targetLen- len; i++) {    
+                arr.push("none")    
+            }
+            return arr;
+        },
         drawRadarCharts() {
             this.option = {
-                color: ["#385CA5", "#FFFAFA"],
+                color: ["#385CA5", "RGBA(189, 26, 26, 1)"],
                 legend: {
-                    data: ["类目1", "类目2"],
+                    data: ["指标值", "实际值"],
                     orient: "vertical",
                     // icon: "circle",
                     left: "10%",
@@ -99,8 +171,8 @@ export default {
                         type: "radar",
                         data: [
                             {
-                                value: [100, 90, 84],
-                                name: "类目1",
+                                value: [100, 59, 84],
+                                name: "指标值",
                                 itemStyle: {
                                     normal: {
                                         borderColor: "#5B8FF9",
@@ -122,7 +194,7 @@ export default {
                             },
                             {
                                 value: [56, 70, 100],
-                                name: "类目2",
+                                name: "实际值",
                                 itemStyle: {
                                     normal: {
                                         borderColor: "#5AD2A5",
@@ -157,6 +229,14 @@ export default {
             });
         },
     },
+    computed:{
+        typeList() {
+            return this.typeArr;
+        },
+        radarData() {
+            return this.dataObj;
+        }
+    }
 };
 </script>
 
@@ -192,6 +272,7 @@ export default {
             color: #fff;
             font-size: 16px;
             margin-top: 15px;
+            cursor: pointer;
             &:nth-child(2) {
                 margin: 15px 15px 0 15px;
             }
@@ -205,16 +286,21 @@ export default {
                 margin: 15px 15px 0 15px;
             }
         }
+        .dashed {
+            border-radius: 4.5px;
+            background: transparent;
+            border: 1.5px dashed rgba(97,175,255,0.65);
+        }
         .default {
             border-radius: 4.5px;
             background: rgba(119, 161, 255, 0.18);
             border: 1.5px solid #61afff;
             box-shadow: 0px -4.5px 17.5px 5.5px rgba(27, 128, 255, 0.84) inset;
         }
-        .dashed {
-            border-radius: 4.5px;
-            background: transparent;
-            border: 1.5px dashed rgba(97,175,255,0.65);
+        .select {
+            background:rgba(119,255,193,0.18);
+            box-shadow: 0px -4.5px 17.5px 5.5px rgba(53,236,168,0.84) inset;
+            border:1.5px solid rgba(97,255,190,0.94)
         }
     }
 }

@@ -1,24 +1,131 @@
 <!-- 当前维修信息 -->
 <template>
-    <div class="panel left-container-angle">
+    <div class="panel left-container-angle maintain">
         <div class="panel-header">
             <div class="title">当前维修信息</div>
-            <div class="name general-border">公区走廊照明故障</div>
+            <!-- <div class="name general-border">{{todayRepairInfo}}</div> -->
+            <div class="name general-border">
+                <div class="text-box">
+                    <div class="text-content">
+                        <p class="text first-text">{{todayRepairInfo}}</p>
+                        <p class="text padding" v-if="isShow">{{todayRepairInfo}}</p>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="name general-border">
+                <div class="text-box" ref="textBoxRef">
+                    <p class="text" ref="textRef">
+                        1.文字如果超出了宽度自动向左滚动文字如果超出了宽度自动向左滚动。
+                    </p>
+                </div>
+            </div> -->
         </div>
         <div class="content">
-            <container name="chart_ring1"/>
-            <container name="chart_ring2"/>
-            <container name="chart_ring3"/>
-            <container name="chart_ring4"/>
+            <container :prop="list[1]" name="chart_ring1" ref="chart_ring1" />
+            <container :prop="list[2]" name="chart_ring2" ref="chart_ring2" />
+            <container :prop="list[3]" name="chart_ring3" ref="chart_ring3" />
+            <container :prop="list[4]" name="chart_ring4" ref="chart_ring4" />
         </div>
     </div>
 </template>
 
 <script>
 import container from "./container";
+import { getLastRepair } from "../../../axios";
 export default {
     components: {
         container,
+    },
+    data() {
+        return {
+            list: [
+                {},
+                {
+                    allSum: 0,
+                    finishSum: 0,
+                    title: "供配电",
+                },
+                {
+                    allSum: 0,
+                    finishSum: 0,
+                    title: "给排水",
+                },
+                {
+                    allSum: 0,
+                    finishSum: 0,
+                    title: "暖通",
+                },
+                {
+                    allSum: 0,
+                    finishSum: 0,
+                    title: "其他",
+                },
+            ],
+            todayRepairInfo: "111",
+            textLeft: "354px",
+            isShow: true
+        };
+    },
+    mounted() {
+        this.getData();
+    },
+    methods: {
+        async getData() {
+            let [res] = await getLastRepair();
+            let data = JSON.parse(res.message);
+            data.allSumList.forEach((item) => {
+                this.list[item.work_type].allSum = item.all_sum;
+            });
+            data.finishedSumList.forEach((item) => {
+                this.list[item.work_type].finishSum = item.finish_sum;
+            });
+            this.$refs.chart_ring1.reloadLine();
+            this.$refs.chart_ring2.reloadLine();
+            this.$refs.chart_ring3.reloadLine();
+            this.$refs.chart_ring4.reloadLine();
+            this.todayRepairInfo = data.todayRepairInfo;
+            this.$nextTick(()=> {
+                this.textScroll();
+            })
+            // finish_sum
+            // all_sum
+        },
+        textScroll() {
+            let [box, content, text] = [
+                document.querySelector(".maintain .text-box"),
+                document.querySelector(".maintain .text-content"),
+                document.querySelector(".maintain .first-text"),
+            ];
+            let [textWidth, boxWidth] = [text.offsetWidth, box.offsetWidth];
+            // 判断文字长度是否大于盒子长度
+            // console.log("textWidth, boxWidth", textWidth, boxWidth);
+            console.log( 'boxWidth', boxWidth , textWidth );
+            if (boxWidth > textWidth) {
+                this.isShow = false;
+                return false;
+            }
+            this.isShow = true;
+            // content.innerHTML += content.innerHTML;
+            // document.querySelector(".broadcast .text").classList.add("padding");
+            // 更新
+            textWidth = document.querySelector(".maintain .first-text")
+                .offsetWidth;
+            toScrollLeft();
+            function toScrollLeft() {
+                clearTimeout(window.broadcastTextTimeout)
+                //  如果文字长度大于滚动条距离，则递归拖动
+                if (textWidth > box.scrollLeft) {
+                    box.scrollLeft++;
+                    window.broadcastTextTimeout =  setTimeout(toScrollLeft, 20);
+                } else {
+                    setTimeout(fun2, 0);
+                }
+            }
+            function fun2() {
+                box.scrollLeft = 0;
+                toScrollLeft();
+            }
+        },
     },
 };
 </script>
@@ -39,28 +146,75 @@ export default {
         height: 34px;
         line-height: 34px;
     }
-    .name {
-        font-size: 18px;
-        width: 356px;
-        height: 34px;
-        line-height: 34px;
-        margin-left: 15px;
-        padding-left: 10px;
-    }
+    // .name {
+    //     font-size: 18px;
+    //     width: 356px;
+    //     height: 34px;
+    //     line-height: 34px;
+    //     margin-left: 15px;
+    //     padding-left: 10px;
+    // }
 }
 .content {
     padding: 15.5px 19px 0 19px;
     display: flex;
     justify-content: space-between;
 }
-// .info {
-//     .chart-box {
-//         width: 104px;
-//         height: 104px;
-//         .charts {
-//             width: 100%;
-//             height: 100%;
-//         }
+
+.general-border {
+    width: 356px;
+    height: 34px;
+    position: relative;
+    margin-left: 15px;
+    padding: 0 10px;
+}
+.text-box{
+    width: 100%;
+    height: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.text-content {
+    display: inline-block;
+}
+.text-content p {
+    display: inline-block;
+    font-size: 18px;
+    line-height: 34px;
+}
+.text-content p.padding {
+    padding-right: 300px;
+}
+
+// .general-border {
+//     position: relative;
+//     overflow: hidden;
+//     width: 356px;
+//     height: 34px;
+//     padding: 0 10px;
+//     .text-box {
+//         width: 100%;
+//         position: absolute;
+//         overflow: hidden;
+//         height: 100%;
+//     }
+//     .text {
+//         display: inline-block;
+//         font-size: 18px;
+//         line-height: 34px;
 //     }
 // }
+@keyframes marginLeft {
+    0% {
+        left: 100%;
+    }
+
+    50% {
+        left: 0%;
+    }
+
+    100% {
+        right: 100%;
+    }
+}
 </style>

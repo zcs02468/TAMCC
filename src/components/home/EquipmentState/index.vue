@@ -1,37 +1,24 @@
 <template>
-    <div class="panel right-container-angle">
+    <div class="panel right-container-angle system-device">
         <div class="panel-header">
             <div class="title">T1能源系统设备状态</div>
-            <div class="name general-border">中心4#冷水机组停机维修</div>
+            <!-- <div class="name general-border">中心4#冷水机组停机维修</div> -->
+            <div class="name general-border">
+                <div class="text-box">
+                    <div class="text-content">
+                        <p class="text first-text">{{todayDeviceException}}</p>
+                        <p class="text padding" v-if="isShow">{{todayDeviceException}}</p>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="content">
             <ul>
-                <li>
-                    <div class="left">2（2）</div>
+                <li v-for="(item,index) in expDeviceInfoList" :key="`system-device${index}`">
+                    <div class="left">{{item.expQuantity}}（{{item.totalQuantity}}）</div>
                     <div class="right">
-                        <div class="name">正常设备1</div>
-                        <div class="type">异常4</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="left">2（4）</div>
-                    <div class="right">
-                        <div class="name">正常设备1</div>
-                        <div class="type">异常4</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="left">0（2）</div>
-                    <div class="right">
-                        <div class="name">正常设备1</div>
-                        <div class="type">异常4</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="left">1（7）</div>
-                    <div class="right">
-                        <div class="name">正常设备1</div>
-                        <div class="type">异常4</div>
+                        <div class="name">正常设备{{item.normalQuantity}}</div>
+                        <div class="type">异常{{item.expQuantity}}</div>
                     </div>
                 </li>
             </ul>
@@ -40,7 +27,98 @@
 </template>
 
 <script>
-export default {};
+import { getDeviceStatus } from "../../../axios";
+export default {
+    data() {
+        return{
+            todayDeviceException:"",
+            expDeviceInfoList:[
+                {
+                    totalQuantity:1,    //全部设备数量
+                    expQuantity:0,      //异常设备数量
+                    normalQuantity: 1   //正常设备数量
+                },
+                {
+                    totalQuantity:1,
+                    expQuantity:0,
+                    normalQuantity: 1
+                },
+                {
+                    totalQuantity:1,
+                    expQuantity:0,
+                    normalQuantity: 1
+                },
+                {
+                    totalQuantity:1,
+                    expQuantity:0,
+                    normalQuantity: 1
+                },
+            ],
+            isShow: true
+        }
+    },
+    created() {
+        this.getData();
+    },
+    methods:{
+        async getData() {
+            let [res] = await getDeviceStatus();
+            let {todayDeviceException,expDeviceInfoList} = JSON.parse(res.message);
+            // expDeviceInfoList	设备状态对象
+            // expQuantity	异常设备数量
+            // totalQuantity	全部设备数量
+
+            this.todayDeviceException = todayDeviceException;
+            expDeviceInfoList.forEach((item,i) => {
+                this.expDeviceInfoList[i].totalQuantity = item.totalQuantity;
+                this.expDeviceInfoList[i].expQuantity = item.expQuantity;
+                this.expDeviceInfoList[i].normalQuantity = Number(item.totalQuantity) - Number(item.expQuantity);
+            });
+            this.$nextTick(()=> {
+                this.textScroll();
+            })
+            setTimeout(()=> {
+                this.getData();
+            },60000)
+        },
+        textScroll() {
+            let [box, content, text] = [
+                document.querySelector(".system-device .text-box"),
+                document.querySelector(".system-device .text-content"),
+                document.querySelector(".system-device .first-text"),
+            ];
+            let [textWidth, boxWidth] = [text.offsetWidth, box.offsetWidth];
+            // 判断文字长度是否大于盒子长度
+            // console.log("textWidth, boxWidth", textWidth, boxWidth);
+            console.log( 'boxWidth', boxWidth , textWidth );
+            if (boxWidth > textWidth) {
+                this.isShow = false;
+                return false;
+            }
+            this.isShow = true;
+            // content.innerHTML += content.innerHTML;
+            // document.querySelector(".broadcast .text").classList.add("padding");
+            // 更新
+            textWidth = document.querySelector(".system-device .first-text")
+                .offsetWidth;
+            toScrollLeft();
+            function toScrollLeft() {
+                clearTimeout(window.broadcastTextTimeout)
+                //  如果文字长度大于滚动条距离，则递归拖动
+                if (textWidth > box.scrollLeft) {
+                    box.scrollLeft++;
+                    window.broadcastTextTimeout =  setTimeout(toScrollLeft, 20);
+                } else {
+                    setTimeout(fun2, 0);
+                }
+            }
+            function fun2() {
+                box.scrollLeft = 0;
+                toScrollLeft();
+            }
+        },
+    }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -59,13 +137,38 @@ export default {};
         height: 34px;
         line-height: 34px;
     }
-    .name {
-        font-size: 18px;
+    // .name {
+    //     font-size: 18px;
+    //     width: 279px;
+    //     height: 34px;
+    //     line-height: 34px;
+    //     margin-left: 15px;
+    //     padding-left: 10px;
+    // }
+    
+    .general-border {
         width: 279px;
         height: 34px;
-        line-height: 34px;
+        position: relative;
         margin-left: 15px;
-        padding-left: 10px;
+        padding: 0 10px;
+    }
+    .text-box{
+        width: 100%;
+        height: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+    .text-content {
+        display: inline-block;
+    }
+    .text-content p {
+        display: inline-block;
+        font-size: 18px;
+        line-height: 34px;
+    }
+    .text-content p.padding {
+        padding-right: 300px;
     }
 }
 .content {
@@ -85,7 +188,8 @@ li {
     display: flex;
     position: relative;
     margin-bottom: 9px;
-    &:nth-child(1),&:nth-child(3) {
+    &:nth-child(1),
+    &:nth-child(3) {
         margin-right: 18px;
     }
     .left {
