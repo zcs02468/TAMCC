@@ -33,6 +33,11 @@ export default {
             }
             this.option.series[0].data[0].value = this.prop.finishSum
             this.option.series[0].data[1].value = Number(this.prop.allSum) - Number(this.prop.finishSum)
+            if( Number(this.prop.allSum) == 0  ) {
+                this.option.series[0].data[1].value = 1
+            }else {
+                this.option.series[0].data[1].value = Number(this.prop.allSum) - Number(this.prop.finishSum)
+            }
             this.option.title.text = this.prop.title + "\n" + a + "%",
             this.myChart.setOption(this.option);
         },

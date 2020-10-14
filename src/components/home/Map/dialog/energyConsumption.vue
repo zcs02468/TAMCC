@@ -1,20 +1,10 @@
 <!-- T1航站楼能耗指标 -->
 <template>
     <div class="panel right-container-angle">
-        <div class="title" @click="SET_MAP_DIALOG_TYPE('energyConsumption')">T1航站楼能耗指标</div>
+        <div class="title" @click="closeMapDialog">T1航站楼能耗指标</div>
         <div class="box">
             <div class="radar-charts-box">
-                <div class="charts" id="energy_consumption_radar"></div>
-                <!-- <div class="guide-box">
-                    <div>
-                        <span class="block" style="background: #385CA5;"></span>
-                        <span>指标值</span>
-                    </div>
-                    <div>
-                        <span class="block" style="background: RGBA(189, 26, 26, 1);"></span>
-                        <span>实际值</span>
-                    </div>
-                </div> -->
+                <div class="charts" id="energy_consumption_radar1"></div>
                 <div class="direction-box" :style="`${directionStyle}`" v-show="isShowDirection">
                     <div class="direction-left">
                         <div style="opacity:0">111</div>
@@ -29,30 +19,16 @@
                         <div v-for="(item) in factArr" :key="item">{{item}}</div>
                     </div>
                 </div>
-                <!-- <div class="guide-box">
-                    <div class="child-guide first-guide" @mouseenter="guideEnter(0)" @mouseleave="guideLeave"></div>
-                    <div class="child-guide two-guide" @mouseenter="guideEnter(2)" @mouseleave="guideLeave"></div>
-                    <div class="child-guide three-guide" @mouseenter="guideEnter(1)" @mouseleave="guideLeave"></div>
-                    <div class="guide-show" v-show="guide.isShow" :style="guide.style">
-                        <span class="rand" style="background: #385CA5;"></span>
-                        <span>指标值: </span>
-                        <span>{{guide.targetValue}}</span>
-                        <br>
-                        <span class="rand" style="background: RGBA(189, 26, 26, 1);"></span>
-                        <span>实际值: </span>
-                        <span>{{guide.nowValue}}</span>
-                    </div>
-                </div> -->
             </div>
             <div class="line-charts-box">
-                <div class="charts" id="energy_consumption_line"></div>
+                <div class="charts" id="energy_consumption_line1"></div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import {getEnergyIndex} from "../../../axios"
+import {getEnergyIndex} from "@/axios"
 import comMinxins from "@/components/common/comMinxins.js"
 import {mapMutations} from "vuex"
 export default {
@@ -64,12 +40,6 @@ export default {
             factArr:[],
             directionStyle:``,
             isShowDirection: false
-            // guide:{
-            //     isShow: false,
-            //     style: 'top:20%;left:60%;',
-            //     targetValue: 0,
-            //     nowValue: 0
-            // }
         }
     },
     mounted() {
@@ -78,7 +48,7 @@ export default {
         this.getData();
     },
     methods: {
-        ...mapMutations(['SET_MAP_DIALOG_TYPE']),
+        ...mapMutations(['closeMapDialog']),
         updateData() {
             this.getData();
         },
@@ -109,12 +79,6 @@ export default {
             this.radarIndicator.splice();
             this.quotaArr.splice();
             this.factArr.splice();
-
-
-
-            // this.radarOption.series[0].data[0].value = radarChartsSeries0;
-            // this.radarOption.series[0].data[1].value = radarChartsSeries1;
-            // this.radarOption.radar[0].indicator = radarIndicator;
             this.myRadarChart.setOption(this.radarOption);
 
             let {xAxisLine,yAxisLine} = this.getLineChartsData(realisticList,radarIndicator);
@@ -126,13 +90,10 @@ export default {
                 if (yAxisLine.hasOwnProperty(key)) {
                     const element = yAxisLine[key];
                     series.push( this.getSeriesData( key, element ) );
-                    // this.lineOption.series[index].name = key;
-                    // this.lineOption.series[index].data = element;
                     index++;
                 }
             }
             this.lineOption.series = series;
-            // console.log(  );
             this.myLineChart.setOption(this.lineOption);
         },
         getRadarChartsData(data) {
@@ -186,7 +147,7 @@ export default {
                     // icon: "circle",
                     // left: "10%",
                     // top: "6%",
-                    right:0,
+                    right:"6%",
                     top:0,
                     itemWidth: 10,
                     itemHeight: 10,
@@ -199,7 +160,7 @@ export default {
                 },
                 radar: [
                     {
-                        radius: "60%",
+                        radius: "75%",
                         name: {
                             textStyle: {
                                 color: "#C6D6FB",
@@ -296,7 +257,7 @@ export default {
             };
             // 基于准备好的dom，初始化this.$echarts实例
             this.myRadarChart = this.$echarts.init(
-                document.getElementById("energy_consumption_radar")
+                document.getElementById("energy_consumption_radar1")
             );
             this.myRadarChart.on('mouseover', (params)=> {
                 this.isShowDirection = true;
@@ -323,7 +284,7 @@ export default {
                 grid: {
                     top: "10%",
                     left: "5%",
-                    right: "10%",
+                    right: "5%",
                     bottom: "10%",
                     // containLabel: true
                 },
@@ -367,156 +328,11 @@ export default {
                         },
                     },
                 ],
-                series: [
-                    // {
-                    //     name: "数据1",
-                    //     type: "line",
-                    //     // smooth: true, //是否平滑
-                    //     showAllSymbol: true,
-                    //     // symbol: 'image://./static/images/guang-circle.png',
-                    //     symbol: "circle",
-                    //     symbolSize: 5,
-                    //     lineStyle: {
-                    //         // normal: {
-                    //         //     color: "#5B8FF9",
-                    //         // },
-                    //     },
-                    //     label: {
-                    //         show: false,
-                    //     },
-                    //     // itemStyle: {
-                    //     //     color: "#2C7AFA",
-                    //     //     borderColor: "#5B8FF9",
-                    //     //     borderWidth: 1,
-                    //     // },
-                    //     tooltip: {
-                    //         show: true,
-                    //     },
-                    //     areaStyle: {
-                    //         opacity: 0.2
-                    //         // normal: {
-                    //         //     color: new this.$echarts.graphic.LinearGradient(
-                    //         //         0,
-                    //         //         0,
-                    //         //         0,
-                    //         //         1,
-                    //         //         [
-                    //         //             {
-                    //         //                 offset: 0,
-                    //         //                 color: "RGBA(72, 116, 204, .3)",
-                    //         //             },
-                    //         //             {
-                    //         //                 offset: 1,
-                    //         //                 color: "rgba(0,179,244,0)",
-                    //         //             },
-                    //         //         ],
-                    //         //         false
-                    //         //     ),
-                    //         // },
-                    //     },
-                    //     data: [100, 120, 110, 120, 130, 140],
-                    // },
-                    // {
-                    //     name: "数据2",
-                    //     type: "line",
-                    //     // smooth: true, //是否平滑
-                    //     showAllSymbol: true,
-                    //     // symbol: 'image://./static/images/guang-circle.png',
-                    //     symbol: "circle",
-                    //     symbolSize: 5,
-                    //     lineStyle: {
-                    //         // normal: {
-                    //         //     color: "#5AD8A6",
-                    //         // },
-                    //     },
-                    //     label: {
-                    //         show: false,
-                    //     },
-                    //     itemStyle: {
-                    //         color: "#67C3A2",
-                    //         borderColor: "#5AD8A6",
-                    //         borderWidth: 3,
-                    //     },
-                    //     tooltip: {
-                    //         show: true,
-                    //     },
-                    //     areaStyle: {
-                    //         opacity: 0.1
-                    //         // normal: {
-                    //         //     color: new this.$echarts.graphic.LinearGradient(
-                    //         //         0,
-                    //         //         0,
-                    //         //         0,
-                    //         //         1,
-                    //         //         [
-                    //         //             {
-                    //         //                 offset: 0,
-                    //         //                 color: "RGBA(90, 216, 166, .3)",
-                    //         //             },
-                    //         //             {
-                    //         //                 offset: 1,
-                    //         //                 color: "rgba(0,202,149,0)",
-                    //         //             },
-                    //         //         ],
-                    //         //         false
-                    //         //     ),
-                    //         // },
-                    //     },
-                    //     data: [150, 170, 160, 170, 180, 190],
-                    // },
-                    // {
-                    //     name: "数据1",
-                    //     type: "line",
-                    //     // smooth: true, //是否平滑
-                    //     showAllSymbol: true,
-                    //     // symbol: 'image://./static/images/guang-circle.png',
-                    //     symbol: "circle",
-                    //     symbolSize: 5,
-                    //     lineStyle: {
-                    //         // normal: {
-                    //         //     color: "#5B8FF9",
-                    //         // },
-                    //     },
-                    //     label: {
-                    //         show: false,
-                    //     },
-                    //     itemStyle: {
-                    //         color: "#2C7AFA",
-                    //         borderColor: "#5B8FF9",
-                    //         borderWidth: 1,
-                    //     },
-                    //     tooltip: {
-                    //         show: true,
-                    //     },
-                    //     areaStyle: {
-                    //         opacity: 0.1
-                    //         // normal: {
-                    //         //     color: new this.$echarts.graphic.LinearGradient(
-                    //         //         0,
-                    //         //         0,
-                    //         //         0,
-                    //         //         1,
-                    //         //         [
-                    //         //             {
-                    //         //                 offset: 0,
-                    //         //                 color: "RGBA(72, 116, 204, .3)",
-                    //         //             },
-                    //         //             {
-                    //         //                 offset: 1,
-                    //         //                 color: "rgba(0,179,244,0)",
-                    //         //             },
-                    //         //         ],
-                    //         //         false
-                    //         //     ),
-                    //         // },
-                    //     },
-                    //     data: [200, 220, 210, 220, 230, 240],
-                    // },
-                ],
+                series: [ ],
             };
             // 基于准备好的dom，初始化this.$echarts实例
             this.myLineChart = this.$echarts.init(
-                document.getElementById("energy_consumption_line")
+                document.getElementById("energy_consumption_line1")
             );
             // 绘制图表
             this.myLineChart.setOption(this.lineOption);
@@ -546,23 +362,6 @@ export default {
                 },
                 data: element,
             }
-        },
-        guideEnter(index) {
-            this.guide.isShow = true;
-            this.guide.targetValue = this.radarOption.series[0].data[0].value[index]
-            this.guide.nowValue = this.radarOption.series[0].data[1].value[index]
-            if( index == 0 ) {
-                this.guide.style = `top:20%;left:60%;`
-            }
-            if( index == 1 ) {
-                this.guide.style = `right:10%;bottom:32%;`
-            }
-            if( index == 2 ) {
-                this.guide.style = `left:10%;bottom:32%;`
-            }
-        },
-        guideLeave() {
-            this.guide.isShow = false;
         }
     },
 };
@@ -570,9 +369,12 @@ export default {
 
 <style lang="scss" scoped>
 .panel {
-    width: 537.5px;
-    height: 238.5px;
+    // width: 537.5px;
+    // height: 238.5px;
+    width: 100%;
+    height: 100%;
     position: relative;
+    background: rgb(1, 23, 68);
 }
 .title {
     color: #c6d6fb;
@@ -584,11 +386,14 @@ export default {
     cursor: pointer;
 }
 .box {
-    display: flex;
+    // display: flex;
 }
 .radar-charts-box {
-    width: 269px;
-    height: 190px;
+    // width: 269px;
+    // width: 381.5px;
+    width: 100%;
+    // height: 190px;
+    height: 314px;
     position: relative;
     .charts {
         width: 100%;
@@ -613,76 +418,13 @@ export default {
             margin: 0 10px;
         }
     }
-    // .guide-box {
-    //     position: absolute;
-    //     right: 0;
-    //     top: 0;
-    //     span {
-    //         display: inline-block;
-    //     }
-    //     .block {
-    //         width: 10px;
-    //         height: 10px;
-    //         border-radius: 2px;
-    //         margin-right: 10px;
-    //     }
-    // }
-    // .guide-box {
-    //     width: 100%;
-    //     height: 100%;
-    //     // border: 1px solid red;
-    //     position: absolute;
-    //     top: 0;
-    //     pointer-events: none;
-    //     .child-guide {
-    //         position: absolute;
-    //         width: 16%;
-    //         height: 12%;
-    //         // border: 1px solid green;
-    //         pointer-events: auto;
-    //         cursor: pointer;
-    //         // opacity: 0;
-    //     }
-    //     .first-guide {
-    //         position: absolute;
-    //         transform: translateX(-50%);
-    //         top: 7%;
-    //         left: 50%;
-    //     }
-    //     .two-guide {
-    //         left: 9%;
-    //         bottom: 13%;
-    //     }
-    //     .three-guide {
-    //         bottom: 13%;
-    //         right: 9%;
-    //     }
-    //     .guide-show {
-    //         position: absolute;
-    //         border-style: solid;
-    //         white-space: nowrap;
-    //         z-index: 9999999;
-    //         transition: left 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s, top 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s;
-    //         background-color: rgba(27, 15, 15, 0.7);
-    //         border-width: 0px;
-    //         border-color: rgb(51, 51, 51);
-    //         border-radius: 4px;
-    //         color: rgb(255, 255, 255);
-    //         font: 14px / 21px "Microsoft YaHei";
-    //         padding: 5px;
-    //         .rand {
-    //             display: inline-block;
-    //             margin-right: 5px;
-    //             border-radius: 10px;
-    //             width: 10px;
-    //             height: 10px;
-    //         }
-    //     }
-    // }
 }
 .line-charts-box {
-    width: 268px;
-    height: 190px;
+    // width: 268px;
+    // width: 381.5px;
+    width: 100%;
+    // height: 190px;
+    height: 314px;
     .charts {
         width: 100%;
         height: 100%;

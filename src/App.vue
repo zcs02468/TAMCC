@@ -5,8 +5,22 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
 export default {
-  name: "App"
+  name: "App",
+  methods: {
+    ...mapMutations(["SET_RANDOM_NUM"]),
+    setAllTime() {
+      clearTimeout( window.allTime );
+      window.allTime = setTimeout(() => {
+        this.SET_RANDOM_NUM();
+        this.setAllTime();
+      }, 60000);
+    }
+  },
+  mounted() {
+    this.setAllTime();
+  },
 };
 </script>
 

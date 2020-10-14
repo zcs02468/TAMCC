@@ -1,7 +1,7 @@
 <!-- T1航站楼排放指标 -->
 <template>
     <div class="panel right-container-angle">
-        <div class="title" @click="SET_MAP_DIALOG_TYPE('emissions')">T1航站楼排放指标</div>
+        <div class="title" @click="closeMapDialog">T1航站楼排放指标</div>
         <div class="content">
             <div class="select-box">
                 <ul>
@@ -9,7 +9,7 @@
                 </ul>
             </div>
             <div class="charts-box">
-                <div class="charts" id="chart_emissions"></div>
+                <div class="charts" id="chart_emissions1"></div>
                 <div class="direction-box" :style="`${directionStyle}`" v-show="isShowDirection">
                     <div class="direction-left">
                         <div style="opacity:0">111</div>
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import {getEmissionType,getEmissionIndex} from "../../../axios"
+import {getEmissionType,getEmissionIndex} from "@/axios"
 import comMinxins from "@/components/common/comMinxins.js"
 import {mapMutations} from "vuex"
 export default {
@@ -59,7 +59,7 @@ export default {
         this.getData('first');
     },
     methods: {
-        ...mapMutations(['SET_MAP_DIALOG_TYPE']),
+        ...mapMutations(['closeMapDialog']),
         updateData() {
             this.getData();
         },
@@ -68,56 +68,7 @@ export default {
             this.getAssginType(item);
             this.selectType = item;
             this.selectIndex = i;
-            // this.option.radar[0].indicator = this.dataList[this.selectType].radarIndicator;
-            // this.option.series[0].data[0].value = this.dataList[this.selectType].indexValueArr;
-            // this.option.series[0].data[1].value = this.dataList[this.selectType].factValueArr;
-            // this.myChart.setOption(this.option);
         },
-        // async getData() {
-        //     try {
-        //         let [res] = await getEmissionIndex();
-        //         // let res = {"result":"true","message":"{\"emissionIndexList\":[{\"pageNo\":null,\"pageSize\":null,\"id\":\"1296621640815190016\",\"isNewRecord\":false,\"orderBy\":null,\"createByName\":null,\"updateByName\":null,\"updateBy\":null,\"lastUpdateDateTime\":null,\"status\":null,\"createDate\":null,\"updateDate\":null,\"remarks\":null,\"createBy\":null,\"emissionId\":\"1296621640815190016\",\"indexName\":\"指标A1\",\"type\":\"类目1\",\"indexValue\":12.23,\"factValue\":123.21,\"createTime\":\"2020-08-21 09:38:46\",\"createDate_lte\":null,\"createDate_between\":null,\"createDate_gte\":null,\"updateDate_lte\":null,\"updateDate_between\":null,\"status_in\":null,\"updateDate_gte\":null,\"id_in\":null},{\"pageNo\":null,\"pageSize\":null,\"id\":\"1296683509832265728\",\"isNewRecord\":false,\"orderBy\":null,\"createByName\":null,\"updateByName\":null,\"updateBy\":null,\"lastUpdateDateTime\":null,\"status\":null,\"createDate\":null,\"updateDate\":null,\"remarks\":null,\"createBy\":null,\"emissionId\":\"1296683509832265728\",\"indexName\":\"指标B1\",\"type\":\"类目1\",\"indexValue\":23.23,\"factValue\":23.21,\"createTime\":\"2020-08-21 13:40:14\",\"createDate_lte\":null,\"createDate_between\":null,\"createDate_gte\":null,\"updateDate_lte\":null,\"updateDate_between\":null,\"status_in\":null,\"updateDate_gte\":null,\"id_in\":null},{\"pageNo\":null,\"pageSize\":null,\"id\":\"1296683624714252288\",\"isNewRecord\":false,\"orderBy\":null,\"createByName\":null,\"updateByName\":null,\"updateBy\":null,\"lastUpdateDateTime\":null,\"status\":null,\"createDate\":null,\"updateDate\":null,\"remarks\":null,\"createBy\":null,\"emissionId\":\"1296683624714252288\",\"indexName\":\"指标C1\",\"type\":\"类目1\",\"indexValue\":55.32,\"factValue\":53.23,\"createTime\":\"2020-08-21 13:40:42\",\"createDate_lte\":null,\"createDate_between\":null,\"createDate_gte\":null,\"updateDate_lte\":null,\"updateDate_between\":null,\"status_in\":null,\"updateDate_gte\":null,\"id_in\":null}]}"}
-        //         let data = JSON.parse(res.message);
-        //         let { emissionIndexList } = data;
-        //         let typeArr = [];
-        //         let dataList = [];
-        //         emissionIndexList.forEach((item,i) => {
-        //             typeArr.push( item.type );
-        //             if( !dataList.hasOwnProperty(item.type) ) {
-        //                 dataList[item.type] = {};
-        //                 dataList[item.type].radarIndicator = []
-        //                 dataList[item.type].indexValueArr= []
-        //                 dataList[item.type].factValueArr= []
-        //             }
-        //             // indexValue   指标
-        //             // factValue    实际
-        //             dataList[item.type].radarIndicator.push({
-        //                 name: item.indexName,
-        //                 min: 0,
-        //             })
-        //             dataList[item.type].indexValueArr.push(item.indexValue);
-        //             dataList[item.type].factValueArr.push(item.factValue);
-
-        //         });
-        //         typeArr = [...new Set(typeArr)];
-        //         if( !this.selectType ) {
-        //             this.selectType = typeArr[0]
-        //         }
-        //         this.typeArr = this.gertNewTypeArr(typeArr);
-        //         this.dataList = dataList;
-        //         this.option.radar[0].indicator = this.dataList[this.selectType].radarIndicator;
-        //         this.option.series[0].data[0].value = this.dataList[this.selectType].indexValueArr;
-        //         this.option.series[0].data[1].value = this.dataList[this.selectType].factValueArr;
-        //         this.myChart.setOption(this.option);
-        //         setTimeout(()=> {
-        //             this.getData();
-        //         },60000)
-        //     } catch (error) {
-        //         setTimeout(()=> {
-        //             this.getData();
-        //         },60000)
-        //     }
-        // },
         async getData(type) {
             let [res] = await getEmissionType();
             // let res = {"result":"true","message":"{\"typeList\":[\"类目1\",\"类目2\"]}"};
@@ -195,19 +146,9 @@ export default {
             let indexValueArr = [];//指标值换算之后的数据
             let factValueArr = [];//实际值换算之后的数据
             data.forEach(item => {
-                // indicatorArr.push({
-                //     name: item.indexName,
-                //     min: 0,
-                // });
-                // indexValueArr.push( item.indexValue );
-                // factValueArr.push( item.factValue );
-                
-                
                 quotaArr.push( item.indexValue );
                 factArr.push( item.factValue );
                 let num = Math.round((item.factValue/item.indexValue) * 1000) / 1000;
-                // radarChartsSeries0.push(100);
-                // radarChartsSeries1.push(num*100);
                 indexValueArr.push( 100 );
                 factValueArr.push( num*100 );
                 indicatorArr.push({
@@ -274,7 +215,7 @@ export default {
                 },
                 radar: [
                     {
-                        radius: "60%",
+                        radius: "70%",
                         name: {
                             textStyle: {
                                 color: "#C6D6FB",
@@ -371,14 +312,14 @@ export default {
             };
             // 基于准备好的dom，初始化this.$echarts实例
             this.myChart = this.$echarts.init(
-                document.getElementById("chart_emissions")
+                document.getElementById("chart_emissions1")
             );
             this.myChart.on('mouseover', (params)=> {
                 this.isShowDirection = true;
                 let event = params.event;
                 let offsetX = event.offsetX;
                 let offsetY = event.offsetY;
-                let width = document.querySelector('#chart_emissions').offsetWidth;
+                let width = document.querySelector('#chart_emissions1').offsetWidth;
                 this.directionStyle = `right:${ width - offsetX - 20 }px;top:${offsetY + 20}px;`
             });
             this.myChart.on('mouseout', (params)=> {
@@ -421,10 +362,11 @@ export default {
 
 <style lang="scss" scoped>
 .panel {
-    width: 537.5px;
-    height: 277.5px;
+    width: 100%;
+    height: 100%;
     position: relative;
     margin-top: 15px;
+    background: rgb(1, 23, 68);
 }
 .title {
     color: #c6d6fb;
@@ -485,8 +427,10 @@ export default {
     }
 }
 .charts-box {
-    width: 278px;
-    height: 222px;
+    // width: 278px;
+    flex: 1;
+    // height: 222px;
+    height: 444px;
     position: relative;
     .charts {
         width: 100%;
@@ -511,56 +455,5 @@ export default {
             margin: 0 10px;
         }
     }
-    // .guide-box {
-    //     width: 100%;
-    //     height: 100%;
-    //     // border: 1px solid red;
-    //     position: absolute;
-    //     top: 0;
-    //     pointer-events: none;
-    //     .child-guide {
-    //         position: absolute;
-    //         width: 16%;
-    //         height: 12%;
-    //         // border: 1px solid green;
-    //         pointer-events: auto;
-    //         cursor: pointer;
-    //     }
-    //     .first-guide {
-    //         position: absolute;
-    //         transform: translateX(-50%);
-    //         top: 9%;
-    //         left: 50%;
-    //     }
-    //     .two-guide {
-    //         left: 7%;
-    //         bottom: 13%;
-    //     }
-    //     .three-guide {
-    //         bottom: 13%;
-    //         right: 7%;
-    //     }
-    //     .guide-show {
-    //         position: absolute;
-    //         border-style: solid;
-    //         white-space: nowrap;
-    //         z-index: 9999999;
-    //         transition: left 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s, top 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s;
-    //         background-color: rgba(27, 15, 15, 0.7);
-    //         border-width: 0px;
-    //         border-color: rgb(51, 51, 51);
-    //         border-radius: 4px;
-    //         color: rgb(255, 255, 255);
-    //         font: 14px / 21px "Microsoft YaHei";
-    //         padding: 5px;
-    //         .rand {
-    //             display: inline-block;
-    //             margin-right: 5px;
-    //             border-radius: 10px;
-    //             width: 10px;
-    //             height: 10px;
-    //         }
-    //     }
-    // }
 }
 </style>

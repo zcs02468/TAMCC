@@ -4,7 +4,7 @@
         <div class="dialog-box">
             <div class="close" @click="closeDailog">X</div>
             <div class="dialog-content">
-                <div class="title">维修信息</div>
+                <div class="title">环保指标问题</div>
                 <div class="content">
                     <ul class="head">
                         <li>

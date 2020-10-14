@@ -17,6 +17,7 @@
 
 <script>
 import { getSumElectricList } from "../../../axios";
+import comMinxins from "../../common/comMinxins";
 export default {
     data() {
         return {
@@ -35,6 +36,7 @@ export default {
             }
         }
     },
+    mixins:[comMinxins],
     mounted() {
         this.drawLine();
         this.getData();
@@ -42,15 +44,24 @@ export default {
     created() {
     },
     methods: {
+        updateData() {
+            this.getData();
+        },
         selectClick(type) {
+            if( this.selectType == type ) {
+                return;
+            }
             this.selectType = type;
             this.option.xAxis[0].data = this.list[this.selectType].x;
             this.option.series[0].data = this.list[this.selectType].y;
+            this.option.series[0].markLine.data[0].yAxis = this.list[this.selectType].standard;
+            this.option.series[0].markLine.data[0].name = this.list[this.selectType].standard;
+            this.option.yAxis[0].min = this.list[this.selectType].standard;
             this.myChart.setOption(this.option);
         },
         async getData() {
-            // let [res] = await getSumElectricList();
-            let res = this.getAjaxData();
+            let [res] = await getSumElectricList();
+            // let res = this.getAjaxData();
             let data = JSON.parse(res.message)
             // sumElectricList	电力对象
             // sumWaterList	市政水对象
@@ -75,10 +86,13 @@ export default {
             Object.assign(this.list,obj);
             this.option.xAxis[0].data = this.list[this.selectType].x;
             this.option.series[0].data = this.list[this.selectType].y;
+            this.option.series[0].markLine.data[0].yAxis = this.list[this.selectType].standard;
+            this.option.series[0].markLine.data[0].name = this.list[this.selectType].standard;
+            this.option.yAxis[0].min = this.list[this.selectType].standard;
             this.myChart.setOption(this.option);
-            setTimeout(()=> {
-                this.getData();
-            },60000)
+            // setTimeout(()=> {
+            //     this.getData();
+            // },60000)
         },
         sortingData(data) {
             let yArr = [];
@@ -132,6 +146,7 @@ export default {
                 yAxis: [
                     {
                         type: "value",
+                        min: 70,
                         splitLine: {
                             show: true,
                             lineStyle: {
@@ -210,6 +225,32 @@ export default {
                                     globalCoord: false, // 缺省为 false
                                 },
                             },
+                        },
+                        markLine: {
+                            symbol: "none",
+                            silent: true,
+                            lineStyle: {
+                                normal: {
+                                    type: "solid"
+                                }
+                            },
+                            // label: {
+                            //     position: "start"
+                            // },
+                            data: [{
+                                yAxis: 300,
+                                lineStyle: {
+                                    width: 1.6,
+                                    color: "#CE2929"
+                                },
+                                label: {
+                                    show: false,
+                                    position: "middle",
+                                    formatter: "{b}"
+                                },
+                                name:"300"
+                                }
+                            ]
                         },
                         data: [10000, 9300, 8300, 8000, 8200, 8400, 8600, 8800, 9200, 12000, 10000, 9000, 8000, 7000, 6500, 6000],
                     }

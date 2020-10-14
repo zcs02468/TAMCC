@@ -28,6 +28,7 @@
 
 <script>
 import { getDeviceStatus } from "../../../axios";
+import comMinxins from "../../common/comMinxins";
 export default {
     data() {
         return{
@@ -57,10 +58,14 @@ export default {
             isShow: true
         }
     },
+    mixins:[comMinxins],
     created() {
         this.getData();
     },
     methods:{
+        updateData() {
+            this.getData();
+        },
         async getData() {
             let [res] = await getDeviceStatus();
             let {todayDeviceException,expDeviceInfoList} = JSON.parse(res.message);
@@ -69,6 +74,7 @@ export default {
             // totalQuantity	全部设备数量
 
             this.todayDeviceException = todayDeviceException;
+            // this.todayDeviceException = "asdfgnakdfjlkajflkajfdl;asdfasd发生发发打发;lasjdflkajsdklf";
             expDeviceInfoList.forEach((item,i) => {
                 this.expDeviceInfoList[i].totalQuantity = item.totalQuantity;
                 this.expDeviceInfoList[i].expQuantity = item.expQuantity;
@@ -77,11 +83,12 @@ export default {
             this.$nextTick(()=> {
                 this.textScroll();
             })
-            setTimeout(()=> {
-                this.getData();
-            },60000)
+            // setTimeout(()=> {
+            //     this.getData();
+            // },60000)
         },
         textScroll() {
+            clearTimeout(window.systemDeviceTimeout)
             let [box, content, text] = [
                 document.querySelector(".system-device .text-box"),
                 document.querySelector(".system-device .text-content"),
@@ -103,13 +110,13 @@ export default {
                 .offsetWidth;
             toScrollLeft();
             function toScrollLeft() {
-                clearTimeout(window.broadcastTextTimeout)
+                clearTimeout(window.systemDeviceTimeout)
                 //  如果文字长度大于滚动条距离，则递归拖动
                 if (textWidth > box.scrollLeft) {
                     box.scrollLeft++;
-                    window.broadcastTextTimeout =  setTimeout(toScrollLeft, 20);
+                    window.systemDeviceTimeout =  setTimeout(toScrollLeft, 20);
                 } else {
-                    setTimeout(fun2, 0);
+                    window.systemDeviceTimeout =  setTimeout(fun2, 0);
                 }
             }
             function fun2() {

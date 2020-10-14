@@ -3,7 +3,6 @@
     <div class="panel left-container-angle maintain">
         <div class="panel-header">
             <div class="title">当前维修信息</div>
-            <!-- <div class="name general-border">{{todayRepairInfo}}</div> -->
             <div class="name general-border">
                 <div class="text-box">
                     <div class="text-content">
@@ -12,13 +11,6 @@
                     </div>
                 </div>
             </div>
-            <!-- <div class="name general-border">
-                <div class="text-box" ref="textBoxRef">
-                    <p class="text" ref="textRef">
-                        1.文字如果超出了宽度自动向左滚动文字如果超出了宽度自动向左滚动。
-                    </p>
-                </div>
-            </div> -->
         </div>
         <div class="content">
             <container :prop="list[1]" name="chart_ring1" ref="chart_ring1" />
@@ -32,6 +24,7 @@
 <script>
 import container from "./container";
 import { getLastRepair } from "../../../axios";
+import comMinxins from "../../common/comMinxins";
 export default {
     components: {
         container,
@@ -66,12 +59,17 @@ export default {
             isShow: true
         };
     },
+    mixins:[comMinxins],
     mounted() {
         this.getData();
     },
     methods: {
+        updateData() {
+            this.getData();
+        },
         async getData() {
             let [res] = await getLastRepair();
+            // let res = {"result":"true","message":"{\"finishedSumList\":[{\"work_type\":\"1\",\"finish_sum\":1},{\"work_type\":\"2\",\"finish_sum\":1}],\"todayRepairInfo\":\"公区走廊照明故障,公区走廊照明故障,检区照明灯具故障,检区照明灯具故障,检区照明灯具故障,检区照明灯具故障,检区照明灯具故障,检区照明灯具故障\",\"allSumList\":[{\"work_type\":\"1\",\"all_sum\":3},{\"work_type\":\"2\",\"all_sum\":2}]}"}
             let data = JSON.parse(res.message);
             data.allSumList.forEach((item) => {
                 this.list[item.work_type].allSum = item.all_sum;
@@ -84,13 +82,18 @@ export default {
             this.$refs.chart_ring3.reloadLine();
             this.$refs.chart_ring4.reloadLine();
             this.todayRepairInfo = data.todayRepairInfo;
+
             this.$nextTick(()=> {
                 this.textScroll();
             })
             // finish_sum
             // all_sum
+            // setTimeout(()=> {
+            //     this.getData();
+            // },60000)
         },
         textScroll() {
+            clearTimeout(window.maintainTimeout)
             let [box, content, text] = [
                 document.querySelector(".maintain .text-box"),
                 document.querySelector(".maintain .text-content"),
@@ -112,13 +115,13 @@ export default {
                 .offsetWidth;
             toScrollLeft();
             function toScrollLeft() {
-                clearTimeout(window.broadcastTextTimeout)
+                clearTimeout(window.maintainTimeout)
                 //  如果文字长度大于滚动条距离，则递归拖动
                 if (textWidth > box.scrollLeft) {
                     box.scrollLeft++;
-                    window.broadcastTextTimeout =  setTimeout(toScrollLeft, 20);
+                    window.maintainTimeout =  setTimeout(toScrollLeft, 20);
                 } else {
-                    setTimeout(fun2, 0);
+                    window.maintainTimeout = setTimeout(fun2, 0);
                 }
             }
             function fun2() {
@@ -146,14 +149,6 @@ export default {
         height: 34px;
         line-height: 34px;
     }
-    // .name {
-    //     font-size: 18px;
-    //     width: 356px;
-    //     height: 34px;
-    //     line-height: 34px;
-    //     margin-left: 15px;
-    //     padding-left: 10px;
-    // }
 }
 .content {
     padding: 15.5px 19px 0 19px;
@@ -186,24 +181,6 @@ export default {
     padding-right: 300px;
 }
 
-// .general-border {
-//     position: relative;
-//     overflow: hidden;
-//     width: 356px;
-//     height: 34px;
-//     padding: 0 10px;
-//     .text-box {
-//         width: 100%;
-//         position: absolute;
-//         overflow: hidden;
-//         height: 100%;
-//     }
-//     .text {
-//         display: inline-block;
-//         font-size: 18px;
-//         line-height: 34px;
-//     }
-// }
 @keyframes marginLeft {
     0% {
         left: 100%;

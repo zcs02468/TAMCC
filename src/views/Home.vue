@@ -2,7 +2,7 @@
     <div class="home-container">
         <div class="wrap" ref="editor">
             <header>
-                <div class="title">虹桥国际机场T1航站楼能管平台</div>
+                <div class="title">虹桥国际机场T1航站楼能源总控平台</div>
                 <div class="line"></div>
             </header>
             <div class="main-box">
@@ -21,6 +21,7 @@
                     <Emissions />
                     <Monitoring />
                     <EquipmentState />
+                    
                 </div>
             </div>
         </div>
@@ -58,13 +59,6 @@ export default {
         Monitoring,
         EquipmentState,
     },
-    data() {
-        return {};
-    },
-    computed: {},
-    created() {},
-    mounted() {},
-    methods: {},
 };
 </script>
 

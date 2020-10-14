@@ -2,15 +2,58 @@
 <template>
     <div class="panel left-container-angle">
         <div class="left-panel">
-            <div class="info-top"></div>
+            <div class="info-top">
+               <div class="info-content" :class="[ `process${ arr2.length }` ]">
+                    <div class="top-box">
+                        <div class="content">
+                            <div class="item">
+                                <img class="userImg" :src="arr1[0] ? arr1[0].avatar : ''">
+                                <div class="username">{{arr1[0] ? arr1[0].userName : ''}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="two-box">
+                        <div class="content">
+                            <div class="item-child" v-for="(item,i) in arr2" :key="i">
+                                <img class="userImg" :src="item.avatar">
+                                <div class="username">{{item.userName}}</div>
+                            </div>
+                        </div>
+                    </div>
+               </div>
+                <!-- <div class="content-box"></div>
+                <div class="top-box">
+                    <div class="item">
+                        <div class="img-box" :style="{ backgroundImage: `url('${arr1[0] ? arr1[0].avatar : ''}')` }"></div>
+                        <div>{{arr1[0].userName}}</div>
+                    </div>
+                </div>
+                <div class="two-box">
+                    <div class="child-item">
+                        <div class="img-box" :style="{ backgroundImage: `url('${arr2[0] ? arr2[0].avatar : ''}')` }"></div>
+                        <div>{{arr2[0] ? arr2[0].userName : ''}}</div>
+                    </div>
+                    <div class="child-item">
+                        <div class="img-box" :style="{ backgroundImage: `url('${arr2[1] ? arr2[1].avatar : ''}')` }"></div>
+                        <div>{{arr2[1] ? arr2[1].userName : ''}}</div>
+                    </div>
+                </div>
+                <div class="three-box">
+                    <div class="child-item"></div>
+                    <div class="child-item"></div>
+                    <div class="child-item"></div>
+                    <div class="child-item"></div>
+                    <div class="child-item"></div>
+                </div> -->
+            </div>
             <div class="info-bottom">
                 <div>
                     <span>总值班电话：</span>
-                    <span>13888886868</span>
+                    <span>{{totalDutyPhone}}</span>
                 </div>
                 <div>
                     <span>EMC电话：</span>
-                    <span>13888886868</span>
+                    <span>{{emcDutyPhone}}</span>
                 </div>
             </div>
         </div>
@@ -51,7 +94,8 @@
 </template>
 
 <script>
-import {getMetaInfo} from "../../../axios"
+import {getMetaInfo, getT1Duty} from "../../../axios"
+import comMinxins from "../../common/comMinxins";
 export default {
     data() {
         return {
@@ -69,18 +113,25 @@ export default {
             aqi:null,
             weatherImagePath:null,
             colorArr:['green','yellow','orange','red','purple','#964B00'],
-            btnBgindex: 0
+            btnBgindex: 0,
+            totalDutyPhone: '111111111', //总值班电话
+            emcDutyPhone:'2222222222',// emc电话
+            arr1:[],
+            arr2:[]
         }
     },
+    mixins:[comMinxins],
     created() {
         this.showTime();
-        this.getData()
+        this.getData();
     },
     methods:{
+        updateData() {
+            this.getData();
+        },
         async getData() {
             let [res] = await getMetaInfo();
             let data = JSON.parse(res.message);
-            console.log('resfffffffff', data);
             let {weather,highTemperature,lowTemperature,illuminance,rainfall,windDirection,aqi,weatherImagePath} = data.metar;
             this.weather = weather;
             this.highTemperature = highTemperature;
@@ -103,8 +154,11 @@ export default {
             // description	空气质量指数值范围
             // dictLabel	空气质量指数类别
             // remarks	空气质量指数颜色
-            this.getAqiData(data.airList,aqi)
-
+            this.getAqiData(data.airList,aqi);
+            this.getT1Duty();
+            // setTimeout(()=> {
+            //     this.getData();
+            // },60000);
         },
         getAqiData(data,aqi) {
             
@@ -123,6 +177,213 @@ export default {
                 }
             }
         },
+        async getT1Duty() {
+            // let res = {"result":"true","message":"{\"emcDutyPhone\":\"13888886eee868\",\"t1DutyList\":[{\"pageNo\":null,\"orderBy\":null,\"isNewRecord\":false,\"pageSize\":null,\"id\":\"1296331931154653184\",\"status\":null,\"remarks\":null,\"createByName\":null,\"createDate\":null,\"updateDate\":null,\"lastUpdateDateTime\":null,\"updateBy\":null,\"createBy\":null,\"updateByName\":null,\"dutyId\":\"1296331931154653184\",\"userCode\":\"user15_1g7d\",\"userName\":\"用户15\",\"tier\":2,\"avatar\":\"http://192.168.1.10/smartEnergy/userfiles/avatar/0/employee/user15_1g7d.jpg\",\"status_in\":null,\"createDate_gte\":null,\"createDate_lte\":null,\"updateDate_lte\":null,\"createDate_between\":null,\"updateDate_between\":null,\"updateDate_gte\":null,\"id_in\":null}],\"totalDutyPhone\":\"021-24348742\"}"}
+            let [res] = await getT1Duty();
+            let data = JSON.parse(res.message);
+//             let data = {
+//     "t1DutyList": [
+//         {
+//             "pageNo": null,
+//             "orderBy": null,
+//             "isNewRecord": false,
+//             "pageSize": null,
+//             "id": "1310141025229508608",
+//             "status": null,
+//             "remarks": null,
+//             "createByName": null,
+//             "createDate": null,
+//             "updateDate": null,
+//             "lastUpdateDateTime": null,
+//             "updateBy": null,
+//             "createBy": null,
+//             "updateByName": null,
+//             "dutyId": "1310141025229508608",
+//             "userCode": "user9_gfpv",
+//             "userName": "用户09",
+//             "tier": 1,
+//             "avatar": null,
+//             "createDate_gte": null,
+//             "status_in": null,
+//             "createDate_between": null,
+//             "createDate_lte": null,
+//             "updateDate_between": null,
+//             "updateDate_gte": null,
+//             "updateDate_lte": null,
+//             "id_in": null
+//         },
+//         {
+//             "pageNo": null,
+//             "orderBy": null,
+//             "isNewRecord": false,
+//             "pageSize": null,
+//             "id": "1296331931154653184",
+//             "status": null,
+//             "remarks": null,
+//             "createByName": null,
+//             "createDate": null,
+//             "updateDate": null,
+//             "lastUpdateDateTime": null,
+//             "updateBy": null,
+//             "createBy": null,
+//             "updateByName": null,
+//             "dutyId": "1296331931154653184",
+//             "userCode": "user15_1g7d",
+//             "userName": "用户15",
+//             "tier": 2,
+//             "avatar": "http://192.168.1.10/smartEnergy/userfiles/avatar/0/employee/user15_1g7d.jpg",
+//             "createDate_gte": null,
+//             "status_in": null,
+//             "createDate_between": null,
+//             "createDate_lte": null,
+//             "updateDate_between": null,
+//             "updateDate_gte": null,
+//             "updateDate_lte": null,
+//             "id_in": null
+//         },
+//         {
+//             "pageNo": null,
+//             "orderBy": null,
+//             "isNewRecord": false,
+//             "pageSize": null,
+//             "id": "1310141025229508608",
+//             "status": null,
+//             "remarks": null,
+//             "createByName": null,
+//             "createDate": null,
+//             "updateDate": null,
+//             "lastUpdateDateTime": null,
+//             "updateBy": null,
+//             "createBy": null,
+//             "updateByName": null,
+//             "dutyId": "1310141025229508608",
+//             "userCode": "user9_gfpv",
+//             "userName": "用户10",
+//             "tier": 2,
+//             "avatar": null,
+//             "createDate_gte": null,
+//             "status_in": null,
+//             "createDate_between": null,
+//             "createDate_lte": null,
+//             "updateDate_between": null,
+//             "updateDate_gte": null,
+//             "updateDate_lte": null,
+//             "id_in": null
+//         },
+//         {
+//             "pageNo": null,
+//             "orderBy": null,
+//             "isNewRecord": false,
+//             "pageSize": null,
+//             "id": "1310141025229508608",
+//             "status": null,
+//             "remarks": null,
+//             "createByName": null,
+//             "createDate": null,
+//             "updateDate": null,
+//             "lastUpdateDateTime": null,
+//             "updateBy": null,
+//             "createBy": null,
+//             "updateByName": null,
+//             "dutyId": "1310141025229508608",
+//             "userCode": "user9_gfpv",
+//             "userName": "用户11",
+//             "tier": 2,
+//             "avatar": null,
+//             "createDate_gte": null,
+//             "status_in": null,
+//             "createDate_between": null,
+//             "createDate_lte": null,
+//             "updateDate_between": null,
+//             "updateDate_gte": null,
+//             "updateDate_lte": null,
+//             "id_in": null
+//         },
+//         {
+//             "pageNo": null,
+//             "orderBy": null,
+//             "isNewRecord": false,
+//             "pageSize": null,
+//             "id": "1310141025229508608",
+//             "status": null,
+//             "remarks": null,
+//             "createByName": null,
+//             "createDate": null,
+//             "updateDate": null,
+//             "lastUpdateDateTime": null,
+//             "updateBy": null,
+//             "createBy": null,
+//             "updateByName": null,
+//             "dutyId": "1310141025229508608",
+//             "userCode": "user9_gfpv",
+//             "userName": "用户12",
+//             "tier": 2,
+//             "avatar": null,
+//             "createDate_gte": null,
+//             "status_in": null,
+//             "createDate_between": null,
+//             "createDate_lte": null,
+//             "updateDate_between": null,
+//             "updateDate_gte": null,
+//             "updateDate_lte": null,
+//             "id_in": null
+//         },
+//         {
+//             "pageNo": null,
+//             "orderBy": null,
+//             "isNewRecord": false,
+//             "pageSize": null,
+//             "id": "1310141025229508608",
+//             "status": null,
+//             "remarks": null,
+//             "createByName": null,
+//             "createDate": null,
+//             "updateDate": null,
+//             "lastUpdateDateTime": null,
+//             "updateBy": null,
+//             "createBy": null,
+//             "updateByName": null,
+//             "dutyId": "1310141025229508608",
+//             "userCode": "user9_gfpv",
+//             "userName": "用户13",
+//             "tier": 2,
+//             "avatar": null,
+//             "createDate_gte": null,
+//             "status_in": null,
+//             "createDate_between": null,
+//             "createDate_lte": null,
+//             "updateDate_between": null,
+//             "updateDate_gte": null,
+//             "updateDate_lte": null,
+//             "id_in": null
+//         }
+//     ],
+//     "totalDutyPhone": "021-24348742"
+// }
+            // console.log(data,"adskfkaljfklajsflkj" );
+            this.totalDutyPhone = data.totalDutyPhone;
+            this.emcDutyPhone = data.emcDutyPhone;
+            let t1DutyList = data.t1DutyList;
+            let arr1 = [], arr2 = [];
+            t1DutyList.forEach(item => {
+                if( item.tier == 1 ) {
+                    arr1.push({
+                        userName: item.userName,
+                        avatar: item.avatar
+                    })
+                }
+                if( item.tier == 2 ) {
+                    arr2.push({
+                        userName: item.userName,
+                        avatar: item.avatar
+                    })
+                }
+            });
+            this.arr1 = arr1;
+            this.arr2 = arr2;
+            this.arr1.splice();
+            this.arr2.splice();
+        },
         showTime() {
             var now = new Date();
             var year = now.getFullYear();
@@ -138,6 +399,8 @@ export default {
             this.date.week = `${d[dd]}`;
             var timeID = setTimeout(this.showTime, 1000);
         },
+    },
+    computed:{
     }
 };
 </script>
@@ -159,8 +422,14 @@ export default {
     flex-direction: column;
     justify-content: space-between;
     .info-top {
-        width: 50px;
-        height: 50px;
+        // width: 50px;
+        // height: 50px;
+        position: relative;
+            display: flex;
+            justify-content: center;
+        .info-content {
+            position: relative;
+        }
     }
     .info-bottom {
         font-size: 16px;
@@ -263,5 +532,310 @@ export default {
             font-size: 16px;
         }
     }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// w362  h201
+// .content-box {
+//     width: 181px;
+//     height: 100.5px;
+//     background: url("../../../assets/image/border.png");
+//     background-size: 100% 100%;
+//     position: absolute;
+//     top: 64px;
+//     left: 23px;
+// }
+
+
+
+// .top-box {
+//     display: flex;
+//     justify-content: center;
+//     margin-top: 15.5px;
+// }
+// .two-box {
+//     display: flex;
+//     justify-content: space-between;
+//     margin-top: 20px;
+//     .child-item:nth-child(1){
+//         margin-left: 29px;
+//     }
+//     .child-item:nth-child(2){
+//         margin-right: 45px;
+//     }
+// }
+// .three-box {
+//     display: flex;
+//     margin-top: 18px;
+//     justify-content: center;
+//     .child-item{
+//         margin-left: 5px;
+//     }
+//     .child-item:nth-child(1) {
+//         margin-left: 2px;
+//     }
+// }
+// .item {
+//     width: 40px;
+//     height: 50px;
+//     box-shadow: 1px 1px 14px 0px rgba(88, 185, 255, 0.41);
+//     border-radius: 4px;
+//     border: 1px solid #4F85FF;
+//     filter: blur(0px);
+//     margin-left: -18px;
+//     background: #081b44;
+//     .img-box {
+//         width: 100%;
+//         height: 38px;    
+//         background-position: 50%;
+//         background-repeat: no-repeat;
+//         background-size: cover;
+//     }
+//     div {
+//         font-size: 10px;
+//     }
+// }
+// .child-item {
+//     width: 40px;
+//     height: 30px;
+//     box-shadow: 1px 1px 14px 0px rgba(88, 185, 255, 0.41);
+//     border-radius: 4px;
+//     border: 1px solid #4F85FF;
+//     filter: blur(0px);
+//     background: #081b44;
+//     .img-box {
+//         width: 100%;
+//         height: 18px;    
+//         background-position: 50%;
+//         background-repeat: no-repeat;
+//         background-size: cover;
+//     }
+//     div {
+//         font-size: 10px;
+//     }
+// }
+
+
+
+.userImg {
+    width: 100%;
+    height: 38px;
+}
+.username {
+    width: 100%;
+    text-align: center;
+    font-size: 10px;
+    line-height: 12px;
+}
+.top-box {
+  margin-top: 15.5px;
+  height: 50px;
+  .content {
+    // width: 180px;
+    position: relative;
+  }
+  .item {
+    width: 40px;
+    height: 50px;
+    box-shadow: 1px 1px 14px 0px rgba(88, 185, 255, 0.41);
+    border-radius: 4px;
+    border: 1px solid #4F85FF;
+    filter: blur(0px);
+    // margin-left: 91.5px;
+    // background: #081b44;
+    position: absolute;
+    // left: 70.5px;
+    &::after {
+      position: absolute;
+      content: '';
+      height: 10px;
+      width: 1px;
+      background: #4F85FF;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: -11px;
+    }
+    
+  }
+}
+.two-box {
+  margin-top: 10px;
+  .content {
+    height: 60px;
+    padding-top: 10px;
+    border-top: 1px solid  #4F85FF;
+    // width: 180px;
+    // width: 135px;
+    // width: 90px;
+    // width: 45px;
+    // width: 40px;
+    position: relative;
+  }
+  .item-child {
+    width: 40px;
+    height: 50px;
+    box-shadow: 1px 1px 14px 0px rgba(88, 185, 255, 0.41);
+    border-radius: 4px;
+    border: 1px solid #4F85FF;
+    filter: blur(0px);
+    position: absolute;
+    &::after {
+      position: absolute;
+      content: '';
+      height: 10px;
+      width: 1px;
+      background:  #4F85FF;
+      left: 50%;
+      transform: translateX(-50%);
+      top: -11px;
+    }
+  }
+}
+
+
+
+
+.process0 {
+  .top-box{
+    .content {
+      width: 40px;
+      .item::after {
+        display: none;
+      }
+    }
+  }
+}
+
+.process1 {
+  .top-box{
+    .content {
+      width: 40px;
+    }
+  }
+  .two-box{
+    .content {
+      border-top: none !important;
+    }
+  }
+}
+.process2 {
+  .top-box{
+    .content {
+      width: 90px;
+      .item{
+        left: 25.5px;
+      }
+    }
+  }
+  .two-box{
+    .content {
+      width: 90px;
+      .item-child:nth-child(1) {
+        left: -19.5px;
+      }
+      .item-child:last-child {
+        right: -19.5px !important;
+      }
+    }
+  }
+}
+.process3 {
+  .top-box{
+    .content {
+      width: 90px;
+      .item{
+        left: 25.5px;
+      }
+    }
+  }
+  .two-box{
+    .content {
+      width: 90px;
+      .item-child:nth-child(1) {
+        left: -19.5px;
+      }
+      .item-child:nth-child(2) {
+        left: 25.5px;
+      }
+      .item-child:last-child {
+        right: -19.5px !important;
+      }
+    }
+  }
+}
+.process4 {
+  .top-box{
+    .content {
+      width: 135px;
+      .item{
+        left: 48.5px;
+      }
+    }
+  }
+  .two-box{
+    .content {
+      width: 135px;
+      .item-child:nth-child(1) {
+        left: -19.5px;
+      }
+      .item-child:nth-child(2) {
+        left: 25.5px;
+      }
+      .item-child:nth-child(3) {
+        left: 70.5px;
+      }
+      .item-child:last-child {
+        right: -19.5px !important;
+      }
+    }
+  }
+}
+.process5 {
+  .top-box{
+    .content {
+      width: 180px;
+      .item{
+        left: 70.5px;
+      }
+    }
+  }
+  .two-box{
+    .content {
+      width: 180px;
+      .item-child:nth-child(1) {
+        left: -19.5px;
+      }
+      .item-child:nth-child(2) {
+        left: 25.5px;
+      }
+      .item-child:nth-child(3) {
+        left: 70.5px;
+      }
+      .item-child:nth-child(4) {
+        left: 115.5px;
+      }
+      .item-child:last-child {
+        right: -19.5px !important;
+      }
+    }
+  }
 }
 </style>

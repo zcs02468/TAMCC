@@ -1,7 +1,7 @@
 <!-- T1航站楼用电占比 -->
 <template>
     <div class="panel left-container-angle">
-        <div class="title" @click="SET_MAP_DIALOG_TYPE('electricity')">T1航站楼用电占比</div>
+        <div class="title" @click="closeMapDialog">T1航站楼用电占比</div>
         <div class="content">
             <div class="select-box">
                 <ul>
@@ -12,7 +12,7 @@
                 </ul>
             </div>
             <div class="ping-box">
-                <div class="charts" id="chart_electricity"></div>
+                <div class="charts" id="chart_electricity1"></div>
             </div>
         </div>
         <div class="info-box general-border">
@@ -46,8 +46,8 @@
 </template>
 
 <script>
-import {getEnergyProportion} from "../../../axios/index"
-import comMinxins from "../../common/comMinxins";
+import {getEnergyProportion} from "@/axios/index"
+import comMinxins from "@/components/common/comMinxins"
 import {mapMutations} from "vuex"
 export default {
     data() {
@@ -62,12 +62,10 @@ export default {
     mixins:[comMinxins],
     mounted() {
         this.drawLine();
-    },
-    created() {
         this.getData()
     },
     methods: {
-        ...mapMutations(['SET_MAP_DIALOG_TYPE']),
+        ...mapMutations(['closeMapDialog']),
         updateData() {
             this.getData();
         },
@@ -92,9 +90,6 @@ export default {
             Object.assign(this.list, obj);
             this.option.series[0].data = this.list[`${this.selectType}List`];
             this.myChart.setOption(this.option);
-            // setTimeout(()=> {
-            //     this.getData()
-            // },60000)
         },
         sortingData(data) {
             let arr = [];
@@ -153,22 +148,6 @@ export default {
                                 color: "#888",
                             },
                         },
-                        // itemStyle: {
-                        //     normal: {
-                        //         color: function(params) {
-                        //             var colorList = [
-                        //                 "#ffff99",
-                        //                 "#00ffcc",
-                        //                 "#00ff99",
-                        //                 "#33ccff",
-                        //                 "#388df6",
-                        //             ];
-                        //             return colorList[
-                        //                 params.dataIndex % colorList.length
-                        //             ];
-                        //         },
-                        //     },
-                        // },
                         animationType: "scale",
                         animationEasing: "elasticOut",
                         animationDelay: function(idx) {
@@ -179,7 +158,7 @@ export default {
             };
             // 基于准备好的dom，初始化this.$echarts实例
             this.myChart = this.$echarts.init(
-                document.getElementById("chart_electricity")
+                document.getElementById("chart_electricity1")
             );
             // 绘制图表
             this.myChart.setOption(this.option);
@@ -194,10 +173,10 @@ export default {
 <style lang="scss" scoped>
 .panel {
     padding-left: 19px;
-    width: 535.5px;
-    height: 353px;
+    height: 100%;
     position: relative;
-    margin-top: 15px;
+    // margin-top: 15px;
+    background: rgb(1, 23, 68);
 }
 .title {
     font-size: 22px;
@@ -210,8 +189,8 @@ export default {
     display: flex;
 }
 .ping-box {
-    width: 537px;
-    height: 192px;
+    width: 620px;
+    height: 520px;
     .charts {
         width: 100%;
         height: 100%;
@@ -227,14 +206,11 @@ export default {
         box-shadow: 0.5px 0.5px 17.5px 0px rgba(88, 185, 255, 0.41) inset;
         text-align: center;
         line-height: 33px;
-        margin-bottom: 20px;
+        margin-bottom: 40px;
     }
     li.select {
         background:linear-gradient(to right,rgba(1,77,204,1),rgba(3,55,152,1)) !important;
     }
-}
-.ping-box {
-    width: 419.5px;
 }
 .info-box {
     width: 500px;

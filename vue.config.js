@@ -4,6 +4,7 @@ const postcss = px2rem({
     remUnit: 80, //基准大小 baseSize，需要和rem.js中相同
 });
 module.exports = {
+    publicPath:"/tamcc",
     devServer: {
         // baseUrl: "/",
         proxy: {
@@ -13,7 +14,11 @@ module.exports = {
                 // target: " http://mock.jszhong.top/mock/5f394e32af83f705d6899898",
                 changeOrigin: true,
             },
-        },
+            // "/smartEnergy": {
+            //     target: "http://218.242.28.28:802",
+            //     changeOrigin: true,
+            // },
+        }
     },
     productionSourceMap: false,
     css: {

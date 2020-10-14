@@ -10,13 +10,26 @@ export default new Vuex.Store({
                 oneH: 0,
                 twoH: 0,
             },
+            mapDialogType: '',
         },
+        randomNum: 0
     },
     mutations: {
         setWaterLevel(state, obj) {
             state.home.waterLevel.oneH = obj.oneH;
             state.home.waterLevel.twoH = obj.twoH;
         },
+        SET_RANDOM_NUM(state) {
+            console.log( '设置时间' );
+            let date = new Date();
+            state.randomNum = date.getTime();
+        },
+        SET_MAP_DIALOG_TYPE(state,value) {
+            state.home.mapDialogType = value;
+        },
+        closeMapDialog(state) {
+            state.home.mapDialogType = false;
+        }
     },
     actions: {},
     modules: {},

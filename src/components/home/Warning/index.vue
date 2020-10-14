@@ -29,7 +29,7 @@
                     <div class="btn general-border" @click="openDialog('order')">明细</div>
                 </div>
                 <div class="right">
-                    <span class="max">6</span>
+                    <span class="max">{{orderNum}}</span>
                     <span class="unit">单</span>
                 </div>
             </div>
@@ -43,12 +43,14 @@
 
 <script>
 import { getLastWarn } from "../../../axios";
+import comMinxins from "../../common/comMinxins";
 import workDialog from "./dialog/workDialog"
 export default {
     data() {
         return {
             todayWarnInfo:"",
             maintainNum: 0,
+            orderNum: 0,
             workList: [],
             orderList: [],
             showWorkDialog: false,
@@ -56,6 +58,7 @@ export default {
             dialogType:null
         };
     },
+    mixins:[comMinxins],
     components:{
         workDialog
     },
@@ -63,6 +66,9 @@ export default {
         this.getData();
     },
     methods: {
+        updateData() {
+            this.getData();
+        },
         async getData() {
             let [res, err] = await getLastWarn();
             let data = JSON.parse(res.message);
@@ -70,12 +76,18 @@ export default {
             this.maintainNum = workList.length;
             this.workList = workList;
             this.orderList = orderList;
-            this.textScroll()
-            setTimeout(()=> {
-                this.getData();
-            },6000)
+            this.orderNum = orderList.length;
+            this.todayWarnInfo = todayWarnInfo;
+            // this.todayWarnInfo = '撒撒旦发射点发啊手动阀啊手动阀啊手动阀啊手动阀啊手动阀啊手动阀阿斯弗啊手动阀发';
+            this.$nextTick(()=> {
+                this.textScroll()
+            })
+            // setTimeout(()=> {
+            //     this.getData();
+            // },60000)
         },
         textScroll() {
+            clearTimeout(window.warningTime);
             let [box, content, text] = [
                 document.querySelector(".panel-warning .text-box"),
                 document.querySelector(".panel-warning .text-content"),
@@ -92,12 +104,13 @@ export default {
             textWidth = document.querySelector(".panel-warning .text").offsetWidth;
             toScrollLeft();
             function toScrollLeft() {
+                clearTimeout(window.warningTime);
                 //  如果文字长度大于滚动条距离，则递归拖动
                 if (textWidth > box.scrollLeft) {
                     box.scrollLeft++;
-                    setTimeout(toScrollLeft, 20);
+                    window.warningTime =  setTimeout(toScrollLeft, 20);
                 } else {
-                    setTimeout(fun2, 0);
+                    window.warningTime =  setTimeout(fun2, 0);
                 }
             }
             function fun2() {

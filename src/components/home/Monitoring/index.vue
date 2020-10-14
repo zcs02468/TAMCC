@@ -4,7 +4,9 @@
         <div class="title">T1一体化机房监控</div>
         <div class="content">
             <div class="left box">
-                <div class="video-box"></div>
+                <div class="video-box">
+                    <img src="../../../assets/image/monitor1.jpg" alt="">
+                </div>
                 <div class="select-box">
                     <a-select
                         default-value="jack"
@@ -28,7 +30,9 @@
                 </div>
             </div>
             <div class="right box">
-                <div class="video-box"></div>
+                <div class="video-box">
+                    <img src="../../../assets/image/monitor2.jpg" alt="">
+                </div>
                 <div class="select-box">
                     <a-select
                         default-value="jack"
@@ -97,6 +101,11 @@ export default {};
         border: 1px solid #4f85ff;
         background: rgba(119, 161, 255, 0.14);
         box-shadow: 0.5px 0.5px 17.5px 0px rgba(88, 185, 255, 0.41) inset;
+        overflow: hidden;
+        img {
+            width: 100%;
+            height: 100%;
+        }
     }
     .select-box {
         width: 100%;
