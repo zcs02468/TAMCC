@@ -54,15 +54,19 @@ export default {
             this.selectType = type;
             this.option.xAxis[0].data = this.list[this.selectType].x;
             this.option.series[0].data = this.list[this.selectType].y;
-            this.option.series[0].markLine.data[0].yAxis = this.list[this.selectType].standard;
-            this.option.series[0].markLine.data[0].name = this.list[this.selectType].standard;
-            this.option.yAxis[0].min = this.list[this.selectType].standard;
+            this.option.series[0].markLine.data = this.list[this.selectType].standard;
+            this.option.yAxis[0].min = this.list[this.selectType].min;
+            this.option.yAxis[0].max = this.list[this.selectType].max;
+            // this.option.series[0].markLine.data[0].yAxis = this.list[this.selectType].standard;
+            // this.option.series[0].markLine.data[0].name = this.list[this.selectType].standard;
+            // this.option.yAxis[0].min = this.list[this.selectType].standard;
             this.myChart.setOption(this.option);
         },
         async getData() {
             let [res] = await getSumElectricList();
+            let data = JSON.parse(res.message);
             // let res = this.getAjaxData();
-            let data = JSON.parse(res.message)
+            // let data = res.message
             // sumElectricList	电力对象
             // sumWaterList	市政水对象
             // fshowtime	日期
@@ -71,24 +75,36 @@ export default {
             // water	市政水日基准值
             let electricData = this.sortingData(data.sumElectricList);
             let waterData = this.sortingData(data.sumWaterList);
+            let baselineList = this.getBaseLineList(data.baselineList)
+            console.log(baselineList,'66666666666666');
+            //#CE2929  rgb(246, 186, 22)
             let obj = {
                 electric:{
                     x: electricData.x,
                     y: electricData.y,
-                    standard: data.electric,
+                    standard: baselineList.electric,
+                    min: baselineList.electricMin,
+                    max: electricData.max
                 },
                 water:{
                     x: waterData.x,
                     y: waterData.y,
-                    standard: data.water,
+                    standard: baselineList.water,
+                    min: baselineList.waterMin,
+                    max: waterData.max
                 },
             }
+            electricData.max < baselineList.electricMax && ( obj.electric.max = baselineList.electricMax );
+            waterData.max < baselineList.waterMax && ( obj.water.max = baselineList.waterMax );
             Object.assign(this.list,obj);
             this.option.xAxis[0].data = this.list[this.selectType].x;
             this.option.series[0].data = this.list[this.selectType].y;
-            this.option.series[0].markLine.data[0].yAxis = this.list[this.selectType].standard;
-            this.option.series[0].markLine.data[0].name = this.list[this.selectType].standard;
-            this.option.yAxis[0].min = this.list[this.selectType].standard;
+            this.option.series[0].markLine.data = this.list[this.selectType].standard;
+            this.option.yAxis[0].min = this.list[this.selectType].min;
+            this.option.yAxis[0].max = this.list[this.selectType].max;
+            // this.option.series[0].markLine.data[0].yAxis = this.list[this.selectType].standard;
+            // this.option.series[0].markLine.data[0].name = this.list[this.selectType].standard;
+            // this.option.yAxis[0].min = this.list[this.selectType].standard;
             this.myChart.setOption(this.option);
             // setTimeout(()=> {
             //     this.getData();
@@ -97,19 +113,62 @@ export default {
         sortingData(data) {
             let yArr = [];
             let xArr = [];
+            let maxNum = 0;
             data.forEach(item => {
                 let time = item.fshowtime.split(" ")[0].split("-")
                 xArr.push(`${time[1]}-${time[2]}`)
                 yArr.push(item.fusedvalue)
+                item.fusedvalue > maxNum && ( maxNum = item.fusedvalue );
             });
             return {
                 x: xArr,
-                y: yArr
+                y: yArr,
+                max: maxNum
             }
         },
-        getAjaxData() {
-            return {"result":"true","message":"{\"sumElectricList\":[{\"pageNo\":null,\"pageSize\":null,\"id\":\"222222222\",\"isNewRecord\":false,\"orderBy\":null,\"createByName\":null,\"updateByName\":null,\"updateBy\":null,\"lastUpdateDateTime\":null,\"status\":null,\"createDate\":null,\"updateDate\":null,\"remarks\":null,\"createBy\":null,\"fid\":\"222222222\",\"fengitemcode\":\"01000\",\"fusedvalue\":3433.1211,\"fshowtime\":\"2020-08-11 10:49:19\",\"finserttime\":null,\"fnote\":null,\"fengitemname\":null,\"updateDate_gte\":null,\"createDate_between\":null,\"status_in\":null,\"updateDate_between\":null,\"createDate_gte\":null,\"createDate_lte\":null,\"updateDate_lte\":null,\"id_in\":null},{\"pageNo\":null,\"pageSize\":null,\"id\":\"333333333\",\"isNewRecord\":false,\"orderBy\":null,\"createByName\":null,\"updateByName\":null,\"updateBy\":null,\"lastUpdateDateTime\":null,\"status\":null,\"createDate\":null,\"updateDate\":null,\"remarks\":null,\"createBy\":null,\"fid\":\"333333333\",\"fengitemcode\":\"01000\",\"fusedvalue\":3432.1143,\"fshowtime\":\"2020-08-10 10:50:00\",\"finserttime\":null,\"fnote\":null,\"fengitemname\":null,\"updateDate_gte\":null,\"createDate_between\":null,\"status_in\":null,\"updateDate_between\":null,\"createDate_gte\":null,\"createDate_lte\":null,\"updateDate_lte\":null,\"id_in\":null},{\"pageNo\":null,\"pageSize\":null,\"id\":\"444444444\",\"isNewRecord\":false,\"orderBy\":null,\"createByName\":null,\"updateByName\":null,\"updateBy\":null,\"lastUpdateDateTime\":null,\"status\":null,\"createDate\":null,\"updateDate\":null,\"remarks\":null,\"createBy\":null,\"fid\":\"444444444\",\"fengitemcode\":\"01000\",\"fusedvalue\":5444.2354,\"fshowtime\":\"2020-08-09 10:50:23\",\"finserttime\":null,\"fnote\":null,\"fengitemname\":null,\"updateDate_gte\":null,\"createDate_between\":null,\"status_in\":null,\"updateDate_between\":null,\"createDate_gte\":null,\"createDate_lte\":null,\"updateDate_lte\":null,\"id_in\":null},{\"pageNo\":null,\"pageSize\":null,\"id\":\"555555555\",\"isNewRecord\":false,\"orderBy\":null,\"createByName\":null,\"updateByName\":null,\"updateBy\":null,\"lastUpdateDateTime\":null,\"status\":null,\"createDate\":null,\"updateDate\":null,\"remarks\":null,\"createBy\":null,\"fid\":\"555555555\",\"fengitemcode\":\"01000\",\"fusedvalue\":2345.1234,\"fshowtime\":\"2020-08-08 10:50:48\",\"finserttime\":null,\"fnote\":null,\"fengitemname\":null,\"updateDate_gte\":null,\"createDate_between\":null,\"status_in\":null,\"updateDate_between\":null,\"createDate_gte\":null,\"createDate_lte\":null,\"updateDate_lte\":null,\"id_in\":null}],\"electric\":\"3000\",\"sumWaterList\":[{\"pageNo\":null,\"pageSize\":null,\"id\":\"777777777\",\"isNewRecord\":false,\"orderBy\":null,\"createByName\":null,\"updateByName\":null,\"updateBy\":null,\"lastUpdateDateTime\":null,\"status\":null,\"createDate\":null,\"updateDate\":null,\"remarks\":null,\"createBy\":null,\"fid\":\"777777777\",\"fengitemcode\":\"02000\",\"fusedvalue\":35333.5533,\"fshowtime\":\"2020-08-11 11:09:20\",\"finserttime\":null,\"fnote\":null,\"fengitemname\":null,\"updateDate_gte\":null,\"createDate_between\":null,\"status_in\":null,\"updateDate_between\":null,\"createDate_gte\":null,\"createDate_lte\":null,\"updateDate_lte\":null,\"id_in\":null},{\"pageNo\":null,\"pageSize\":null,\"id\":\"888888888\",\"isNewRecord\":false,\"orderBy\":null,\"createByName\":null,\"updateByName\":null,\"updateBy\":null,\"lastUpdateDateTime\":null,\"status\":null,\"createDate\":null,\"updateDate\":null,\"remarks\":null,\"createBy\":null,\"fid\":\"888888888\",\"fengitemcode\":\"02000\",\"fusedvalue\":56554.3432,\"fshowtime\":\"2020-08-10 11:12:10\",\"finserttime\":null,\"fnote\":null,\"fengitemname\":null,\"updateDate_gte\":null,\"createDate_between\":null,\"status_in\":null,\"updateDate_between\":null,\"createDate_gte\":null,\"createDate_lte\":null,\"updateDate_lte\":null,\"id_in\":null},{\"pageNo\":null,\"pageSize\":null,\"id\":\"999999999\",\"isNewRecord\":false,\"orderBy\":null,\"createByName\":null,\"updateByName\":null,\"updateBy\":null,\"lastUpdateDateTime\":null,\"status\":null,\"createDate\":null,\"updateDate\":null,\"remarks\":null,\"createBy\":null,\"fid\":\"999999999\",\"fengitemcode\":\"02000\",\"fusedvalue\":88383.3428,\"fshowtime\":\"2020-08-09 11:13:34\",\"finserttime\":null,\"fnote\":null,\"fengitemname\":null,\"updateDate_gte\":null,\"createDate_between\":null,\"status_in\":null,\"updateDate_between\":null,\"createDate_gte\":null,\"createDate_lte\":null,\"updateDate_lte\":null,\"id_in\":null},{\"pageNo\":null,\"pageSize\":null,\"id\":\"000000000\",\"isNewRecord\":false,\"orderBy\":null,\"createByName\":null,\"updateByName\":null,\"updateBy\":null,\"lastUpdateDateTime\":null,\"status\":null,\"createDate\":null,\"updateDate\":null,\"remarks\":null,\"createBy\":null,\"fid\":\"000000000\",\"fengitemcode\":\"02000\",\"fusedvalue\":93839.1253,\"fshowtime\":\"2020-08-08 11:14:00\",\"finserttime\":null,\"fnote\":null,\"fengitemname\":null,\"updateDate_gte\":null,\"createDate_between\":null,\"status_in\":null,\"updateDate_between\":null,\"createDate_gte\":null,\"createDate_lte\":null,\"updateDate_lte\":null,\"id_in\":null},{\"pageNo\":null,\"pageSize\":null,\"id\":\"666666666\",\"isNewRecord\":false,\"orderBy\":null,\"createByName\":null,\"updateByName\":null,\"updateBy\":null,\"lastUpdateDateTime\":null,\"status\":null,\"createDate\":null,\"updateDate\":null,\"remarks\":null,\"createBy\":null,\"fid\":\"666666666\",\"fengitemcode\":\"02000\",\"fusedvalue\":46456.2211,\"fshowtime\":\"2020-08-07 10:48:19\",\"finserttime\":null,\"fnote\":null,\"fengitemname\":null,\"updateDate_gte\":null,\"createDate_between\":null,\"status_in\":null,\"updateDate_between\":null,\"createDate_gte\":null,\"createDate_lte\":null,\"updateDate_lte\":null,\"id_in\":null}],\"water\":\"200\"}"}
+        getBaseLineList(data) {
+            let obj = {
+                electric:[],
+                water:[],
 
+                electricMin: null,
+                electricMax: null,
+                waterMin: null,
+                waterMax: null
+            }
+            let arr = ['','electric','water',''];
+            let colors = ['rgb(246, 186, 22)','#CE2929'];
+            data.forEach(item => {
+                // obj[arr[item.type]].push(item.baselineValue);
+                if( obj[`${arr[item.type]}Min`] == null ) {
+                    obj[`${arr[item.type]}Min`] = item.baselineValue;
+                }else {
+                    if( item.baselineValue < obj[`${arr[item.type]}Min`] ) {
+                        obj[`${arr[item.type]}Min`] = item.baselineValue
+                    }
+                }
+                if( obj[`${arr[item.type]}Max`] == null ) {
+                    obj[`${arr[item.type]}Max`] = item.baselineValue;
+                }else {
+                    if( item.baselineValue > obj[`${arr[item.type]}Max`] ) {
+                        obj[`${arr[item.type]}Max`] = item.baselineValue
+                    }
+                }
+                obj[arr[item.type]].push({
+                    yAxis: item.baselineValue,
+                    lineStyle: {
+                        width: 1.6,
+                        color: colors[obj[arr[item.type]].length]
+                    },
+                    label: {
+                        show: false,
+                        position: "middle",
+                        formatter: "{b}"
+                    },
+                    name:item.baselineValue
+                });
+            });
+            return obj;
         },
         drawLine() {
             this.option = {
@@ -237,18 +296,19 @@ export default {
                             // label: {
                             //     position: "start"
                             // },
-                            data: [{
-                                yAxis: 300,
-                                lineStyle: {
-                                    width: 1.6,
-                                    color: "#CE2929"
-                                },
-                                label: {
-                                    show: false,
-                                    position: "middle",
-                                    formatter: "{b}"
-                                },
-                                name:"300"
+                            data: [
+                                {
+                                    yAxis: 300,
+                                    lineStyle: {
+                                        width: 1.6,
+                                        color: "#CE2929"
+                                    },
+                                    label: {
+                                        show: false,
+                                        position: "middle",
+                                        formatter: "{b}"
+                                    },
+                                    name:"300"
                                 }
                             ]
                         },
