@@ -5,7 +5,7 @@
         <div class="content">
             <div class="select-box">
                 <ul>
-                    <li v-for="(item,i) in typeArr" :key="`${i}emissions`" :class="[item == 'none' ? 'dashed':'default',selectIndex == i ? 'select':'']" @click="selectTypeClick(item,i)">{{item == 'none'?'':item}}</li>
+                    <li v-for="(item,i) in typeArr" :key="`${i}emissions`" :class="[item == 'none' ? 'dashed':'default',selectIndex == i ? 'select':'', item && item.length > 4 ? 'maxSize' : '']" @click="selectTypeClick(item,i)">{{item == 'none'?'':item}}</li>
                 </ul>
             </div>
             <div class="charts-box">
@@ -465,6 +465,10 @@ export default {
             &:nth-child(11) {
                 margin: 15px 15px 0 15px;
             }
+        }
+        .maxSize {
+            font-size: 14px;
+            line-height: 16px;
         }
         .dashed {
             border-radius: 4.5px;
