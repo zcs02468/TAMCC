@@ -155,7 +155,6 @@ export default {
                     name: item.indexName,
                     min: 0,
                 });
-
             });
 
             //新增
@@ -167,7 +166,6 @@ export default {
             indicatorArr.forEach(item => {
                 item.max = maxNum + 20
             })
-            console.log( indexValueArr, factValueArr );
             this.option.radar[0].indicator = indicatorArr;
             this.option.series[0].data[0].value = indexValueArr;
             this.option.series[0].data[1].value = factValueArr;
@@ -178,11 +176,6 @@ export default {
             this.quotaArr.splice();
             this.factArr.splice();
             this.myChart.setOption(this.option);
-
-            // this.option.radar[0].indicator = indicatorArr;
-            // this.option.series[0].data[0].value = indexValueArr;
-            // this.option.series[0].data[1].value = factValueArr;
-            // this.myChart.setOption(this.option);
         },
         gertNewTypeArr(data) {
             let len = data.length;

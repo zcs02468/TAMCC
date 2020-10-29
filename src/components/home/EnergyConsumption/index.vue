@@ -22,11 +22,11 @@
                     </div>
                     <div class="direction-center">
                         <div>指标值</div>
-                        <div v-for="(item) in quotaArr" :key="item">{{item}}</div>
+                        <div v-for="(item,index) in quotaArr" :key="`${index}_${item}_quota`">{{item}}</div>
                     </div>
                     <div class="direction-right">
                         <div>实际值</div>
-                        <div v-for="(item) in factArr" :key="item">{{item}}</div>
+                        <div v-for="(item,index) in factArr" :key="`${index}_${item}fact`">{{item}}</div>
                     </div>
                 </div>
                 <!-- <div class="guide-box">
@@ -131,6 +131,7 @@ export default {
                     index++;
                 }
             }
+            console.log( '3333333');
             this.lineOption.series = series;
             // console.log(  );
             this.myLineChart.setOption(this.lineOption);

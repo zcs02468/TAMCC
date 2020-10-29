@@ -23,11 +23,11 @@
                 <div class="top">
                     <div class="block-box">
                         <span>电：</span>
-                        <span>XXXXKWH</span>
+                        <span>{{electricSum}}KWH</span>
                     </div>
                     <div class="block-box">
                         <span class="max">水：</span>
-                        <span>XXXXm²</span>
+                        <span>{{waterSum}}m²</span>
                     </div>
                 </div>
                 <div class="bottom">
@@ -49,21 +49,22 @@
 import {getEnergyProportion} from "../../../axios/index"
 import comMinxins from "../../common/comMinxins";
 import {mapMutations} from "vuex"
+// import ajaxData from "@/components/home/Electricity/data.json"
 export default {
     data() {
         return {
             selectType:'electric', //electric---电力    water---市政水   gas---天然气
             list:{
                 electricList:[],
-                waterList:[]
-            }
+                waterList:[],
+            },
+            electricSum:0,
+            waterSum:0
         }
     },
     mixins:[comMinxins],
     mounted() {
         this.drawLine();
-    },
-    created() {
         this.getData()
     },
     methods: {
@@ -79,32 +80,46 @@ export default {
         },
         async getData() {
             let [res] = await getEnergyProportion();
+            // let res = ajaxData;
+            // console.log( 'res',res);
             let data =  JSON.parse(res.message);
+            // console.log('data' ,data);
             // electricList	电力对象
             // waterList	市政水对象
             // fengitemname	分项名称
             // fusedvalue	日用能
             // let {electricList,waterList} = data;
+            let electricData = this.sortingData(data.electricList);
+            let waterData = this.sortingData(data.waterList);
+            // this.electricSum = data.electricList[0].fusedvalue;
+            // this.waterSum = data.waterData[0].fusedvalue;
+            this.electricSum = electricData.sum;
+            this.waterSum = waterData.sum;
             let obj = {
-                electricList: this.sortingData(data.electricList),
-                waterList: this.sortingData(data.waterList),
+                electricList: electricData.arr,
+                waterList: waterData.arr,
             }
             Object.assign(this.list, obj);
             this.option.series[0].data = this.list[`${this.selectType}List`];
             this.myChart.setOption(this.option);
-            // setTimeout(()=> {
-            //     this.getData()
-            // },60000)
         },
         sortingData(data) {
             let arr = [];
-            data.forEach(item => {
-                arr.push({
-                    name: item.fengitemname,
-                    value:item.fusedvalue
-                })
+            let sum = 0; 
+            data.forEach((item,index) => {
+                if( item.fengitemname == '总用电' || item.fengitemname == '总用水' ) {
+                    sum = item.fusedvalue;
+                }else {
+                    arr.push({
+                        name: item.fengitemname,
+                        value:item.fusedvalue
+                    })
+                }
             });
-            return arr;
+            return {
+                arr:arr,
+                sum:sum
+            };
         },
         drawLine() {
             this.option = {
@@ -265,16 +280,17 @@ export default {
         }
     }
     .block-box {
-        font-size: 18px;
+        font-size: 16px;
         span:nth-child(1) {
             display: inline-block;
-            width: 42px;
+            width: 30px;
             // height: 20px;
         }
         span:nth-child(2) {
             display: inline-block;
             width: 116px;
             height: 20px;
+            font-size: 14px;
         }
         .max {
             width: 63px !important;

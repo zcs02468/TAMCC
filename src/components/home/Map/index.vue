@@ -1,7 +1,7 @@
 <template>
     <div class="map-panel">
         <div class="map-box"></div>
-        <div class="footer-panel">今日航班数<span class="max">&nbsp;&nbsp;{{flights}}&nbsp;&nbsp;</span>单</div>
+        <div class="footer-panel">今日航班数<span class="max">&nbsp;&nbsp;{{flights}}&nbsp;&nbsp;</span>架次</div>
         <div class="dialog-box">
             <electricity v-if="mapDialogType == 'electricity'"/>
             <energyConsumption v-if="mapDialogType == 'energyConsumption'"/>

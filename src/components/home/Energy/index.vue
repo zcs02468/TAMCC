@@ -18,6 +18,7 @@
 <script>
 import { getSumElectricList } from "../../../axios";
 import comMinxins from "../../common/comMinxins";
+// import ajaxData from "./data.json"
 export default {
     data() {
         return {
@@ -54,16 +55,14 @@ export default {
             this.selectType = type;
             this.option.xAxis[0].data = this.list[this.selectType].x;
             this.option.series[0].data = this.list[this.selectType].y;
-            this.option.series[0].markLine.data = this.list[this.selectType].standard;
-            this.option.yAxis[0].min = this.list[this.selectType].min;
+            this.option.series[1].data = this.list[this.selectType].standard;
+            this.option.yAxis[0].min = 0;
             this.option.yAxis[0].max = this.list[this.selectType].max;
-            // this.option.series[0].markLine.data[0].yAxis = this.list[this.selectType].standard;
-            // this.option.series[0].markLine.data[0].name = this.list[this.selectType].standard;
-            // this.option.yAxis[0].min = this.list[this.selectType].standard;
             this.myChart.setOption(this.option);
         },
         async getData() {
             let [res] = await getSumElectricList();
+            // let res = ajaxData;
             let data = JSON.parse(res.message);
             // let res = this.getAjaxData();
             // let data = res.message
@@ -73,23 +72,21 @@ export default {
             // fusedvalue	日用能
             // electric	电力日基准值
             // water	市政水日基准值
-            let electricData = this.sortingData(data.sumElectricList);
-            let waterData = this.sortingData(data.sumWaterList);
             let baselineList = this.getBaseLineList(data.baselineList)
-            console.log(baselineList,'66666666666666');
-            //#CE2929  rgb(246, 186, 22)
+            let electricData = this.sortingData(data.sumElectricList.reverse(),baselineList.electric);
+            let waterData = this.sortingData(data.sumWaterList.reverse(),baselineList.water);
             let obj = {
                 electric:{
                     x: electricData.x,
                     y: electricData.y,
-                    standard: baselineList.electric,
+                    standard: electricData.baseLineArr,
                     min: baselineList.electricMin,
                     max: electricData.max
                 },
                 water:{
                     x: waterData.x,
                     y: waterData.y,
-                    standard: baselineList.water,
+                    standard: waterData.baseLineArr,
                     min: baselineList.waterMin,
                     max: waterData.max
                 },
@@ -99,54 +96,39 @@ export default {
             Object.assign(this.list,obj);
             this.option.xAxis[0].data = this.list[this.selectType].x;
             this.option.series[0].data = this.list[this.selectType].y;
-            this.option.series[0].markLine.data = this.list[this.selectType].standard;
-            this.option.yAxis[0].min = this.list[this.selectType].min;
+            this.option.series[1].data = this.list[this.selectType].standard;
+            this.option.yAxis[0].min = 0;;
             this.option.yAxis[0].max = this.list[this.selectType].max;
-            // this.option.series[0].markLine.data[0].yAxis = this.list[this.selectType].standard;
-            // this.option.series[0].markLine.data[0].name = this.list[this.selectType].standard;
-            // this.option.yAxis[0].min = this.list[this.selectType].standard;
             this.myChart.setOption(this.option);
-            // setTimeout(()=> {
-            //     this.getData();
-            // },60000)
         },
-        sortingData(data) {
+        sortingData(data,obj) {
             let yArr = [];
             let xArr = [];
             let maxNum = 0;
+            let baseLineArr = [];
             data.forEach(item => {
                 let time = item.fshowtime.split(" ")[0].split("-")
                 xArr.push(`${time[1]}-${time[2]}`)
                 yArr.push(item.fusedvalue)
+                baseLineArr.push( obj[`${time[0]}-${time[1]}`].value )
                 item.fusedvalue > maxNum && ( maxNum = item.fusedvalue );
             });
             return {
                 x: xArr,
                 y: yArr,
-                max: maxNum
+                max: maxNum,
+                baseLineArr: baseLineArr
             }
         },
         getBaseLineList(data) {
             let obj = {
-                electric:[],
-                water:[],
-
-                electricMin: null,
+                electric:{},
+                water:{},
                 electricMax: null,
-                waterMin: null,
                 waterMax: null
             }
             let arr = ['','electric','water',''];
-            let colors = ['rgb(246, 186, 22)','#CE2929'];
             data.forEach(item => {
-                // obj[arr[item.type]].push(item.baselineValue);
-                if( obj[`${arr[item.type]}Min`] == null ) {
-                    obj[`${arr[item.type]}Min`] = item.baselineValue;
-                }else {
-                    if( item.baselineValue < obj[`${arr[item.type]}Min`] ) {
-                        obj[`${arr[item.type]}Min`] = item.baselineValue
-                    }
-                }
                 if( obj[`${arr[item.type]}Max`] == null ) {
                     obj[`${arr[item.type]}Max`] = item.baselineValue;
                 }else {
@@ -154,20 +136,13 @@ export default {
                         obj[`${arr[item.type]}Max`] = item.baselineValue
                     }
                 }
-                obj[arr[item.type]].push({
-                    yAxis: item.baselineValue,
-                    lineStyle: {
-                        width: 1.6,
-                        color: colors[obj[arr[item.type]].length]
-                    },
-                    label: {
-                        show: false,
-                        position: "middle",
-                        formatter: "{b}"
-                    },
-                    name:item.baselineValue
-                });
-            });
+                let timeArr = item.yearMonth.split(' ')[0].split("-")
+                obj[arr[item.type]][item.yearMonth] = {
+                    year: timeArr[0],
+                    month: timeArr[1],
+                    value: item.baselineValue
+                }
+            })
             return obj;
         },
         drawLine() {
@@ -285,35 +260,15 @@ export default {
                                 },
                             },
                         },
-                        markLine: {
-                            symbol: "none",
-                            silent: true,
-                            lineStyle: {
-                                normal: {
-                                    type: "solid"
-                                }
-                            },
-                            // label: {
-                            //     position: "start"
-                            // },
-                            data: [
-                                {
-                                    yAxis: 300,
-                                    lineStyle: {
-                                        width: 1.6,
-                                        color: "#CE2929"
-                                    },
-                                    label: {
-                                        show: false,
-                                        position: "middle",
-                                        formatter: "{b}"
-                                    },
-                                    name:"300"
-                                }
-                            ]
-                        },
                         data: [10000, 9300, 8300, 8000, 8200, 8400, 8600, 8800, 9200, 12000, 10000, 9000, 8000, 7000, 6500, 6000],
-                    }
+                    },
+                    {
+                        name: '基准值',
+                        type: 'line',
+                        step: 'start',
+                        symbolSize: 0,
+                        data: [120, 120, 120, 140, 140, 140, 140]
+                    },
                 ],
             };
             // 基于准备好的dom，初始化this.$echarts实例

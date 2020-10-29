@@ -9,7 +9,8 @@ const baseUrl = '';
 export const getEnergyProportion = async () => await get({ url: baseUrl + "/smartEnergy/energyProportion" });
 
 // T1航站楼能耗趋势接口
-export const getSumElectricList = async () => await get({url:baseUrl + '/smartEnergy/sumElectricList'});
+// export const getSumElectricList = async () => await get({url:baseUrl + '/smartEnergy/sumElectricList'});
+export const getSumElectricList = async () => await get({url:baseUrl + '/smartEnergy/energyTrend'});
 
 // 当前维修信息接口
 export const getLastRepair = async () => await get({url:baseUrl + '/smartEnergy/lastRepair'});

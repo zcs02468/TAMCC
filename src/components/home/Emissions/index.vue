@@ -68,56 +68,7 @@ export default {
             this.getAssginType(item);
             this.selectType = item;
             this.selectIndex = i;
-            // this.option.radar[0].indicator = this.dataList[this.selectType].radarIndicator;
-            // this.option.series[0].data[0].value = this.dataList[this.selectType].indexValueArr;
-            // this.option.series[0].data[1].value = this.dataList[this.selectType].factValueArr;
-            // this.myChart.setOption(this.option);
         },
-        // async getData() {
-        //     try {
-        //         let [res] = await getEmissionIndex();
-        //         // let res = {"result":"true","message":"{\"emissionIndexList\":[{\"pageNo\":null,\"pageSize\":null,\"id\":\"1296621640815190016\",\"isNewRecord\":false,\"orderBy\":null,\"createByName\":null,\"updateByName\":null,\"updateBy\":null,\"lastUpdateDateTime\":null,\"status\":null,\"createDate\":null,\"updateDate\":null,\"remarks\":null,\"createBy\":null,\"emissionId\":\"1296621640815190016\",\"indexName\":\"指标A1\",\"type\":\"类目1\",\"indexValue\":12.23,\"factValue\":123.21,\"createTime\":\"2020-08-21 09:38:46\",\"createDate_lte\":null,\"createDate_between\":null,\"createDate_gte\":null,\"updateDate_lte\":null,\"updateDate_between\":null,\"status_in\":null,\"updateDate_gte\":null,\"id_in\":null},{\"pageNo\":null,\"pageSize\":null,\"id\":\"1296683509832265728\",\"isNewRecord\":false,\"orderBy\":null,\"createByName\":null,\"updateByName\":null,\"updateBy\":null,\"lastUpdateDateTime\":null,\"status\":null,\"createDate\":null,\"updateDate\":null,\"remarks\":null,\"createBy\":null,\"emissionId\":\"1296683509832265728\",\"indexName\":\"指标B1\",\"type\":\"类目1\",\"indexValue\":23.23,\"factValue\":23.21,\"createTime\":\"2020-08-21 13:40:14\",\"createDate_lte\":null,\"createDate_between\":null,\"createDate_gte\":null,\"updateDate_lte\":null,\"updateDate_between\":null,\"status_in\":null,\"updateDate_gte\":null,\"id_in\":null},{\"pageNo\":null,\"pageSize\":null,\"id\":\"1296683624714252288\",\"isNewRecord\":false,\"orderBy\":null,\"createByName\":null,\"updateByName\":null,\"updateBy\":null,\"lastUpdateDateTime\":null,\"status\":null,\"createDate\":null,\"updateDate\":null,\"remarks\":null,\"createBy\":null,\"emissionId\":\"1296683624714252288\",\"indexName\":\"指标C1\",\"type\":\"类目1\",\"indexValue\":55.32,\"factValue\":53.23,\"createTime\":\"2020-08-21 13:40:42\",\"createDate_lte\":null,\"createDate_between\":null,\"createDate_gte\":null,\"updateDate_lte\":null,\"updateDate_between\":null,\"status_in\":null,\"updateDate_gte\":null,\"id_in\":null}]}"}
-        //         let data = JSON.parse(res.message);
-        //         let { emissionIndexList } = data;
-        //         let typeArr = [];
-        //         let dataList = [];
-        //         emissionIndexList.forEach((item,i) => {
-        //             typeArr.push( item.type );
-        //             if( !dataList.hasOwnProperty(item.type) ) {
-        //                 dataList[item.type] = {};
-        //                 dataList[item.type].radarIndicator = []
-        //                 dataList[item.type].indexValueArr= []
-        //                 dataList[item.type].factValueArr= []
-        //             }
-        //             // indexValue   指标
-        //             // factValue    实际
-        //             dataList[item.type].radarIndicator.push({
-        //                 name: item.indexName,
-        //                 min: 0,
-        //             })
-        //             dataList[item.type].indexValueArr.push(item.indexValue);
-        //             dataList[item.type].factValueArr.push(item.factValue);
-
-        //         });
-        //         typeArr = [...new Set(typeArr)];
-        //         if( !this.selectType ) {
-        //             this.selectType = typeArr[0]
-        //         }
-        //         this.typeArr = this.gertNewTypeArr(typeArr);
-        //         this.dataList = dataList;
-        //         this.option.radar[0].indicator = this.dataList[this.selectType].radarIndicator;
-        //         this.option.series[0].data[0].value = this.dataList[this.selectType].indexValueArr;
-        //         this.option.series[0].data[1].value = this.dataList[this.selectType].factValueArr;
-        //         this.myChart.setOption(this.option);
-        //         setTimeout(()=> {
-        //             this.getData();
-        //         },60000)
-        //     } catch (error) {
-        //         setTimeout(()=> {
-        //             this.getData();
-        //         },60000)
-        //     }
-        // },
         async getData(type) {
             let [res] = await getEmissionType();
             // let res = {"result":"true","message":"{\"typeList\":[\"类目1\",\"类目2\"]}"};
@@ -195,26 +146,15 @@ export default {
             let indexValueArr = [];//指标值换算之后的数据
             let factValueArr = [];//实际值换算之后的数据
             data.forEach(item => {
-                // indicatorArr.push({
-                //     name: item.indexName,
-                //     min: 0,
-                // });
-                // indexValueArr.push( item.indexValue );
-                // factValueArr.push( item.factValue );
-                
-                
                 quotaArr.push( item.indexValue );
                 factArr.push( item.factValue );
                 let num = Math.round((item.factValue/item.indexValue) * 1000) / 1000;
-                // radarChartsSeries0.push(100);
-                // radarChartsSeries1.push(num*100);
                 indexValueArr.push( 100 );
                 factValueArr.push( num*100 );
                 indicatorArr.push({
                     name: item.indexName,
                     min: 0,
                 });
-
             });
 
             //新增
@@ -226,7 +166,6 @@ export default {
             indicatorArr.forEach(item => {
                 item.max = maxNum + 20
             })
-            console.log( indexValueArr, factValueArr );
             this.option.radar[0].indicator = indicatorArr;
             this.option.series[0].data[0].value = indexValueArr;
             this.option.series[0].data[1].value = factValueArr;
@@ -237,11 +176,6 @@ export default {
             this.quotaArr.splice();
             this.factArr.splice();
             this.myChart.setOption(this.option);
-
-            // this.option.radar[0].indicator = indicatorArr;
-            // this.option.series[0].data[0].value = indexValueArr;
-            // this.option.series[0].data[1].value = factValueArr;
-            // this.myChart.setOption(this.option);
         },
         gertNewTypeArr(data) {
             let len = data.length;
