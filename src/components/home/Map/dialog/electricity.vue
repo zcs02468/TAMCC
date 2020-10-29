@@ -121,6 +121,7 @@ export default {
         },
         drawLine() {
             this.option = {
+                color:['#3d8bc4','#cc4c1f','#bb7f11','#5f9877','#74418e','#c7a537','#205d96','#882e31','#22837d','#FF99C3'],
                 tooltip: {
                     trigger: "item",
                     formatter: "用量 <br/>{b} : {c} ({d}%)",
