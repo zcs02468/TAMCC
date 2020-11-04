@@ -7,7 +7,8 @@
             <div class="name general-border">
                 <div class="text-box">
                     <div class="text-content">
-                        <p class="text">{{ todayWarnInfo }}</p>
+                        <p class="text first-text padding">{{ todayWarnInfo }}</p>
+                        <p class="text" v-if="isShow">{{todayWarnInfo}}</p>
                     </div>
                 </div>
             </div>
@@ -55,7 +56,8 @@ export default {
             orderList: [],
             showWorkDialog: false,
             showWarnDialog: false,
-            dialogType:null
+            dialogType:null,
+            isShow: true
         };
     },
     mixins:[comMinxins],
@@ -82,12 +84,9 @@ export default {
             this.$nextTick(()=> {
                 this.textScroll()
             })
-            // setTimeout(()=> {
-            //     this.getData();
-            // },60000)
         },
         textScroll() {
-            clearTimeout(window.warningTime);
+            clearTimeout(window.warningTime)
             let [box, content, text] = [
                 document.querySelector(".panel-warning .text-box"),
                 document.querySelector(".panel-warning .text-content"),
@@ -96,10 +95,10 @@ export default {
             let [textWidth, boxWidth] = [text.offsetWidth, box.offsetWidth];
             // 判断文字长度是否大于盒子长度
             if (boxWidth > textWidth) {
+                this.isShow = false;
                 return false;
             }
-            content.innerHTML += content.innerHTML;
-            document.querySelector(".panel-warning .text").classList.add("padding");
+            this.isShow = true;
             // 更新
             textWidth = document.querySelector(".panel-warning .text").offsetWidth;
             toScrollLeft();
@@ -110,7 +109,7 @@ export default {
                     box.scrollLeft++;
                     window.warningTime =  setTimeout(toScrollLeft, 20);
                 } else {
-                    window.warningTime =  setTimeout(fun2, 0);
+                    window.warningTime = setTimeout(fun2, 0);
                 }
             }
             function fun2() {
@@ -153,15 +152,6 @@ export default {
         height: 34px;
         line-height: 34px;
     }
-    // .name {
-    //     font-size: 18px;
-    //     width: 356px;
-    //     height: 34px;
-    //     line-height: 34px;
-    //     margin-left: 15px;
-    //     padding-left: 10px;
-    // }
-
     .general-border {
         width: 356px;
         height: 34px;
@@ -184,7 +174,7 @@ export default {
         line-height: 34px;
     }
     .text-content p.padding {
-        padding-right: 300px;
+        padding-right: 100px;
     }
 }
 .content-box {
@@ -221,7 +211,6 @@ export default {
         }
     }
     .right {
-        // margin-left: 24px;
         span {
             display: inline-block;
             height: 100%;
@@ -236,7 +225,6 @@ export default {
         .unit {
             font-size: 18px;
             vertical-align: bottom;
-            // margin-left: 13px;
         }
     }
 }

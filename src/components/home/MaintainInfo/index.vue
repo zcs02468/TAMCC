@@ -101,18 +101,13 @@ export default {
             ];
             let [textWidth, boxWidth] = [text.offsetWidth, box.offsetWidth];
             // 判断文字长度是否大于盒子长度
-            // console.log("textWidth, boxWidth", textWidth, boxWidth);
-            console.log( 'boxWidth', boxWidth , textWidth );
             if (boxWidth > textWidth) {
                 this.isShow = false;
                 return false;
             }
             this.isShow = true;
-            // content.innerHTML += content.innerHTML;
-            // document.querySelector(".broadcast .text").classList.add("padding");
             // 更新
-            textWidth = document.querySelector(".maintain .first-text")
-                .offsetWidth;
+            textWidth = document.querySelector(".maintain .first-text").offsetWidth;
             toScrollLeft();
             function toScrollLeft() {
                 clearTimeout(window.maintainTimeout)
@@ -178,7 +173,7 @@ export default {
     line-height: 34px;
 }
 .text-content p.padding {
-    padding-right: 300px;
+    padding-right: 100px;
 }
 
 @keyframes marginLeft {

@@ -7,7 +7,7 @@
                 <div class="text-box">
                     <div class="text-content">
                         <p class="text first-text">{{todayDeviceException}}</p>
-                        <p class="text padding" v-if="isShow">{{todayDeviceException}}</p>
+                        <p class="text" v-if="isShow">{{todayDeviceException}}</p>
                     </div>
                 </div>
             </div>
@@ -101,8 +101,6 @@ export default {
                 return false;
             }
             this.isShow = true;
-            // content.innerHTML += content.innerHTML;
-            // document.querySelector(".broadcast .text").classList.add("padding");
             // 更新
             textWidth = document.querySelector(".system-device .first-text")
                 .offsetWidth;
@@ -142,15 +140,6 @@ export default {
         height: 34px;
         line-height: 34px;
     }
-    // .name {
-    //     font-size: 18px;
-    //     width: 279px;
-    //     height: 34px;
-    //     line-height: 34px;
-    //     margin-left: 15px;
-    //     padding-left: 10px;
-    // }
-    
     .general-border {
         width: 279px;
         height: 34px;
@@ -173,7 +162,7 @@ export default {
         line-height: 34px;
     }
     .text-content p.padding {
-        padding-right: 300px;
+        padding-right: 100px;
     }
 }
 .content {

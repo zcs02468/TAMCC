@@ -54,7 +54,7 @@ module.exports = {
     
             ]
         }
-    }
+    },
     // // 压缩图片
     // chainWebpack: (config) => {
     //     config.module
@@ -64,4 +64,5 @@ module.exports = {
     //         .options({ bypassOnDebug: true })
     //         .end();
     // },
+  outputDir: 'tamcc',
 };
