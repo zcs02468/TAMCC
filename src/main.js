@@ -6,7 +6,7 @@ import echarts from "echarts";
 import axios from "axios";
 import "./assets/js/flexible";
 import { Select, Icon } from 'ant-design-vue';
-import { Carousel, CarouselItem, Pagination } from "element-ui";
+import { Pagination } from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 
 import "@/assets/styles/base.scss";

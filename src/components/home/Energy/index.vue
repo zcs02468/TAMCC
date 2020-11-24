@@ -109,7 +109,6 @@ export default {
             let maxNum = 0;
             let baseLineArr = [];
             data.forEach(item => {
-                console.log( 'item.fshowtime', item.fshowtime );
                 let time = item.fshowtime.split(" ")[0].split("-")
                 xArr.push(`${time[1]}-${time[2]}`)
                 yArr.push(item.fusedvalue)

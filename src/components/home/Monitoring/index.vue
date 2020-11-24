@@ -5,26 +5,29 @@
         <div class="content">
             <div class="left box">
                 <div class="video-box">
-                    <img src="../../../assets/image/monitor1.jpg" alt="">
+                    <!-- <img src="../../../assets/image/monitor1.jpg" alt=""> -->
+                    <myVideo
+                        :videoId="leftVideoId"
+                        :videoSrc="leftVideoSrc"
+                    ></myVideo>
                 </div>
                 <div class="select-box">
                     <a-select
-                        default-value="jack"
+                        :default-value="0"
                         style="width: 100%;background: transparent;"
+                        @change="leftSelectChange"
                     >
                         <a-icon
                             slot="suffixIcon"
                             type="caret-down"
                             style="color: #fff;"
                         />
-                        <a-select-option value="jack">
-                            区域1
-                        </a-select-option>
-                        <a-select-option value="lucy">
-                            区域2
-                        </a-select-option>
-                        <a-select-option value="Yiminghe">
-                            区域3
+                        <a-select-option
+                            :value="index"
+                            v-for="(item,index) in leftSelectList"
+                            :key="item.id"
+                        >
+                            {{ item.deviceName }}
                         </a-select-option>
                     </a-select>
                 </div>
@@ -35,11 +38,14 @@
                     <!-- <video>
                         <source src="rtmp://10.160.8.103:1935/live/1" type="application/x-mpegURL">
                     </video> -->
-                    <myVideo></myVideo>
+                    <myVideo
+                        :videoId="rightVideoId"
+                        :videoSrc="rightVideoSrc"
+                    ></myVideo>
                 </div>
                 <div class="select-box">
                     <a-select
-                        default-value="jack"
+                        :default-value="0"
                         style="width: 100%;background: transparent;"
                     >
                         <a-icon
@@ -47,14 +53,13 @@
                             type="caret-down"
                             style="color: #fff;"
                         />
-                        <a-select-option value="jack">
-                            区域1
-                        </a-select-option>
-                        <a-select-option value="lucy">
-                            区域2
-                        </a-select-option>
-                        <a-select-option value="Yiminghe">
-                            区域3
+                        <a-select-option
+                            :value="index"
+                            v-for="(item,index) in rightSelectList"
+                            :key="item.id"
+                            @change="rightSelectChange"
+                        >
+                            {{ item.deviceName }}
                         </a-select-option>
                     </a-select>
                 </div>
@@ -64,11 +69,87 @@
 </template>
 
 <script>
-import myVideo from "./myVideo"
+import myVideo from "./myVideo";
+import { getDeviceList, getRTMPUrl } from "@/axios";
 export default {
-    components:{
-        myVideo
-    }
+    components: {
+        myVideo,
+    },
+    data() {
+        return {
+            leftSelectList: [],
+            rightSelectList: [],
+            leftVideoId: "",
+            rightVideoId: "",
+            leftVideoSrc: "",
+            rightVideoSrc: "",
+        };
+    },
+    async created() {
+        this.getDeviceList(1).then((res) => {
+            console.log("res,aaaaaa", res);
+            this.leftSelectList = res;
+            this.leftSelectList.splice();
+            this.getVideoUrl(1, this.leftSelectList[0].deviceIp);
+        });
+        await this.getDeviceList(2).then((res) => {
+            this.rightSelectList = res;
+            this.rightSelectList.splice();
+            this.getVideoUrl(2, this.rightSelectList[0].deviceIp);
+        });
+    },
+    methods: {
+        leftSelectChange(value) {
+            this.getVideoUrl(1, this.leftSelectList[value].deviceIp);
+        },
+        rightSelectChange(value) {
+            this.getVideoUrl(2, this.rightSelectList[value].deviceIp);
+        },
+        async getDeviceList(type) {
+            let [res] = await getDeviceList({window: type});
+            // let res = {
+            //     result: "true",
+            //     data: [
+            //         {
+            //             isNewRecord: false,
+            //             id: "1331149452718415872",
+            //             createDate: "2020-11-24 16:15",
+            //             updateDate: "2020-11-24 16:26",
+            //             deviceName: "冷站房进出口",
+            //             deviceIp: "192.168.1.1",
+            //             window: "1",
+            //         },
+            //     ],
+            //     message: "请求成功",
+            // };
+            // console.log( 'res')
+            let data = res.data;
+            // deviceName	设备显示名称
+            // deviceIp	设备IP地址
+            return data;
+        },
+        async getVideoUrl(type, ip) {
+            // window	窗口
+            // ip	设备ip
+            const params = {
+                window: type,
+                ip: ip,
+            };
+            let [res] = await getRTMPUrl(params);
+            // let res = {
+            //     result: "true",
+            //     data: "rtmp://192.168.1.200:1935/live/1",
+            //     message: "请求成功",
+            // };
+            if (type == 1) {
+                this.leftVideoId = this.leftSelectList[0].id;
+                this.leftVideoSrc = res.data;
+            } else {
+                this.rightVideoId = this.rightSelectList[0].id;
+                this.rightVideoSrc = res.data;
+            }
+        },
+    },
 };
 </script>
 

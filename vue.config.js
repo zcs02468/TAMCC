@@ -10,6 +10,7 @@ module.exports = {
         proxy: {
             "/smartEnergy": {
                 target: "http://47.110.226.205:8980",
+                // target: "http://10.160.8.103:8090",
                 // target: "https://www.easy-mock.com/mock/5f3942727c850a226dfc1fbd",
                 // target: " http://mock.jszhong.top/mock/5f394e32af83f705d6899898",
                 changeOrigin: true,

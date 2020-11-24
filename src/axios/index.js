@@ -39,3 +39,10 @@ export const getMetaInfo = async () => await get({url:baseUrl + '/smartEnergy/me
 
 //T1值班信息接口
 export const getT1Duty = async () => await get({url:'/smartEnergy/t1Duty'});
+
+
+//一、	获取设备列表（根据窗口编号）
+//http://10.160.8.103:8090/smartEnergy/dev/getDeviceListBywindow?Window=1
+export const getDeviceList = async (obj) => await get({url:'/smartEnergy/dev/getDeviceListBywindow', params:{...obj}});
+
+export const getRTMPUrl = async (obj) => await get({url:"/smartEnergy/dev/getRTMPUrlAndStartTranscode", params:{...obj}})
