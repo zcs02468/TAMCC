@@ -18,7 +18,7 @@
 <script>
 import { getSumElectricList } from "../../../axios";
 import comMinxins from "../../common/comMinxins";
-// import ajaxData from "./data.json"
+import ajaxData from "./data.json"
 export default {
     data() {
         return {
@@ -61,8 +61,8 @@ export default {
             this.myChart.setOption(this.option);
         },
         async getData() {
-            let [res] = await getSumElectricList();
-            // let res = ajaxData;
+            // let [res] = await getSumElectricList();
+            let res = ajaxData;
             let data = JSON.parse(res.message);
             // let res = this.getAjaxData();
             // let data = res.message
@@ -75,6 +75,7 @@ export default {
             let baselineList = this.getBaseLineList(data.baselineList)
             let electricData = this.sortingData(data.sumElectricList.reverse(),baselineList.electric);
             let waterData = this.sortingData(data.sumWaterList.reverse(),baselineList.water);
+            console.log( 'waterData:', waterData );
             let obj = {
                 electric:{
                     x: electricData.x,
@@ -91,6 +92,7 @@ export default {
                     max: waterData.max
                 },
             }
+            console.log( 'objobj', obj );
             electricData.max < baselineList.electricMax && ( obj.electric.max = baselineList.electricMax );
             waterData.max < baselineList.waterMax && ( obj.water.max = baselineList.waterMax );
             Object.assign(this.list,obj);
@@ -107,6 +109,7 @@ export default {
             let maxNum = 0;
             let baseLineArr = [];
             data.forEach(item => {
+                console.log( 'item.fshowtime', item.fshowtime );
                 let time = item.fshowtime.split(" ")[0].split("-")
                 xArr.push(`${time[1]}-${time[2]}`)
                 yArr.push(item.fusedvalue)

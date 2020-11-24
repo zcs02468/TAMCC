@@ -31,7 +31,11 @@
             </div>
             <div class="right box">
                 <div class="video-box">
-                    <img src="../../../assets/image/monitor2.jpg" alt="">
+                    <!-- <img src="../../../assets/image/monitor2.jpg" alt=""> -->
+                    <!-- <video>
+                        <source src="rtmp://10.160.8.103:1935/live/1" type="application/x-mpegURL">
+                    </video> -->
+                    <myVideo></myVideo>
                 </div>
                 <div class="select-box">
                     <a-select
@@ -60,7 +64,12 @@
 </template>
 
 <script>
-export default {};
+import myVideo from "./myVideo"
+export default {
+    components:{
+        myVideo
+    }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -93,7 +102,7 @@ export default {};
 
 .box {
     width: 240px;
-    height: 384px;
+    // height: 384px;
     .video-box {
         width: 100%;
         height: 145px;
@@ -103,6 +112,10 @@ export default {};
         box-shadow: 0.5px 0.5px 17.5px 0px rgba(88, 185, 255, 0.41) inset;
         overflow: hidden;
         img {
+            width: 100%;
+            height: 100%;
+        }
+        video {
             width: 100%;
             height: 100%;
         }
