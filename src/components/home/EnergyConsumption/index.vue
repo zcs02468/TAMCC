@@ -118,7 +118,6 @@ export default {
             this.myRadarChart.setOption(this.radarOption);
 
             let {xAxisLine,yAxisLine} = this.getLineChartsData(realisticList,radarIndicator);
-            console.log( 'yAxisLineyAxisLine',xAxisLine, yAxisLine );
             this.lineOption.xAxis[0].data = xAxisLine;
             let index = 0;
             let series = [];
@@ -131,9 +130,7 @@ export default {
                     index++;
                 }
             }
-            console.log( '3333333');
             this.lineOption.series = series;
-            // console.log(  );
             this.myLineChart.setOption(this.lineOption);
         },
         getRadarChartsData(data) {
