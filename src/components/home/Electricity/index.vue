@@ -8,7 +8,8 @@
                     <li :class="selectType == 'electric'? 'select':''" @click="selectClick('electric')">电力</li>
                     <li :class="selectType == 'water'? 'select':''" @click="selectClick('water')">市政水</li>
                     <li :class="selectType == 'gas'? 'select':''" @click="selectClick('gas')">天然气</li>
-                    <li :class="selectType == 'awater'? 'select':''" @click="selectClick('awater')">中水</li>
+                    <li></li>
+                    <!-- <li :class="selectType == 'awater'? 'select':''" @click="selectClick('awater')">中水</li> -->
                 </ul>
             </div>
             <div class="ping-box">
@@ -27,18 +28,18 @@
                     </div>
                     <div class="block-box">
                         <span class="max">水：</span>
-                        <span>{{waterSum}}m²</span>
+                        <span>{{waterSum}}m³</span>
                     </div>
                 </div>
                 <div class="bottom">
                     <div class="block-box">
                         <span>气：</span>
-                        <span>XXXXm²</span>
+                        <span>{{gasSum}}m³</span>
                     </div>
-                    <div class="block-box">
+                    <!-- <div class="block-box">
                         <span class="max">中水：</span>
                         <span>XXXXm²</span>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -93,9 +94,8 @@ export default {
             // let {electricList,waterList} = data;
             let electricData = this.sortingData(data.electricList);
             let waterData = this.sortingData(data.waterList);
-            let gasData = this.sortingData(data.naturalGas)
-            // this.electricSum = data.electricList[0].fusedvalue;
-            // this.waterSum = data.waterData[0].fusedvalue;
+            let gasData = this.sortingData(data.naturalGas);
+            
             this.electricSum = electricData.sum;
             this.waterSum = waterData.sum;
             this.gasSum = gasData.sum;
@@ -112,7 +112,7 @@ export default {
             let arr = [];
             let sum = 0; 
             data.forEach((item,index) => {
-                if( item.fengitemname == '总用电' || item.fengitemname == '总用水'  ) {
+                if( item.fengitemname == '总用电' || item.fengitemname == '总用水' || item.fengitemname == '总用天然气' ) {
                     sum = item.fusedvalue;
                 }else {
                     arr.push({
@@ -250,6 +250,9 @@ export default {
         text-align: center;
         line-height: 33px;
         margin-bottom: 20px;
+    }
+    li:last-child{
+        visibility: hidden;
     }
     li.select {
         background:linear-gradient(to right,rgba(1,77,204,1),rgba(3,55,152,1)) !important;

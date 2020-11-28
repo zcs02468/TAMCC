@@ -38,7 +38,7 @@ export default {
     data() {
         return {
             dataList: null,
-            typeArr:["none","none","none","none","none","none","none","none","none","none","none","none",],
+            typeArr:["none","none","none","none","none","none","none","none","none","none","none","none"],
             selectIndex: 0,
             selectType: null,
             guide:{
@@ -75,6 +75,7 @@ export default {
             let data = JSON.parse(res.message);
             let newArr = this.gertNewTypeArr( data.typeList );
             this.typeArr = newArr;
+            this.typeArr.length = 12;
             this.typeArr.splice();
             if( type ) {
                 this.getAssginType(newArr[0]);

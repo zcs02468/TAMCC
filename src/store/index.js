@@ -10,7 +10,7 @@ export default new Vuex.Store({
                 oneH: 0,
                 twoH: 0,
             },
-            mapDialogType: '',
+            mapDialogType: 'electricity',
         },
         randomNum: 0
     },

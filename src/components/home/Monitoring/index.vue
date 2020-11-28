@@ -5,12 +5,13 @@
         <div class="content">
             <div class="left box">
                 <div class="video-box">
-                    <!-- <img src="../../../assets/image/monitor1.jpg" alt=""> -->
-                    <myVideo
-                        v-if="leftVideoSrc"
-                        :videoId="leftVideoId"
-                        :videoSrc="leftVideoSrc"
-                    ></myVideo>
+                    <div class="video-floor" :class="[ leftVideoType && !mapDialogType ? 'fixed':'' ]" @click="leftVideoClick">
+                        <myVideo
+                            v-if="leftVideoSrc"
+                            :videoId="leftVideoId"
+                            :videoSrc="leftVideoSrc"
+                        ></myVideo>
+                    </div>
                 </div>
                 <div class="select-box">
                     <a-select
@@ -35,15 +36,13 @@
             </div>
             <div class="right box">
                 <div class="video-box">
-                    <!-- <img src="../../../assets/image/monitor2.jpg" alt=""> -->
-                    <!-- <video>
-                        <source src="rtmp://10.160.8.103:1935/live/1" type="application/x-mpegURL">
-                    </video> -->
-                    <myVideo
-                        v-if="rightVideoSrc"
-                        :videoId="rightVideoId"
-                        :videoSrc="rightVideoSrc"
-                    ></myVideo>
+                    <div class="video-floor" :class="[ rightVideoType && !mapDialogType ? 'fixed':'' ]" @click="rightVideoClick">
+                        <myVideo
+                            v-if="rightVideoSrc"
+                            :videoId="rightVideoId"
+                            :videoSrc="rightVideoSrc"
+                        ></myVideo>
+                    </div>
                 </div>
                 <div class="select-box">
                     <a-select
@@ -73,6 +72,7 @@
 <script>
 import myVideo from "./myVideo";
 import { getDeviceList, getRTMPUrl } from "@/axios";
+import {mapState,mapMutations} from "vuex"
 export default {
     components: {
         myVideo,
@@ -85,6 +85,8 @@ export default {
             rightVideoId: "",
             leftVideoSrc: "",
             rightVideoSrc: "",
+            leftVideoType: false,
+            rightVideoType: false,
         };
     },
     async created() {
@@ -104,6 +106,17 @@ export default {
         });
     },
     methods: {
+        ...mapMutations(['closeMapDialog']),
+        leftVideoClick() {
+            this.closeMapDialog();
+            this.rightVideoType = false;
+            this.leftVideoType = !this.leftVideoType;
+        },
+        rightVideoClick() {
+            this.closeMapDialog();
+            this.leftVideoType = false;
+            this.rightVideoType = !this.rightVideoType;
+        },
         leftSelectChange(value) {
             this.getVideoUrl(1, this.leftSelectList[value].deviceIp);
         },
@@ -112,7 +125,6 @@ export default {
         },
         async getDeviceList(type) {
             let [res] = await getDeviceList({window: type});
-            console.warn( '111111获取视频列表type：', type,'----------------', res );
             if( !res ) return;
             // let res = {
             //     result: "true",
@@ -143,7 +155,6 @@ export default {
                 ip: ip,
             };
             let [res] = await getRTMPUrl(params);
-            console.warn( '111111获取视频URL======type：', type,'----------------', res );
             if( !res ) return;
             // let res = {
             //     result: "true",
@@ -154,14 +165,17 @@ export default {
             if (type == 1) {
                 this.leftVideoId = Math.random().toString(32).substr(2).padStart(12, "left963852");
                 this.leftVideoSrc = res.data;
-                console.log('%c 左侧视频地址:' + this.leftVideoSrc,'color:blue;background:yellow;')
             } else {
                 this.rightVideoId = Math.random().toString(32).substr(2).padStart(12, "right963852");
                 this.rightVideoSrc = res.data;
-                console.log('%c 右侧视频地址:' + this.rightVideoSrc,'color:blue;background:yellow;')
             }
         },
     },
+    computed:{
+        ...mapState({
+            mapDialogType: state => state.home.mapDialogType
+        })
+    }
 };
 </script>
 
@@ -204,6 +218,17 @@ export default {
         background: rgba(119, 161, 255, 0.14);
         box-shadow: 0.5px 0.5px 17.5px 0px rgba(88, 185, 255, 0.41) inset;
         overflow: hidden;
+        .video-floor {
+            width: 100%;
+            height: 100%;
+        }
+        .fixed {
+            position: fixed;
+            top: 67px;
+            left: 575px;
+            width: 765px;
+            height: 678.5px;
+        }
         img {
             width: 100%;
             height: 100%;
