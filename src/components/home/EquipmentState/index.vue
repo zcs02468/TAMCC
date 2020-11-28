@@ -95,7 +95,6 @@ export default {
             let [textWidth, boxWidth] = [text.offsetWidth, box.offsetWidth];
             // 判断文字长度是否大于盒子长度
             // console.log("textWidth, boxWidth", textWidth, boxWidth);
-            console.log( 'boxWidth', boxWidth , textWidth );
             if (boxWidth > textWidth) {
                 this.isShow = false;
                 return false;

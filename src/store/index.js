@@ -20,7 +20,6 @@ export default new Vuex.Store({
             state.home.waterLevel.twoH = obj.twoH;
         },
         SET_RANDOM_NUM(state) {
-            console.log( '设置时间' );
             let date = new Date();
             state.randomNum = date.getTime();
         },

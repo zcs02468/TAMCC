@@ -75,7 +75,6 @@ export default {
             let baselineList = this.getBaseLineList(data.baselineList)
             let electricData = this.sortingData(data.sumElectricList.reverse(),baselineList.electric);
             let waterData = this.sortingData(data.sumWaterList.reverse(),baselineList.water);
-            console.log( 'waterData:', waterData );
             let obj = {
                 electric:{
                     x: electricData.x,
@@ -92,7 +91,6 @@ export default {
                     max: waterData.max
                 },
             }
-            console.log( 'objobj', obj );
             electricData.max < baselineList.electricMax && ( obj.electric.max = baselineList.electricMax );
             waterData.max < baselineList.waterMax && ( obj.water.max = baselineList.waterMax );
             Object.assign(this.list,obj);

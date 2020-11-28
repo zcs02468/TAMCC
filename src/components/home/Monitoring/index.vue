@@ -7,6 +7,7 @@
                 <div class="video-box">
                     <!-- <img src="../../../assets/image/monitor1.jpg" alt=""> -->
                     <myVideo
+                        v-if="leftVideoSrc"
                         :videoId="leftVideoId"
                         :videoSrc="leftVideoSrc"
                     ></myVideo>
@@ -39,6 +40,7 @@
                         <source src="rtmp://10.160.8.103:1935/live/1" type="application/x-mpegURL">
                     </video> -->
                     <myVideo
+                        v-if="rightVideoSrc"
                         :videoId="rightVideoId"
                         :videoSrc="rightVideoSrc"
                     ></myVideo>
@@ -87,15 +89,18 @@ export default {
     },
     async created() {
         this.getDeviceList(1).then((res) => {
-            console.log("res,aaaaaa", res);
-            this.leftSelectList = res;
-            this.leftSelectList.splice();
-            this.getVideoUrl(1, this.leftSelectList[0].deviceIp);
+            if( res ) {
+                this.leftSelectList = res;
+                this.leftSelectList.splice();
+                this.getVideoUrl(1, this.leftSelectList[0].deviceIp);
+            }
         });
-        await this.getDeviceList(2).then((res) => {
-            this.rightSelectList = res;
-            this.rightSelectList.splice();
-            this.getVideoUrl(2, this.rightSelectList[0].deviceIp);
+        this.getDeviceList(2).then((res) => {
+            if( res ) {
+                this.rightSelectList = res;
+                this.rightSelectList.splice();
+                this.getVideoUrl(2, this.rightSelectList[0].deviceIp);
+            }
         });
     },
     methods: {
@@ -107,6 +112,8 @@ export default {
         },
         async getDeviceList(type) {
             let [res] = await getDeviceList({window: type});
+            console.warn( '111111获取视频列表type：', type,'----------------', res );
+            if( !res ) return;
             // let res = {
             //     result: "true",
             //     data: [
@@ -136,17 +143,22 @@ export default {
                 ip: ip,
             };
             let [res] = await getRTMPUrl(params);
+            console.warn( '111111获取视频URL======type：', type,'----------------', res );
+            if( !res ) return;
             // let res = {
             //     result: "true",
-            //     data: "rtmp://192.168.1.200:1935/live/1",
+            //     // data: "rtmp://192.168.1.200:1935/live/1",
+            //     data: "rtmp://10.160.8.103:1935/live/1",
             //     message: "请求成功",
             // };
             if (type == 1) {
-                this.leftVideoId = this.leftSelectList[0].id;
+                this.leftVideoId = Math.random().toString(32).substr(2).padStart(12, "left963852");
                 this.leftVideoSrc = res.data;
+                console.log('%c 左侧视频地址:' + this.leftVideoSrc,'color:blue;background:yellow;')
             } else {
-                this.rightVideoId = this.rightSelectList[0].id;
+                this.rightVideoId = Math.random().toString(32).substr(2).padStart(12, "right963852");
                 this.rightVideoSrc = res.data;
+                console.log('%c 右侧视频地址:' + this.rightVideoSrc,'color:blue;background:yellow;')
             }
         },
     },

@@ -90,7 +90,6 @@ export default {
             this.myRadarChart.setOption(this.radarOption);
 
             let {xAxisLine,yAxisLine} = this.getLineChartsData(realisticList,radarIndicator);
-            console.log( 'yAxisLineyAxisLine',xAxisLine, yAxisLine );
             this.lineOption.xAxis[0].data = xAxisLine;
             let index = 0;
             let series = [];

@@ -46,13 +46,11 @@ export default {
        })
     },
     destroyed(){
-        console.log('销毁-----------------')
         this.disposeVideo();
     },
     methods: {
       selectVideo() {
             this.videoPlayer = videojs(this.videoId);// 关联video标签的id
-            console.log(this.videoPlayer)
             this.videoPlayer.src({
                src: this.videoSrc,
                type: 'rtmp/flv'
