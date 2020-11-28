@@ -3,7 +3,7 @@
         <div class="charts-box">
             <div class="charts" :id="name"></div>
         </div>
-        <div class="btn general-border">{{prop.finishSum}}</div>
+        <div class="btn general-border">{{prop.finishSum}}/{{prop.allSum}}</div>
     </div>
 </template>
 

@@ -6,7 +6,7 @@
                 <li :class="selectType == 'electric'? 'select':''" @click="selectClick('electric')">电力</li>
                 <li :class="selectType == 'water'? 'select':''" @click="selectClick('water')">市政水</li>
                 <li :class="selectType == 'gas'? 'select':''" @click="selectClick('gas')">天然气</li>
-                <li :class="selectType == 'awater'? 'select':''" @click="selectClick('awater')">中水</li>
+                <!-- <li :class="selectType == 'awater'? 'select':''" @click="selectClick('awater')">中水</li> -->
             </ul>
         </div>
         <div class="charts-box">

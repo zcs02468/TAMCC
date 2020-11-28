@@ -57,9 +57,11 @@ export default {
             list:{
                 electricList:[],
                 waterList:[],
+                gasList:[]
             },
             electricSum:0,
-            waterSum:0
+            waterSum:0,
+            gasSum:0
         }
     },
     mixins:[comMinxins],
@@ -91,13 +93,16 @@ export default {
             // let {electricList,waterList} = data;
             let electricData = this.sortingData(data.electricList);
             let waterData = this.sortingData(data.waterList);
+            let gasData = this.sortingData(data.naturalGas)
             // this.electricSum = data.electricList[0].fusedvalue;
             // this.waterSum = data.waterData[0].fusedvalue;
             this.electricSum = electricData.sum;
             this.waterSum = waterData.sum;
+            this.gasSum = gasData.sum;
             let obj = {
                 electricList: electricData.arr,
                 waterList: waterData.arr,
+                gasList: gasData.arr,
             }
             Object.assign(this.list, obj);
             this.option.series[0].data = this.list[`${this.selectType}List`];
@@ -107,7 +112,7 @@ export default {
             let arr = [];
             let sum = 0; 
             data.forEach((item,index) => {
-                if( item.fengitemname == '总用电' || item.fengitemname == '总用水' ) {
+                if( item.fengitemname == '总用电' || item.fengitemname == '总用水'  ) {
                     sum = item.fusedvalue;
                 }else {
                     arr.push({

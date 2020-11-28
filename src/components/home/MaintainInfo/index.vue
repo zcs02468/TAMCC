@@ -51,7 +51,7 @@ export default {
                 {
                     allSum: 0,
                     finishSum: 0,
-                    title: "其他",
+                    title: "合计",
                 },
             ],
             todayRepairInfo: "111",
@@ -71,12 +71,18 @@ export default {
             let [res] = await getLastRepair();
             // let res = {"result":"true","message":"{\"finishedSumList\":[{\"work_type\":\"1\",\"finish_sum\":1},{\"work_type\":\"2\",\"finish_sum\":1}],\"todayRepairInfo\":\"公区走廊照明故障,公区走廊照明故障,检区照明灯具故障,检区照明灯具故障,检区照明灯具故障,检区照明灯具故障,检区照明灯具故障,检区照明灯具故障\",\"allSumList\":[{\"work_type\":\"1\",\"all_sum\":3},{\"work_type\":\"2\",\"all_sum\":2}]}"}
             let data = JSON.parse(res.message);
+            let allSum = 0;
+            let finishNum = 0;
             data.allSumList.forEach((item) => {
+                allSum+=item.all_sum
                 this.list[item.work_type].allSum = item.all_sum;
             });
             data.finishedSumList.forEach((item) => {
+                finishNum+=item.finish_sum
                 this.list[item.work_type].finishSum = item.finish_sum;
             });
+            this.list[4].allSum = allSum;
+            this.list[4].finishSum = finishNum;
             this.$refs.chart_ring1.reloadLine();
             this.$refs.chart_ring2.reloadLine();
             this.$refs.chart_ring3.reloadLine();
