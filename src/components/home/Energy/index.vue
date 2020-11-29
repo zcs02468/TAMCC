@@ -61,8 +61,8 @@ export default {
             this.myChart.setOption(this.option);
         },
         async getData() {
-            // let [res] = await getSumElectricList();
-            let res = ajaxData;
+            let [res] = await getSumElectricList();
+            // let res = ajaxData;
             let data = JSON.parse(res.message);
             // let res = this.getAjaxData();
             // let data = res.message
@@ -75,24 +75,33 @@ export default {
             let baselineList = this.getBaseLineList(data.baselineList)
             let electricData = this.sortingData(data.sumElectricList.reverse(),baselineList.electric);
             let waterData = this.sortingData(data.sumWaterList.reverse(),baselineList.water);
+            let gasData = this.sortingData(data.naturalGas.reverse(),baselineList.gas)
             let obj = {
                 electric:{
                     x: electricData.x,
                     y: electricData.y,
                     standard: electricData.baseLineArr,
-                    min: baselineList.electricMin,
+                    // min: baselineList.electricMin,
                     max: electricData.max
                 },
                 water:{
                     x: waterData.x,
                     y: waterData.y,
                     standard: waterData.baseLineArr,
-                    min: baselineList.waterMin,
+                    // min: baselineList.waterMin,
                     max: waterData.max
                 },
+                gas:{
+                    x: gasData.x,
+                    y: gasData.y,
+                    standard: gasData.baseLineArr,
+                    // min: baselineList.waterMin,
+                    max: gasData.max
+                }
             }
             electricData.max < baselineList.electricMax && ( obj.electric.max = baselineList.electricMax );
             waterData.max < baselineList.waterMax && ( obj.water.max = baselineList.waterMax );
+            gasData.max < baselineList.gasMax && ( obj.gas.max = baselineList.gasMax );
             Object.assign(this.list,obj);
             this.option.xAxis[0].data = this.list[this.selectType].x;
             this.option.series[0].data = this.list[this.selectType].y;
@@ -124,10 +133,12 @@ export default {
             let obj = {
                 electric:{},
                 water:{},
+                gas:{},
                 electricMax: null,
-                waterMax: null
+                waterMax: null,
+                gasMax: null
             }
-            let arr = ['','electric','water',''];
+            let arr = ['','electric','water','gas'];
             data.forEach(item => {
                 if( obj[`${arr[item.type]}Max`] == null ) {
                     obj[`${arr[item.type]}Max`] = item.baselineValue;
