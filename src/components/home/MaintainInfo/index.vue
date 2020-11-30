@@ -69,20 +69,14 @@ export default {
         },
         async getData() {
             let [res] = await getLastRepair();
-            // let res = {"result":"true","message":"{\"finishedSumList\":[{\"work_type\":\"1\",\"finish_sum\":1},{\"work_type\":\"2\",\"finish_sum\":1}],\"todayRepairInfo\":\"公区走廊照明故障,公区走廊照明故障,检区照明灯具故障,检区照明灯具故障,检区照明灯具故障,检区照明灯具故障,检区照明灯具故障,检区照明灯具故障\",\"allSumList\":[{\"work_type\":\"1\",\"all_sum\":3},{\"work_type\":\"2\",\"all_sum\":2}]}"}
-            let data = JSON.parse(res.message);
-            let allSum = 0;
-            let finishNum = 0;
-            data.allSumList.forEach((item) => {
-                allSum+=item.all_sum
-                this.list[item.work_type].allSum = item.all_sum;
-            });
-            data.finishedSumList.forEach((item) => {
-                finishNum+=item.finish_sum
-                this.list[item.work_type].finishSum = item.finish_sum;
-            });
-            this.list[4].allSum = allSum;
-            this.list[4].finishSum = finishNum;
+            // let res = {"result":"true","data":{"todayRepairInfo":"（1）国际到达边检男卫台盆下方水管脱落——已修复\n（2）T25登机口男卫 地漏堵——已修复  \n（3）1号低压室灯管坏——已修复","allSumList":45,"finishedSumList":9,"workCompleteInfos":[{"workType":"1","completeWork":5,"sumWork":22},{"workType":"2","completeWork":3,"sumWork":5},{"workType":"3","completeWork":1,"sumWork":18}]},"message":"请求成功"}
+            let data = res.data;
+            data.workCompleteInfos.forEach(item => {
+                this.list[item.workType].allSum = item.sumWork;
+                this.list[item.workType].finishSum = item.completeWork;
+            })
+            this.list[4].allSum = data.allSumList;
+            this.list[4].finishSum = data.finishedSumList;
             this.$refs.chart_ring1.reloadLine();
             this.$refs.chart_ring2.reloadLine();
             this.$refs.chart_ring3.reloadLine();
@@ -92,11 +86,6 @@ export default {
             this.$nextTick(()=> {
                 this.textScroll();
             })
-            // finish_sum
-            // all_sum
-            // setTimeout(()=> {
-            //     this.getData();
-            // },60000)
         },
         textScroll() {
             clearTimeout(window.maintainTimeout)

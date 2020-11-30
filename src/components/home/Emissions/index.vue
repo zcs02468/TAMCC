@@ -388,18 +388,21 @@ export default {
             font-size: 16px;
             margin-top: 15px;
             cursor: pointer;
-            &:nth-child(2) {
+            &:nth-child(3n+2) {
                 margin: 15px 15px 0 15px;
             }
-            &:nth-child(5) {
-                margin: 15px 15px 0 15px;
-            }
-            &:nth-child(8) {
-                margin: 15px 15px 0 15px;
-            }
-            &:nth-child(11) {
-                margin: 15px 15px 0 15px;
-            }
+            // &:nth-child(2) {
+            //     margin: 15px 15px 0 15px;
+            // }
+            // &:nth-child(5) {
+            //     margin: 15px 15px 0 15px;
+            // }
+            // &:nth-child(8) {
+            //     margin: 15px 15px 0 15px;
+            // }
+            // &:nth-child(11) {
+            //     margin: 15px 15px 0 15px;
+            // }
         }
         .maxSize {
             font-size: 14px;

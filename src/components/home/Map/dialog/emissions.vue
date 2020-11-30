@@ -70,8 +70,9 @@ export default {
             this.selectIndex = i;
         },
         async getData(type) {
-            let [res] = await getEmissionType();
+            // let [res] = await getEmissionType();
             // let res = {"result":"true","message":"{\"typeList\":[\"类目1\",\"类目2\"]}"};
+            let res= {"result":"true","message":"{\"typeList\":[\"B楼污水\",\"供水水质\",\"油烟排放\",\"梅林\",\"葡珍轩\",\"小杨生煎\",\"新旺\",\"沙龙源\",\"无敌家\",\"东航贵宾\",\"肯德基\",\"新商户1\",\"新商户2\"]}"}
             let data = JSON.parse(res.message);
             let newArr = this.gertNewTypeArr( data.typeList );
             this.typeArr = newArr;
@@ -388,18 +389,21 @@ export default {
             font-size: 16px;
             margin-top: 15px;
             cursor: pointer;
-            &:nth-child(2) {
+            &:nth-child(3n+2) {
                 margin: 15px 15px 0 15px;
             }
-            &:nth-child(5) {
-                margin: 15px 15px 0 15px;
-            }
-            &:nth-child(8) {
-                margin: 15px 15px 0 15px;
-            }
-            &:nth-child(11) {
-                margin: 15px 15px 0 15px;
-            }
+            // &:nth-child(2) {
+            //     margin: 15px 15px 0 15px;
+            // }
+            // &:nth-child(5) {
+            //     margin: 15px 15px 0 15px;
+            // }
+            // &:nth-child(8) {
+            //     margin: 15px 15px 0 15px;
+            // }
+            // &:nth-child(11) {
+            //     margin: 15px 15px 0 15px;
+            // }
         }
         .dashed {
             border-radius: 4.5px;
