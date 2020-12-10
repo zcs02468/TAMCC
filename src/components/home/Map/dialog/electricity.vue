@@ -110,7 +110,7 @@ export default {
             let arr = [];
             let sum = 0; 
             data.forEach((item,index) => {
-                if( item.fengitemname == '总用电' || item.fengitemname == '总用水' || item.fengitemname == '总用天然气' ) {
+                if( item.fengitemname == '总用电' || item.fengitemname == '总用水' || item.fengitemname == '总用气' ) {
                     sum = item.fusedvalue;
                 }else {
                     arr.push({

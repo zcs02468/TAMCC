@@ -63,6 +63,7 @@ export default {
         async getData() {
             let [res] = await getSumElectricList();
             // let res = ajaxData;
+            // console.log( 'EnergyEnergyEnergy', res );
             let data = JSON.parse(res.message);
             // let res = this.getAjaxData();
             // let data = res.message
@@ -109,6 +110,7 @@ export default {
             this.option.yAxis[0].min = 0;;
             this.option.yAxis[0].max = this.list[this.selectType].max;
             this.myChart.setOption(this.option);
+            console.log('22222222222');
         },
         sortingData(data,obj) {
             let yArr = [];
