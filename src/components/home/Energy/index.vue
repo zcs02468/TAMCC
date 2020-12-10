@@ -56,7 +56,7 @@ export default {
             this.option.xAxis[0].data = this.list[this.selectType].x;
             this.option.series[0].data = this.list[this.selectType].y;
             this.option.series[1].data = this.list[this.selectType].standard;
-            this.option.yAxis[0].min = 0;
+            this.option.yAxis[0].min = this.list[this.selectType].min;
             this.option.yAxis[0].max = this.list[this.selectType].max;
             this.myChart.setOption(this.option);
         },
@@ -76,13 +76,17 @@ export default {
             let baselineList = this.getBaseLineList(data.baselineList)
             let electricData = this.sortingData(data.sumElectricList.reverse(),baselineList.electric);
             let waterData = this.sortingData(data.sumWaterList.reverse(),baselineList.water);
+            // let arr = data.naturalGas.splice(0,1)
             let gasData = this.sortingData(data.naturalGas.reverse(),baselineList.gas)
+            // let gasData = this.sortingData(arr,baselineList.gas)
+            // console.log( 'gasData', gasData );
             let obj = {
                 electric:{
                     x: electricData.x,
                     y: electricData.y,
                     standard: electricData.baseLineArr,
                     // min: baselineList.electricMin,
+                    min: electricData.min,
                     max: electricData.max
                 },
                 water:{
@@ -90,6 +94,7 @@ export default {
                     y: waterData.y,
                     standard: waterData.baseLineArr,
                     // min: baselineList.waterMin,
+                    min: waterData.min,
                     max: waterData.max
                 },
                 gas:{
@@ -97,25 +102,40 @@ export default {
                     y: gasData.y,
                     standard: gasData.baseLineArr,
                     // min: baselineList.waterMin,
+                    min: gasData.min,
                     max: gasData.max
                 }
             }
+            // console.log( 'obj', JSON.parse(JSON.stringify(obj)) );
+            electricData.min > baselineList.electricMin && ( obj.electric.min = baselineList.electricMin );
+            waterData.min > baselineList.waterMin && ( obj.water.min = baselineList.waterMin );
+            gasData.min > baselineList.gasMin && ( obj.gas.min = baselineList.gasMin );
+
             electricData.max < baselineList.electricMax && ( obj.electric.max = baselineList.electricMax );
             waterData.max < baselineList.waterMax && ( obj.water.max = baselineList.waterMax );
             gasData.max < baselineList.gasMax && ( obj.gas.max = baselineList.gasMax );
+
+            obj.electric.min = Math.floor((obj.electric.min/4)*3);
+            obj.water.min = Math.floor((obj.water.min/4)*3);
+            obj.gas.min = Math.floor((obj.gas.min/4)*3);
+
+            obj.electric.max = Math.floor((obj.electric.max/6)*7);
+            obj.water.max = Math.floor((obj.water.max/6)*7);
+            obj.gas.max = Math.floor((obj.gas.max/6)*7);
+
             Object.assign(this.list,obj);
             this.option.xAxis[0].data = this.list[this.selectType].x;
             this.option.series[0].data = this.list[this.selectType].y;
             this.option.series[1].data = this.list[this.selectType].standard;
-            this.option.yAxis[0].min = 0;;
+            this.option.yAxis[0].min = this.list[this.selectType].min;
             this.option.yAxis[0].max = this.list[this.selectType].max;
             this.myChart.setOption(this.option);
-            console.log('22222222222');
         },
         sortingData(data,obj) {
             let yArr = [];
             let xArr = [];
             let maxNum = 0;
+            let minNum = Infinity;
             let baseLineArr = [];
             data.forEach(item => {
                 let time = item.fshowtime.split(" ")[0].split("-")
@@ -123,11 +143,13 @@ export default {
                 yArr.push(item.fusedvalue)
                 baseLineArr.push( obj[`${time[0]}-${time[1]}`].value )
                 item.fusedvalue > maxNum && ( maxNum = item.fusedvalue );
+                item.fusedvalue < minNum && ( minNum = item.fusedvalue );
             });
             return {
                 x: xArr,
                 y: yArr,
                 max: maxNum,
+                min: minNum,
                 baseLineArr: baseLineArr
             }
         },
@@ -138,10 +160,20 @@ export default {
                 gas:{},
                 electricMax: null,
                 waterMax: null,
-                gasMax: null
+                gasMax: null,
+                electricMin: null,
+                waterMin: null,
+                gasMin: null,
             }
             let arr = ['','electric','water','gas'];
             data.forEach(item => {
+                if( obj[`${arr[item.type]}Min`] == null ) {
+                    obj[`${arr[item.type]}Min`] = item.baselineValue;
+                }else {
+                    if( item.baselineValue < obj[`${arr[item.type]}Min`] ) {
+                        obj[`${arr[item.type]}Min`] = item.baselineValue
+                    }
+                }
                 if( obj[`${arr[item.type]}Max`] == null ) {
                     obj[`${arr[item.type]}Max`] = item.baselineValue;
                 }else {
@@ -193,7 +225,7 @@ export default {
                 yAxis: [
                     {
                         type: "value",
-                        min: 70,
+                        // min: 70,
                         splitLine: {
                             show: true,
                             lineStyle: {

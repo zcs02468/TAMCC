@@ -3,9 +3,9 @@
         <div class="map-box"></div>
         <div class="footer-panel">今日航班数<span class="max">&nbsp;&nbsp;{{flights}}&nbsp;&nbsp;</span>架次</div>
         <div class="dialog-box">
-            <electricity v-if="mapDialogType == 'electricity'"/>
-            <energyConsumption v-if="mapDialogType == 'energyConsumption'"/>
-            <emissions v-if="mapDialogType == 'emissions'"/>
+            <electricity v-if="getCom == 'electricity'"/>
+            <energyConsumption v-if="getCom == 'energyConsumption'"/>
+            <emissions v-if="getCom == 'emissions'"/>
         </div>
     </div>
 </template>
@@ -48,8 +48,11 @@ export default {
     computed:{
         ...mapState({
             mapDialogType: state => state.home.mapDialogType
-        })
-    }
+        }),
+        getCom() {
+            return this.mapDialogType ? this.mapDialogType : "electricity"
+        }
+    },
 };
 </script>
 
@@ -62,7 +65,7 @@ export default {
 .map-box {
     width: 100%;
     height: 610px;
-    background: url('../../../assets/image/timg3.png');
+    // background: url('../../../assets/image/timg3.png');
     background-size: 100% 100%;
 }
 .footer-panel {
