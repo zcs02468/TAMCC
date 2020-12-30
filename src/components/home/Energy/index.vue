@@ -63,7 +63,6 @@ export default {
         async getData() {
             let [res] = await getSumElectricList();
             // let res = ajaxData;
-            // console.log( 'EnergyEnergyEnergy', res );
             let data = JSON.parse(res.message);
             // let res = this.getAjaxData();
             // let data = res.message
@@ -79,7 +78,6 @@ export default {
             // let arr = data.naturalGas.splice(0,1)
             let gasData = this.sortingData(data.naturalGas.reverse(),baselineList.gas)
             // let gasData = this.sortingData(arr,baselineList.gas)
-            // console.log( 'gasData', gasData );
             let obj = {
                 electric:{
                     x: electricData.x,
@@ -106,7 +104,6 @@ export default {
                     max: gasData.max
                 }
             }
-            // console.log( 'obj', JSON.parse(JSON.stringify(obj)) );
             electricData.min > baselineList.electricMin && ( obj.electric.min = baselineList.electricMin );
             waterData.min > baselineList.waterMin && ( obj.water.min = baselineList.waterMin );
             gasData.min > baselineList.gasMin && ( obj.gas.min = baselineList.gasMin );

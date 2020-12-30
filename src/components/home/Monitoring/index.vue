@@ -141,7 +141,6 @@ export default {
             //     ],
             //     message: "请求成功",
             // };
-            // console.log( 'res')
             let data = res.data;
             // deviceName	设备显示名称
             // deviceIp	设备IP地址

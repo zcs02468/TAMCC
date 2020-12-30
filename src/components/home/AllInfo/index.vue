@@ -343,7 +343,6 @@ export default {
 //     ],
 //     "totalDutyPhone": "021-24348742"
 // }
-            // console.log(data,"adskfkaljfklajsflkj" );
             this.totalDutyPhone = data.totalDutyPhone;
             this.emcDutyPhone = data.emcDutyPhone;
             let t1DutyList = data.t1DutyList;
