@@ -192,7 +192,7 @@ export default {
                                 min: 0,
                             },
                         ],
-                        center: ["40%", "50%"], // 位置
+                        center: ["30%", "50%"], // 位置
                         shape: "circle", //形状
                         splitArea: {
                             areaStyle: {
