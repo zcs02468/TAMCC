@@ -48,6 +48,7 @@
                     <a-select
                         :default-value="0"
                         style="width: 100%;background: transparent;"
+                        @change="rightSelectChange"
                     >
                         <a-icon
                             slot="suffixIcon"
@@ -58,7 +59,6 @@
                             :value="index"
                             v-for="(item,index) in rightSelectList"
                             :key="item.id"
-                            @change="rightSelectChange"
                         >
                             {{ item.deviceName }}
                         </a-select-option>
@@ -135,6 +135,24 @@ export default {
             //             createDate: "2020-11-24 16:15",
             //             updateDate: "2020-11-24 16:26",
             //             deviceName: "冷站房进出口",
+            //             deviceIp: "192.168.1.1",
+            //             window: "1",
+            //         },
+            //         {
+            //             isNewRecord: false,
+            //             id: "13311494527184158721111",
+            //             createDate: "2020-11-24 16:15",
+            //             updateDate: "2020-11-24 16:26",
+            //             deviceName: "冷站房进出口1112222",
+            //             deviceIp: "192.168.1.1",
+            //             window: "1",
+            //         },
+            //         {
+            //             isNewRecord: false,
+            //             id: "13311494527184158722222",
+            //             createDate: "2020-11-24 16:15",
+            //             updateDate: "2020-11-24 16:26",
+            //             deviceName: "冷站房进出口3333",
             //             deviceIp: "192.168.1.1",
             //             window: "1",
             //         },

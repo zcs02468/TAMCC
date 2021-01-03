@@ -3,120 +3,173 @@
     <div class="panel left-container-angle">
         <div class="left-panel">
             <div class="info-top">
-               <div class="info-content" :class="[ `process${ arr2.length }` ]">
+                <div class="info-content" :class="[`process${arr2.length}`]">
                     <div class="top-box">
                         <div class="content">
                             <div class="item">
-                                <img class="userImg" :src="arr1[0] ? arr1[0].avatar : ''">
-                                <div class="username">{{arr1[0] ? arr1[0].userName : ''}}</div>
+                                <img
+                                    class="userImg"
+                                    src="../../../assets/image/boss.png"
+                                />
+                                <div class="username">
+                                    {{ arr1[0] ? arr1[0].userName : "" }}
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="two-box">
                         <div class="content">
-                            <div class="item-child" v-for="(item,i) in arr2" :key="i">
-                                <img class="userImg" :src="item.avatar">
-                                <div class="username">{{item.userName}}</div>
+                            <div
+                                class="item-child"
+                                v-for="(item, i) in arr2"
+                                :key="i"
+                            >
+                                <img class="userImg" src="../../../assets/image/user.png" />
+                                <div class="username">{{ item.userName }}</div>
                             </div>
                         </div>
                     </div>
-               </div>
+                </div>
             </div>
             <div class="info-bottom">
-                <div>
+                <!-- <div>
                     <span>总值班电话：</span>
                     <span>{{totalDutyPhone}}</span>
                 </div>
                 <div>
                     <span>EMC电话：</span>
                     <span>{{emcDutyPhone}}</span>
+                </div> -->
+                <div class="info general-border">
+                    <div class="left">
+                        <div class="name">能源系统保障信息</div>
+                        <div
+                            class="btn general-border"
+                            @click="openDialog"
+                        >
+                            明细
+                        </div>
+                    </div>
+                    <div class="right">
+                        <span class="max">{{ count }}</span>
+                        <span class="unit">个</span>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="right-panel">
             <div class="time-box">
-                <span>{{date.day}}</span>
-                <span>{{date.time}}</span>
-                <span>{{date.week}}</span>
+                <span>{{ date.day }}</span>
+                <span>{{ date.time }}</span>
+                <span>{{ date.week }}</span>
             </div>
             <div class="weather-box">
                 <div class="weather-top">
                     <div>
                         <span class="img-box">
-                            <img :src="weatherImagePath" alt="" srcset="">
+                            <img :src="weatherImagePath" alt="" srcset="" />
                         </span>
-                        <span class="temperature">{{temperature}}℃</span>
+                        <span class="temperature">{{ temperature }}℃</span>
                     </div>
                     <div>
-                        <span>{{weather}}</span>
-                        <span>{{lowTemperature}}～{{highTemperature}}℃</span>
+                        <span>{{ weather }}</span>
+                        <span
+                            >{{ lowTemperature }}～{{ highTemperature }}℃</span
+                        >
                     </div>
                 </div>
                 <div class="weather-bottom">
                     <div class="weather-left">
-                        <div>湿度：{{humidity}}%</div>
-                        <div class="marginTop15">雨量：{{rainfall}}mm</div>
-                        <div class="marginTop15">AQI：{{aqi}}</div>
+                        <div>湿度：{{ humidity }}%</div>
+                        <div class="marginTop15">雨量：{{ rainfall }}mm</div>
+                        <div class="marginTop15">AQI：{{ aqi }}</div>
                     </div>
                     <div class="weather-right">
-                        <div>照度：{{illuminance}}klux</div>
-                        <div class="marginTop15">风向：{{windDirection}}</div>
-                        <span class="btn marginTop15" :style="{ background: colorArr[btnBgindex] }">{{apiName}}</span>
+                        <div>照度：{{ illuminance }}klux</div>
+                        <div class="marginTop15">风向：{{ windDirection }}</div>
+                        <span
+                            class="btn marginTop15"
+                            :style="{ background: colorArr[btnBgindex] }"
+                            >{{ apiName }}</span
+                        >
                     </div>
                 </div>
             </div>
+        </div>
+        <div>
+            <workDialog
+                v-if="isShow"
+                @closeDialog="closeDialog"
+            />
         </div>
     </div>
 </template>
 
 <script>
-import {getMetaInfo, getT1Duty} from "../../../axios"
+import { getMetaInfo, getT1Duty, getEnergySecurity } from "../../../axios";
 import comMinxins from "../../common/comMinxins";
+import workDialog from "./workDialog/index"
 export default {
+    components:{
+      workDialog
+    },
     data() {
         return {
-            date:{
-                day:'2020-07-27',
-                time:'09:15:55',
-                week:'星期一',
+            date: {
+                day: "2020-07-27",
+                time: "09:15:55",
+                week: "星期一",
             },
-            weather:null,
-            highTemperature:null,
-            lowTemperature:null,
-            illuminance:null,
-            rainfall:null,
-            windDirection:null,
-            aqi:null,
-            weatherImagePath:null,
-            temperature:55,
-            humidity:50,
-            colorArr:['green','yellow','orange','red','purple','#964B00'],
+            weather: null,
+            highTemperature: null,
+            lowTemperature: null,
+            illuminance: null,
+            rainfall: null,
+            windDirection: null,
+            aqi: null,
+            weatherImagePath: null,
+            temperature: 55,
+            humidity: 50,
+            colorArr: ["green", "yellow", "orange", "red", "purple", "#964B00"],
             btnBgindex: 0,
-            apiName: '',
-            totalDutyPhone: '111111111', //总值班电话
-            emcDutyPhone:'2222222222',// emc电话
-            arr1:[],
-            arr2:[]
-        }
+            apiName: "",
+            arr1: [],
+            arr2: [],
+            //能源系统保障信息
+            isShow: false,
+            count: 0,
+        };
     },
-    mixins:[comMinxins],
+    mixins: [comMinxins],
     created() {
         this.showTime();
         this.getData();
     },
-    methods:{
+    methods: {
         updateData() {
             this.getData();
         },
         async getData() {
-          this.getMetadata();
-          this.getT1Duty();
+            this.getMetadata();
+            this.getT1Duty();
+            this.getEnergySecurity();
         },
         async getMetadata() {
             let [res] = await getMetaInfo();
             // let res = {"result":"true","message":"{\"metar\":{\"orderBy\":null,\"isNewRecord\":false,\"id\":\"1297772791943258112\",\"pageSize\":null,\"pageNo\":null,\"createByName\":null,\"createDate\":null,\"status\":null,\"updateBy\":null,\"updateDate\":null,\"lastUpdateDateTime\":null,\"updateByName\":null,\"remarks\":null,\"createBy\":null,\"metarId\":\"1297772791943258112\",\"date\":\"2020-10-26 00:00:00\",\"weather\":\"晴\",\"temperature\":21.0,\"humidity\":35.0,\"highTemperature\":36.0,\"lowTemperature\":28.0,\"illuminance\":20.0,\"rainfall\":0.0,\"windDirection\":\"正北\",\"aqi\":130,\"weatherImagePath\":\"http://192.168.1.10/smartEnergy/profile/1297771563383967746.jpg\",\"createDate_between\":null,\"createDate_lte\":null,\"updateDate_between\":null,\"createDate_gte\":null,\"updateDate_lte\":null,\"updateDate_gte\":null,\"status_in\":null,\"id_in\":null},\"airList\":[{\"orderBy\":null,\"isNewRecord\":false,\"id\":\"1295887375621595136\",\"pageSize\":null,\"pageNo\":null,\"createByName\":null,\"createDate\":\"2020-08-19 08:56\",\"status\":\"0\",\"updateBy\":\"system\",\"updateDate\":\"2020-08-19 08:56\",\"lastUpdateDateTime\":null,\"updateByName\":null,\"remarks\":\"绿色\",\"createBy\":\"system\",\"parentCodes\":\"0,\",\"treeSorts\":\"0000000030,\",\"isQueryChildren\":null,\"treeLevel\":0,\"childList\":null,\"treeLeaf\":\"1\",\"treeSort\":30,\"treeNames\":\"优\",\"description\":\"0~50\",\"isSys\":\"1\",\"dictCode\":\"1295887375621595136\",\"dictLabelOrig\":\"优\",\"dictType\":\"air_quality_index\",\"cssClass\":\"\",\"cssStyle\":\"\",\"extend\":{\"extendF1\":null,\"extendS1\":\"\",\"extendS8\":\"\",\"extendS4\":\"\",\"extendS2\":\"\",\"extendF3\":null,\"extendD2\":null,\"extendS7\":\"\",\"extendF4\":null,\"extendI4\":null,\"extendF2\":null,\"extendI3\":null,\"extendS5\":\"\",\"extendD3\":null,\"extendS6\":\"\",\"extendI2\":null,\"extendI1\":null,\"extendD1\":null,\"extendS3\":\"\",\"extendD4\":null},\"dictValue\":\"1\",\"dictLabel\":\"优\",\"isRoot\":true,\"parentCode\":\"0\",\"isTreeLeaf\":true,\"createDate_between\":null,\"createDate_lte\":null,\"updateDate_between\":null,\"createDate_gte\":null,\"updateDate_lte\":null,\"updateDate_gte\":null,\"status_in\":null,\"id_in\":null},{\"orderBy\":null,\"isNewRecord\":false,\"id\":\"1295887639296516096\",\"pageSize\":null,\"pageNo\":null,\"createByName\":null,\"createDate\":\"2020-08-19 08:57\",\"status\":\"0\",\"updateBy\":\"system\",\"updateDate\":\"2020-08-19 08:57\",\"lastUpdateDateTime\":null,\"updateByName\":null,\"remarks\":\"黄色\",\"createBy\":\"system\",\"parentCodes\":\"0,\",\"treeSorts\":\"0000000060,\",\"isQueryChildren\":null,\"treeLevel\":0,\"childList\":null,\"treeLeaf\":\"1\",\"treeSort\":60,\"treeNames\":\"良\",\"description\":\"51~100\",\"isSys\":\"1\",\"dictCode\":\"1295887639296516096\",\"dictLabelOrig\":\"良\",\"dictType\":\"air_quality_index\",\"cssClass\":\"\",\"cssStyle\":\"\",\"extend\":{\"extendF1\":null,\"extendS1\":\"\",\"extendS8\":\"\",\"extendS4\":\"\",\"extendS2\":\"\",\"extendF3\":null,\"extendD2\":null,\"extendS7\":\"\",\"extendF4\":null,\"extendI4\":null,\"extendF2\":null,\"extendI3\":null,\"extendS5\":\"\",\"extendD3\":null,\"extendS6\":\"\",\"extendI2\":null,\"extendI1\":null,\"extendD1\":null,\"extendS3\":\"\",\"extendD4\":null},\"dictValue\":\"2\",\"dictLabel\":\"良\",\"isRoot\":true,\"parentCode\":\"0\",\"isTreeLeaf\":true,\"createDate_between\":null,\"createDate_lte\":null,\"updateDate_between\":null,\"createDate_gte\":null,\"updateDate_lte\":null,\"updateDate_gte\":null,\"status_in\":null,\"id_in\":null},{\"orderBy\":null,\"isNewRecord\":false,\"id\":\"1295887877545566208\",\"pageSize\":null,\"pageNo\":null,\"createByName\":null,\"createDate\":\"2020-08-19 08:58\",\"status\":\"0\",\"updateBy\":\"system\",\"updateDate\":\"2020-08-19 08:58\",\"lastUpdateDateTime\":null,\"updateByName\":null,\"remarks\":\"橙色\",\"createBy\":\"system\",\"parentCodes\":\"0,\",\"treeSorts\":\"0000000090,\",\"isQueryChildren\":null,\"treeLevel\":0,\"childList\":null,\"treeLeaf\":\"1\",\"treeSort\":90,\"treeNames\":\"轻度污染\",\"description\":\"101~150\",\"isSys\":\"1\",\"dictCode\":\"1295887877545566208\",\"dictLabelOrig\":\"轻度污染\",\"dictType\":\"air_quality_index\",\"cssClass\":\"\",\"cssStyle\":\"\",\"extend\":{\"extendF1\":null,\"extendS1\":\"\",\"extendS8\":\"\",\"extendS4\":\"\",\"extendS2\":\"\",\"extendF3\":null,\"extendD2\":null,\"extendS7\":\"\",\"extendF4\":null,\"extendI4\":null,\"extendF2\":null,\"extendI3\":null,\"extendS5\":\"\",\"extendD3\":null,\"extendS6\":\"\",\"extendI2\":null,\"extendI1\":null,\"extendD1\":null,\"extendS3\":\"\",\"extendD4\":null},\"dictValue\":\"3\",\"dictLabel\":\"轻度污染\",\"isRoot\":true,\"parentCode\":\"0\",\"isTreeLeaf\":true,\"createDate_between\":null,\"createDate_lte\":null,\"updateDate_between\":null,\"createDate_gte\":null,\"updateDate_lte\":null,\"updateDate_gte\":null,\"status_in\":null,\"id_in\":null},{\"orderBy\":null,\"isNewRecord\":false,\"id\":\"1295888088141570048\",\"pageSize\":null,\"pageNo\":null,\"createByName\":null,\"createDate\":\"2020-08-19 08:59\",\"status\":\"0\",\"updateBy\":\"system\",\"updateDate\":\"2020-08-19 08:59\",\"lastUpdateDateTime\":null,\"updateByName\":null,\"remarks\":\"红色\",\"createBy\":\"system\",\"parentCodes\":\"0,\",\"treeSorts\":\"0000000120,\",\"isQueryChildren\":null,\"treeLevel\":0,\"childList\":null,\"treeLeaf\":\"1\",\"treeSort\":120,\"treeNames\":\"中度污染\",\"description\":\"151~200\",\"isSys\":\"1\",\"dictCode\":\"1295888088141570048\",\"dictLabelOrig\":\"中度污染\",\"dictType\":\"air_quality_index\",\"cssClass\":\"\",\"cssStyle\":\"\",\"extend\":{\"extendF1\":null,\"extendS1\":\"\",\"extendS8\":\"\",\"extendS4\":\"\",\"extendS2\":\"\",\"extendF3\":null,\"extendD2\":null,\"extendS7\":\"\",\"extendF4\":null,\"extendI4\":null,\"extendF2\":null,\"extendI3\":null,\"extendS5\":\"\",\"extendD3\":null,\"extendS6\":\"\",\"extendI2\":null,\"extendI1\":null,\"extendD1\":null,\"extendS3\":\"\",\"extendD4\":null},\"dictValue\":\"4\",\"dictLabel\":\"中度污染\",\"isRoot\":true,\"parentCode\":\"0\",\"isTreeLeaf\":true,\"createDate_between\":null,\"createDate_lte\":null,\"updateDate_between\":null,\"createDate_gte\":null,\"updateDate_lte\":null,\"updateDate_gte\":null,\"status_in\":null,\"id_in\":null},{\"orderBy\":null,\"isNewRecord\":false,\"id\":\"1295888348410716160\",\"pageSize\":null,\"pageNo\":null,\"createByName\":null,\"createDate\":\"2020-08-19 09:00\",\"status\":\"0\",\"updateBy\":\"system\",\"updateDate\":\"2020-08-19 09:00\",\"lastUpdateDateTime\":null,\"updateByName\":null,\"remarks\":\"紫色\",\"createBy\":\"system\",\"parentCodes\":\"0,\",\"treeSorts\":\"0000000150,\",\"isQueryChildren\":null,\"treeLevel\":0,\"childList\":null,\"treeLeaf\":\"1\",\"treeSort\":150,\"treeNames\":\"重度污染\",\"description\":\"201~300\",\"isSys\":\"1\",\"dictCode\":\"1295888348410716160\",\"dictLabelOrig\":\"重度污染\",\"dictType\":\"air_quality_index\",\"cssClass\":\"\",\"cssStyle\":\"\",\"extend\":{\"extendF1\":null,\"extendS1\":\"\",\"extendS8\":\"\",\"extendS4\":\"\",\"extendS2\":\"\",\"extendF3\":null,\"extendD2\":null,\"extendS7\":\"\",\"extendF4\":null,\"extendI4\":null,\"extendF2\":null,\"extendI3\":null,\"extendS5\":\"\",\"extendD3\":null,\"extendS6\":\"\",\"extendI2\":null,\"extendI1\":null,\"extendD1\":null,\"extendS3\":\"\",\"extendD4\":null},\"dictValue\":\"5\",\"dictLabel\":\"重度污染\",\"isRoot\":true,\"parentCode\":\"0\",\"isTreeLeaf\":true,\"createDate_between\":null,\"createDate_lte\":null,\"updateDate_between\":null,\"createDate_gte\":null,\"updateDate_lte\":null,\"updateDate_gte\":null,\"status_in\":null,\"id_in\":null},{\"orderBy\":null,\"isNewRecord\":false,\"id\":\"1295888664791261184\",\"pageSize\":null,\"pageNo\":null,\"createByName\":null,\"createDate\":\"2020-08-19 09:01\",\"status\":\"0\",\"updateBy\":\"system\",\"updateDate\":\"2020-08-19 09:01\",\"lastUpdateDateTime\":null,\"updateByName\":null,\"remarks\":\"褐红色\",\"createBy\":\"system\",\"parentCodes\":\"0,\",\"treeSorts\":\"0000000180,\",\"isQueryChildren\":null,\"treeLevel\":0,\"childList\":null,\"treeLeaf\":\"1\",\"treeSort\":180,\"treeNames\":\"严重污染\",\"description\":\"＞300\",\"isSys\":\"1\",\"dictCode\":\"1295888664791261184\",\"dictLabelOrig\":\"严重污染\",\"dictType\":\"air_quality_index\",\"cssClass\":\"\",\"cssStyle\":\"\",\"extend\":{\"extendF1\":null,\"extendS1\":\"\",\"extendS8\":\"\",\"extendS4\":\"\",\"extendS2\":\"\",\"extendF3\":null,\"extendD2\":null,\"extendS7\":\"\",\"extendF4\":null,\"extendI4\":null,\"extendF2\":null,\"extendI3\":null,\"extendS5\":\"\",\"extendD3\":null,\"extendS6\":\"\",\"extendI2\":null,\"extendI1\":null,\"extendD1\":null,\"extendS3\":\"\",\"extendD4\":null},\"dictValue\":\"6\",\"dictLabel\":\"严重污染\",\"isRoot\":true,\"parentCode\":\"0\",\"isTreeLeaf\":true,\"createDate_between\":null,\"createDate_lte\":null,\"updateDate_between\":null,\"createDate_gte\":null,\"updateDate_lte\":null,\"updateDate_gte\":null,\"status_in\":null,\"id_in\":null}]}"}
             let data = JSON.parse(res.message);
-            let {weather,highTemperature,lowTemperature,illuminance,rainfall,windDirection,aqi,weatherImagePath,temperature,humidity} = data.metar;
+            let {
+                weather,
+                highTemperature,
+                lowTemperature,
+                illuminance,
+                rainfall,
+                windDirection,
+                aqi,
+                weatherImagePath,
+                temperature,
+                humidity,
+            } = data.metar;
             this.weather = weather;
             this.highTemperature = highTemperature;
             this.lowTemperature = lowTemperature;
@@ -140,19 +193,19 @@ export default {
             // description	空气质量指数值范围
             // dictLabel	空气质量指数类别
             // remarks	空气质量指数颜色
-            this.getAqiData(data.airList,aqi);
+            this.getAqiData(data.airList, aqi);
         },
-        getAqiData(data,aqi) {
+        getAqiData(data, aqi) {
             for (let i = 0; i < data.length; i++) {
                 const item = data[i];
                 let description = item.description.split("~");
-                if(description.length == 1 ) {
+                if (description.length == 1) {
                     this.btnBgindex = i;
                     this.apiName = item.dictLabel;
-                }else {
+                } else {
                     let min = description[0];
                     let max = description[1];
-                    if( min <= aqi && aqi <= max  ) {
+                    if (min <= aqi && aqi <= max) {
                         this.btnBgindex = i;
                         this.apiName = item.dictLabel;
                         return;
@@ -161,205 +214,30 @@ export default {
             }
         },
         async getT1Duty() {
-            // let res = {"result":"true","message":"{\"emcDutyPhone\":\"13888886eee868\",\"t1DutyList\":[{\"pageNo\":null,\"orderBy\":null,\"isNewRecord\":false,\"pageSize\":null,\"id\":\"1296331931154653184\",\"status\":null,\"remarks\":null,\"createByName\":null,\"createDate\":null,\"updateDate\":null,\"lastUpdateDateTime\":null,\"updateBy\":null,\"createBy\":null,\"updateByName\":null,\"dutyId\":\"1296331931154653184\",\"userCode\":\"user15_1g7d\",\"userName\":\"用户15\",\"tier\":2,\"avatar\":\"http://192.168.1.10/smartEnergy/userfiles/avatar/0/employee/user15_1g7d.jpg\",\"status_in\":null,\"createDate_gte\":null,\"createDate_lte\":null,\"updateDate_lte\":null,\"createDate_between\":null,\"updateDate_between\":null,\"updateDate_gte\":null,\"id_in\":null}],\"totalDutyPhone\":\"021-24348742\"}"}
-            let [res] = await getT1Duty();
+            let res = {
+                result: "true",
+                message:
+                    '{"emcDutyPhone":"13888886eee868","t1DutyList":[{"pageNo":null,"orderBy":null,"isNewRecord":false,"pageSize":null,"id":"1296331931154653184","status":null,"remarks":null,"createByName":null,"createDate":null,"updateDate":null,"lastUpdateDateTime":null,"updateBy":null,"createBy":null,"updateByName":null,"dutyId":"1296331931154653184","userCode":"user15_1g7d","userName":"用户15","tier":2,"avatar":"http://192.168.1.10/smartEnergy/userfiles/avatar/0/employee/user15_1g7d.jpg","status_in":null,"createDate_gte":null,"createDate_lte":null,"updateDate_lte":null,"createDate_between":null,"updateDate_between":null,"updateDate_gte":null,"id_in":null}],"totalDutyPhone":"021-24348742"}',
+            };
+            // let [res] = await getT1Duty();
             let data = JSON.parse(res.message);
-//             let data = {
-//     "t1DutyList": [
-//         {
-//             "pageNo": null,
-//             "orderBy": null,
-//             "isNewRecord": false,
-//             "pageSize": null,
-//             "id": "1310141025229508608",
-//             "status": null,
-//             "remarks": null,
-//             "createByName": null,
-//             "createDate": null,
-//             "updateDate": null,
-//             "lastUpdateDateTime": null,
-//             "updateBy": null,
-//             "createBy": null,
-//             "updateByName": null,
-//             "dutyId": "1310141025229508608",
-//             "userCode": "user9_gfpv",
-//             "userName": "用户09",
-//             "tier": 1,
-//             "avatar": null,
-//             "createDate_gte": null,
-//             "status_in": null,
-//             "createDate_between": null,
-//             "createDate_lte": null,
-//             "updateDate_between": null,
-//             "updateDate_gte": null,
-//             "updateDate_lte": null,
-//             "id_in": null
-//         },
-//         {
-//             "pageNo": null,
-//             "orderBy": null,
-//             "isNewRecord": false,
-//             "pageSize": null,
-//             "id": "1296331931154653184",
-//             "status": null,
-//             "remarks": null,
-//             "createByName": null,
-//             "createDate": null,
-//             "updateDate": null,
-//             "lastUpdateDateTime": null,
-//             "updateBy": null,
-//             "createBy": null,
-//             "updateByName": null,
-//             "dutyId": "1296331931154653184",
-//             "userCode": "user15_1g7d",
-//             "userName": "用户15",
-//             "tier": 2,
-//             "avatar": "http://192.168.1.10/smartEnergy/userfiles/avatar/0/employee/user15_1g7d.jpg",
-//             "createDate_gte": null,
-//             "status_in": null,
-//             "createDate_between": null,
-//             "createDate_lte": null,
-//             "updateDate_between": null,
-//             "updateDate_gte": null,
-//             "updateDate_lte": null,
-//             "id_in": null
-//         },
-//         {
-//             "pageNo": null,
-//             "orderBy": null,
-//             "isNewRecord": false,
-//             "pageSize": null,
-//             "id": "1310141025229508608",
-//             "status": null,
-//             "remarks": null,
-//             "createByName": null,
-//             "createDate": null,
-//             "updateDate": null,
-//             "lastUpdateDateTime": null,
-//             "updateBy": null,
-//             "createBy": null,
-//             "updateByName": null,
-//             "dutyId": "1310141025229508608",
-//             "userCode": "user9_gfpv",
-//             "userName": "用户10",
-//             "tier": 2,
-//             "avatar": null,
-//             "createDate_gte": null,
-//             "status_in": null,
-//             "createDate_between": null,
-//             "createDate_lte": null,
-//             "updateDate_between": null,
-//             "updateDate_gte": null,
-//             "updateDate_lte": null,
-//             "id_in": null
-//         },
-//         {
-//             "pageNo": null,
-//             "orderBy": null,
-//             "isNewRecord": false,
-//             "pageSize": null,
-//             "id": "1310141025229508608",
-//             "status": null,
-//             "remarks": null,
-//             "createByName": null,
-//             "createDate": null,
-//             "updateDate": null,
-//             "lastUpdateDateTime": null,
-//             "updateBy": null,
-//             "createBy": null,
-//             "updateByName": null,
-//             "dutyId": "1310141025229508608",
-//             "userCode": "user9_gfpv",
-//             "userName": "用户11",
-//             "tier": 2,
-//             "avatar": null,
-//             "createDate_gte": null,
-//             "status_in": null,
-//             "createDate_between": null,
-//             "createDate_lte": null,
-//             "updateDate_between": null,
-//             "updateDate_gte": null,
-//             "updateDate_lte": null,
-//             "id_in": null
-//         },
-//         {
-//             "pageNo": null,
-//             "orderBy": null,
-//             "isNewRecord": false,
-//             "pageSize": null,
-//             "id": "1310141025229508608",
-//             "status": null,
-//             "remarks": null,
-//             "createByName": null,
-//             "createDate": null,
-//             "updateDate": null,
-//             "lastUpdateDateTime": null,
-//             "updateBy": null,
-//             "createBy": null,
-//             "updateByName": null,
-//             "dutyId": "1310141025229508608",
-//             "userCode": "user9_gfpv",
-//             "userName": "用户12",
-//             "tier": 2,
-//             "avatar": null,
-//             "createDate_gte": null,
-//             "status_in": null,
-//             "createDate_between": null,
-//             "createDate_lte": null,
-//             "updateDate_between": null,
-//             "updateDate_gte": null,
-//             "updateDate_lte": null,
-//             "id_in": null
-//         },
-//         {
-//             "pageNo": null,
-//             "orderBy": null,
-//             "isNewRecord": false,
-//             "pageSize": null,
-//             "id": "1310141025229508608",
-//             "status": null,
-//             "remarks": null,
-//             "createByName": null,
-//             "createDate": null,
-//             "updateDate": null,
-//             "lastUpdateDateTime": null,
-//             "updateBy": null,
-//             "createBy": null,
-//             "updateByName": null,
-//             "dutyId": "1310141025229508608",
-//             "userCode": "user9_gfpv",
-//             "userName": "用户13",
-//             "tier": 2,
-//             "avatar": null,
-//             "createDate_gte": null,
-//             "status_in": null,
-//             "createDate_between": null,
-//             "createDate_lte": null,
-//             "updateDate_between": null,
-//             "updateDate_gte": null,
-//             "updateDate_lte": null,
-//             "id_in": null
-//         }
-//     ],
-//     "totalDutyPhone": "021-24348742"
-// }
-            // console.log(data,"adskfkaljfklajsflkj" );
             this.totalDutyPhone = data.totalDutyPhone;
             this.emcDutyPhone = data.emcDutyPhone;
             let t1DutyList = data.t1DutyList;
-            let arr1 = [], arr2 = [];
-            t1DutyList.forEach(item => {
-                if( item.tier == 1 ) {
+            let arr1 = [],
+                arr2 = [];
+            t1DutyList.forEach((item) => {
+                if (item.tier == 1) {
                     arr1.push({
                         userName: item.userName,
-                        avatar: item.avatar
-                    })
+                        avatar: item.avatar,
+                    });
                 }
-                if( item.tier == 2 ) {
+                if (item.tier == 2) {
                     arr2.push({
                         userName: item.userName,
-                        avatar: item.avatar
-                    })
+                        avatar: item.avatar,
+                    });
                 }
             });
             this.arr1 = arr1;
@@ -376,15 +254,43 @@ export default {
             var minutes = now.getMinutes();
             var seconds = now.getSeconds();
             var dd = now.getDay();
-            var d = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
-            this.date.day = `${year}-${String(month).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
-            this.date.time = `${String(hours).padStart(2,"0")}:${String(minutes).padStart(2,"0")}:${String(seconds).padStart(2,"0")}`;
+            var d = [
+                "星期日",
+                "星期一",
+                "星期二",
+                "星期三",
+                "星期四",
+                "星期五",
+                "星期六",
+            ];
+            this.date.day = `${year}-${String(month).padStart(2, "0")}-${String(
+                day
+            ).padStart(2, "0")}`;
+            this.date.time = `${String(hours).padStart(2, "0")}:${String(
+                minutes
+            ).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
             this.date.week = `${d[dd]}`;
             var timeID = setTimeout(this.showTime, 1000);
         },
+        //能源保障系统
+        openDialog() {
+          this.isShow = true;
+        },
+        closeDialog() {
+          this.isShow = false;
+        },
+        async getEnergySecurity() {
+            let params = {
+                pageNo: 1,
+                pageSize: 10,
+            };
+            let res = await getEnergySecurity(params);
+            let data = res.data;
+            this.count = data.count;
+            this.list = data.list;
+        },
     },
-    computed:{
-    }
+    computed: {},
 };
 </script>
 
@@ -400,42 +306,71 @@ export default {
 .left-panel {
     width: 223px;
     height: 100%;
-    padding: 0 0 10px 0;    
+    padding: 0 0 10px 0;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     .info-top {
-        // width: 50px;
-        // height: 50px;
         position: relative;
-            display: flex;
-            justify-content: center;
+        display: flex;
+        justify-content: center;
         .info-content {
             position: relative;
         }
     }
     .info-bottom {
-        font-size: 16px;
-        div {
-            span {
-                display: inline-block;
-                height: 20px;
-                line-height: 20px;
+        .info {
+            height: 71px;
+            display: flex;
+            color: #fff;
+            .left {
+                width: 115px;
+                height: 100%;
+                font-size: 18px;
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                .name {
+                    width: 100%;
+                    font-size: 14px;
+                    margin-left: 10px;
+                    line-height: 26px;
+                }
+                .btn {
+                    width: 100px;
+                    height: 28px;
+                    border-radius: 5px;
+                    text-align: center;
+                    line-height: 28px;
+                    margin-top: 7.5px;
+                    cursor: pointer;
+                    font-size: 14px;
+                }
             }
-            span:nth-child(1) {
-                width: 108px;
-                text-align: right;
+            .right {
+                span {
+                    display: inline-block;
+                    height: 100%;
+                    line-height: 71px;
+                }
+                .max {
+                    font-size: 48px;
+                    vertical-align: bottom;
+                    width: 75px;
+                    text-align: center;
+                }
+                .unit {
+                    font-size: 18px;
+                    vertical-align: bottom;
+                }
             }
-        }
-        div:nth-child(2) {
-            margin-top: 6px;
         }
     }
 }
 .right-panel {
     width: 285px;
     height: 100%;
-    // display: flex;
     margin-right: 14.5px;
     .time-box {
         font-size: 18px;
@@ -466,7 +401,7 @@ export default {
             border-radius: 4px;
             background: rgba(119, 161, 255, 0.14);
             overflow: hidden;
-            img{
+            img {
                 width: 100%;
                 height: 100%;
             }
@@ -508,7 +443,6 @@ export default {
             width: 109px;
             height: 28px;
             border-radius: 5px;
-            // background: #f2a625;
             color: #000;
             text-align: center;
             line-height: 28px;
@@ -528,196 +462,183 @@ export default {
     line-height: 12px;
 }
 .top-box {
-  margin-top: 15.5px;
-  height: 50px;
-  .content {
-    // width: 180px;
-    position: relative;
-  }
-  .item {
-    width: 40px;
+    margin-top: 15.5px;
     height: 50px;
-    box-shadow: 1px 1px 14px 0px rgba(88, 185, 255, 0.41);
-    border-radius: 4px;
-    border: 1px solid #4F85FF;
-    filter: blur(0px);
-    // margin-left: 91.5px;
-    // background: #081b44;
-    position: absolute;
-    // left: 70.5px;
-    &::after {
-      position: absolute;
-      content: '';
-      height: 10px;
-      width: 1px;
-      background: #4F85FF;
-      left: 50%;
-      transform: translateX(-50%);
-      bottom: -11px;
+    .content {
+        position: relative;
     }
-    
-  }
+    .item {
+        width: 40px;
+        height: 50px;
+        box-shadow: 1px 1px 14px 0px rgba(88, 185, 255, 0.41);
+        border-radius: 4px;
+        border: 1px solid #4f85ff;
+        filter: blur(0px);
+        position: absolute;
+        &::after {
+            position: absolute;
+            content: "";
+            height: 10px;
+            width: 1px;
+            background: #4f85ff;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: -11px;
+        }
+    }
 }
 .two-box {
-  margin-top: 10px;
-  .content {
-    height: 60px;
-    padding-top: 10px;
-    border-top: 1px solid  #4F85FF;
-    // width: 180px;
-    // width: 135px;
-    // width: 90px;
-    // width: 45px;
-    // width: 40px;
-    position: relative;
-  }
-  .item-child {
-    width: 40px;
-    height: 50px;
-    box-shadow: 1px 1px 14px 0px rgba(88, 185, 255, 0.41);
-    border-radius: 4px;
-    border: 1px solid #4F85FF;
-    filter: blur(0px);
-    position: absolute;
-    &::after {
-      position: absolute;
-      content: '';
-      height: 10px;
-      width: 1px;
-      background:  #4F85FF;
-      left: 50%;
-      transform: translateX(-50%);
-      top: -11px;
+    margin-top: 10px;
+    .content {
+        height: 60px;
+        padding-top: 10px;
+        border-top: 1px solid #4f85ff;
+        position: relative;
     }
-  }
+    .item-child {
+        width: 40px;
+        height: 50px;
+        box-shadow: 1px 1px 14px 0px rgba(88, 185, 255, 0.41);
+        border-radius: 4px;
+        border: 1px solid #4f85ff;
+        filter: blur(0px);
+        position: absolute;
+        &::after {
+            position: absolute;
+            content: "";
+            height: 10px;
+            width: 1px;
+            background: #4f85ff;
+            left: 50%;
+            transform: translateX(-50%);
+            top: -11px;
+        }
+    }
 }
 
-
-
-
 .process0 {
-  .top-box{
-    .content {
-      width: 40px;
-      .item::after {
-        display: none;
-      }
+    .top-box {
+        .content {
+            width: 40px;
+            .item::after {
+                display: none;
+            }
+        }
     }
-  }
 }
 
 .process1 {
-  .top-box{
-    .content {
-      width: 40px;
+    .top-box {
+        .content {
+            width: 40px;
+        }
     }
-  }
-  .two-box{
-    .content {
-      border-top: none !important;
+    .two-box {
+        .content {
+            border-top: none !important;
+        }
     }
-  }
 }
 .process2 {
-  .top-box{
-    .content {
-      width: 90px;
-      .item{
-        left: 25.5px;
-      }
+    .top-box {
+        .content {
+            width: 90px;
+            .item {
+                left: 25.5px;
+            }
+        }
     }
-  }
-  .two-box{
-    .content {
-      width: 90px;
-      .item-child:nth-child(1) {
-        left: -19.5px;
-      }
-      .item-child:last-child {
-        right: -19.5px !important;
-      }
+    .two-box {
+        .content {
+            width: 90px;
+            .item-child:nth-child(1) {
+                left: -19.5px;
+            }
+            .item-child:last-child {
+                right: -19.5px !important;
+            }
+        }
     }
-  }
 }
 .process3 {
-  .top-box{
-    .content {
-      width: 90px;
-      .item{
-        left: 25.5px;
-      }
+    .top-box {
+        .content {
+            width: 90px;
+            .item {
+                left: 25.5px;
+            }
+        }
     }
-  }
-  .two-box{
-    .content {
-      width: 90px;
-      .item-child:nth-child(1) {
-        left: -19.5px;
-      }
-      .item-child:nth-child(2) {
-        left: 25.5px;
-      }
-      .item-child:last-child {
-        right: -19.5px !important;
-      }
+    .two-box {
+        .content {
+            width: 90px;
+            .item-child:nth-child(1) {
+                left: -19.5px;
+            }
+            .item-child:nth-child(2) {
+                left: 25.5px;
+            }
+            .item-child:last-child {
+                right: -19.5px !important;
+            }
+        }
     }
-  }
 }
 .process4 {
-  .top-box{
-    .content {
-      width: 135px;
-      .item{
-        left: 48.5px;
-      }
+    .top-box {
+        .content {
+            width: 135px;
+            .item {
+                left: 48.5px;
+            }
+        }
     }
-  }
-  .two-box{
-    .content {
-      width: 135px;
-      .item-child:nth-child(1) {
-        left: -19.5px;
-      }
-      .item-child:nth-child(2) {
-        left: 25.5px;
-      }
-      .item-child:nth-child(3) {
-        left: 70.5px;
-      }
-      .item-child:last-child {
-        right: -19.5px !important;
-      }
+    .two-box {
+        .content {
+            width: 135px;
+            .item-child:nth-child(1) {
+                left: -19.5px;
+            }
+            .item-child:nth-child(2) {
+                left: 25.5px;
+            }
+            .item-child:nth-child(3) {
+                left: 70.5px;
+            }
+            .item-child:last-child {
+                right: -19.5px !important;
+            }
+        }
     }
-  }
 }
 .process5 {
-  .top-box{
-    .content {
-      width: 180px;
-      .item{
-        left: 70.5px;
-      }
+    .top-box {
+        .content {
+            width: 180px;
+            .item {
+                left: 70.5px;
+            }
+        }
     }
-  }
-  .two-box{
-    .content {
-      width: 180px;
-      .item-child:nth-child(1) {
-        left: -19.5px;
-      }
-      .item-child:nth-child(2) {
-        left: 25.5px;
-      }
-      .item-child:nth-child(3) {
-        left: 70.5px;
-      }
-      .item-child:nth-child(4) {
-        left: 115.5px;
-      }
-      .item-child:last-child {
-        right: -19.5px !important;
-      }
+    .two-box {
+        .content {
+            width: 180px;
+            .item-child:nth-child(1) {
+                left: -19.5px;
+            }
+            .item-child:nth-child(2) {
+                left: 25.5px;
+            }
+            .item-child:nth-child(3) {
+                left: 70.5px;
+            }
+            .item-child:nth-child(4) {
+                left: 115.5px;
+            }
+            .item-child:last-child {
+                right: -19.5px !important;
+            }
+        }
     }
-  }
 }
 </style>

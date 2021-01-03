@@ -5,6 +5,14 @@ import { get } from "./tools";
 // const baseUrl = 'http://47.110.226.205:8980'
 const baseUrl = '';
 
+
+
+//获取微信登陆二维码
+export const getQrCode = async () => await get({url:"/smartEnergy/weixin/qrCode"});
+
+//查询登录状态
+export const getToken = async (params) => await get({url:"/smartEnergy/weixin/findLoginToken", params});
+
 //T1航站楼能耗占比接口
 export const getEnergyProportion = async () => await get({ url: baseUrl + "/smartEnergy/energyProportion" });
 
@@ -46,3 +54,6 @@ export const getT1Duty = async () => await get({url:'/smartEnergy/t1Duty'});
 export const getDeviceList = async (obj) => await get({url:'/smartEnergy/dev/getDeviceListBywindow', params:{...obj}});
 
 export const getRTMPUrl = async (obj) => await get({url:"/smartEnergy/dev/getRTMPUrlAndStartTranscode", params:{...obj}})
+
+// T1能源系统保障信息
+export const getEnergySecurity = async (params) => await get({url:'/smartEnergy/energySecurity',params});

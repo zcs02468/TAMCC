@@ -5,6 +5,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
+        isShowLogin: 0,
         home: {
             waterLevel: {
                 oneH: 0,
