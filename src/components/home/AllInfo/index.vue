@@ -214,12 +214,12 @@ export default {
             }
         },
         async getT1Duty() {
-            let res = {
-                result: "true",
-                message:
-                    '{"emcDutyPhone":"13888886eee868","t1DutyList":[{"pageNo":null,"orderBy":null,"isNewRecord":false,"pageSize":null,"id":"1296331931154653184","status":null,"remarks":null,"createByName":null,"createDate":null,"updateDate":null,"lastUpdateDateTime":null,"updateBy":null,"createBy":null,"updateByName":null,"dutyId":"1296331931154653184","userCode":"user15_1g7d","userName":"用户15","tier":2,"avatar":"http://192.168.1.10/smartEnergy/userfiles/avatar/0/employee/user15_1g7d.jpg","status_in":null,"createDate_gte":null,"createDate_lte":null,"updateDate_lte":null,"createDate_between":null,"updateDate_between":null,"updateDate_gte":null,"id_in":null}],"totalDutyPhone":"021-24348742"}',
-            };
-            // let [res] = await getT1Duty();
+            // let res = {
+            //     result: "true",
+            //     message:
+            //         '{"emcDutyPhone":"13888886eee868","t1DutyList":[{"pageNo":null,"orderBy":null,"isNewRecord":false,"pageSize":null,"id":"1296331931154653184","status":null,"remarks":null,"createByName":null,"createDate":null,"updateDate":null,"lastUpdateDateTime":null,"updateBy":null,"createBy":null,"updateByName":null,"dutyId":"1296331931154653184","userCode":"user15_1g7d","userName":"用户15","tier":2,"avatar":"http://192.168.1.10/smartEnergy/userfiles/avatar/0/employee/user15_1g7d.jpg","status_in":null,"createDate_gte":null,"createDate_lte":null,"updateDate_lte":null,"createDate_between":null,"updateDate_between":null,"updateDate_gte":null,"id_in":null}],"totalDutyPhone":"021-24348742"}',
+            // };
+            let [res] = await getT1Duty();
             let data = JSON.parse(res.message);
             this.totalDutyPhone = data.totalDutyPhone;
             this.emcDutyPhone = data.emcDutyPhone;

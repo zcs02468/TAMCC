@@ -84,9 +84,7 @@ export default {
         async getData() {
             let [res] = await getEnergyProportion();
             // let res = ajaxData;
-            // console.log( 'ElectricityElectricityElectricity',res);
             let data =  JSON.parse(res.message);
-            // console.log('data' ,data);
             // electricList	电力对象
             // waterList	市政水对象
             // fengitemname	分项名称
