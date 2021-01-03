@@ -287,7 +287,6 @@ export default {
             let res = await getEnergySecurity(params);
             let data = res.data;
             this.count = data.count;
-            this.list = data.list;
         },
     },
     computed: {},
