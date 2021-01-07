@@ -37,7 +37,7 @@
 import {getEnergyIndex} from "@/axios"
 import comMinxins from "@/components/common/comMinxins.js"
 import {mapMutations} from "vuex"
-// import energyConsumption from "@/json/energyConsumption.json"
+import energyConsumption from "@/json/energyConsumption.json"
 export default {
     mixins:[ comMinxins ],
     data() {
@@ -62,10 +62,10 @@ export default {
         },
         async getData() {
             let [res] = await getEnergyIndex();
-            if( !res ) return;
             // let res = energyConsumption;
+            if( !res ) return;
             let {quotaList,realisticList} = JSON.parse( res.message );
-            let {radarIndicator,radarChartsSeries0,radarChartsSeries1,quotaArr,factArr} = this.getRadarChartsData(quotaList);
+            let {radarIndicator,radarChartsSeries0,radarChartsSeries1,quotaArr,factArr,quotaObj} = this.getRadarChartsData(quotaList);
             //新增
             //获取数组最大值
             let maxNum = Math.max(...radarChartsSeries1);
@@ -85,9 +85,11 @@ export default {
             this.radarIndicator.splice();
             this.quotaArr.splice();
             this.factArr.splice();
+            this.quotaObj = quotaObj
             this.myRadarChart.setOption(this.radarOption);
 
-            let {xAxisLine,yAxisLine} = this.getLineChartsData(realisticList,radarIndicator);
+            let {xAxisLine,yAxisLine,actualYData} = this.getLineChartsData(realisticList,quotaObj);
+            this.actualYData = actualYData;
             this.lineOption.xAxis[0].data = xAxisLine;
             let index = 0;
             let series = [];
@@ -108,13 +110,8 @@ export default {
             let quotaArr = [];
             let factArr = [];
             let options = [];
+            let quotaObj = {}
             data.forEach(item => {
-                // radarChartsSeries0.push(item.quotaValue);
-                // radarChartsSeries1.push(item.factValue);
-                // radarIndicator.push({
-                //     name: item.quotaKey,
-                //     min: 0,
-                // })
                 quotaArr.push( item.quotaValue );
                 factArr.push( item.factValue );
                 options.push({
@@ -122,6 +119,7 @@ export default {
                     value: item.quotaName
                 })
                 let num = Math.round((item.factValue/item.quotaValue) * 1000) / 1000;
+                quotaObj[item.quotaKey] = item.quotaValue;
                 radarChartsSeries0.push(100);
                 radarChartsSeries1.push(num*100);
                 radarIndicator.push({
@@ -131,22 +129,32 @@ export default {
             });
             this.options = options;
             this.options.splice();
-            return {radarIndicator,radarChartsSeries0,radarChartsSeries1,quotaArr,factArr};
+            return {radarIndicator,radarChartsSeries0,radarChartsSeries1,quotaArr,factArr,quotaObj};
         },
-        getLineChartsData(data,radarIndicator) {
-            let xArr = []
-            let obj = {}
+        getLineChartsData(data,quotaObj) {
+            let xArr = [];
+            let obj = {};
+            let actualYData = {};
             data.forEach(item => {
                 if( !obj[item.quotaKey] ) {
                     obj[item.quotaKey] = []
                 }
+                if( !actualYData[item.quotaKey] ) {
+                    actualYData[item.quotaKey] = []
+                }
+                
                 xArr.unshift(item.collectionDate)
-                obj[item.quotaKey].unshift(item.realisticValue)
+                // obj[item.quotaKey].unshift(item.realisticValue)
+                let a = this._.divide(item.realisticValue*100/quotaObj[item.quotaKey]*100);
+                    a = this._.round(a,2)
+                obj[item.quotaKey].unshift(a)
+                actualYData[item.quotaKey].unshift(item.realisticValue)
             });
             let xAxis = [...new Set(xArr)];
             return {
                 yAxisLine: obj,
-                xAxisLine: xAxis
+                xAxisLine: xAxis,
+                actualYData: actualYData
             }
         },
         drawRadarCharts() {
@@ -289,9 +297,20 @@ export default {
             });
         },
         drawLineCharts() {
+            let _this = this;
             this.lineOption = {
                 tooltip: {
                     trigger: "axis",
+                     formatter: function (params) {
+                        let name = params[0].name;
+                        var res = `<div>${params[0].name}</div>`
+                        for(var i=0;i<params.length;i++){
+                            let seriesName = params[i].seriesName;
+                            let data = _this.actualYData[seriesName][params[i].dataIndex]
+                            res += `<p><span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${params[i].color};"></span>${seriesName}:${data}</p>`
+                        }
+                        return res;
+                    }
                 },
                 grid: {
                     top: "10%",

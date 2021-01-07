@@ -113,12 +113,6 @@ export default {
             let factArr = [];
             let quotaObj = {}
             data.forEach(item => {
-                // radarChartsSeries0.push(item.quotaValue);
-                // radarChartsSeries1.push(item.factValue);
-                // radarIndicator.push({
-                //     name: item.quotaKey,
-                //     min: 0,
-                // })
                 quotaArr.push( item.quotaValue );
                 factArr.push( item.factValue );
                 let num = Math.round((item.factValue/item.quotaValue) * 1000) / 1000;
@@ -133,9 +127,9 @@ export default {
             return {radarIndicator,radarChartsSeries0,radarChartsSeries1,quotaArr,factArr,quotaObj};
         },
         getLineChartsData(data,quotaObj) {
-            let xArr = []
-            let obj = {}
-            let actualYData = {}
+            let xArr = [];
+            let obj = {};
+            let actualYData = {};
             data.forEach(item => {
                 if( !obj[item.quotaKey] ) {
                     obj[item.quotaKey] = []
