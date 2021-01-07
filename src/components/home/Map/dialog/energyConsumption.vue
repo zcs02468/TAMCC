@@ -47,6 +47,8 @@ export default {
             factArr:[],
             directionStyle:``,
             isShowDirection: false,
+            quotaObj:{},
+            actualYData:{},
             options:[]
         }
     },
