@@ -37,7 +37,7 @@
 import {getEnergyIndex} from "@/axios"
 import comMinxins from "@/components/common/comMinxins.js"
 import {mapMutations} from "vuex"
-import energyConsumption from "@/json/energyConsumption.json"
+// import energyConsumption from "@/json/energyConsumption.json"
 export default {
     mixins:[ comMinxins ],
     data() {
