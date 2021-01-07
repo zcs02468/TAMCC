@@ -1,11 +1,12 @@
-import { get } from "./tools";
+import { get, post } from "./tools";
 
 // const baseUrl = 'http://47.110.226.205:8980'
 // const baseUrl = 'https://www.easy-mock.com/mock/5f3942727c850a226dfc1fbd'
 // const baseUrl = 'http://47.110.226.205:8980'
 const baseUrl = '';
 
-
+// T1导航栏下拉列表
+export const postNav = async ()=> post({url:"/smartEnergy/findNavigation"});
 
 //获取微信登陆二维码
 export const getQrCode = async () => await get({url:"/smartEnergy/weixin/qrCode"});

@@ -4,6 +4,7 @@
         <div class="left-panel">
             <div class="info-top">
                 <div class="info-content" :class="[`process${arr2.length}`]">
+                <!-- <div class="info-content"> -->
                     <div class="top-box">
                         <div class="content">
                             <div class="item">
@@ -42,7 +43,7 @@
                 </div> -->
                 <div class="info general-border">
                     <div class="left">
-                        <div class="name">能源系统保障信息</div>
+                        <div class="name">保障信息</div>
                         <div
                             class="btn general-border"
                             @click="openDialog"
@@ -51,8 +52,8 @@
                         </div>
                     </div>
                     <div class="right">
-                        <span class="max">{{ count }}</span>
-                        <span class="unit">个</span>
+                        <div>EMC电话</div>
+                        <div>{{emcDutyPhone}}</div>
                     </div>
                 </div>
             </div>
@@ -348,21 +349,31 @@ export default {
                 }
             }
             .right {
-                span {
-                    display: inline-block;
-                    height: 100%;
-                    line-height: 71px;
+                flex: 1;
+                text-align: center;
+                font-size: 14px;
+                div:nth-child(1) {
+                    line-height: 26px;
                 }
-                .max {
-                    font-size: 48px;
-                    vertical-align: bottom;
-                    width: 75px;
-                    text-align: center;
+                div:nth-child(2) {
+                    margin-top: 7.5px;
+                    line-height: 28px;
                 }
-                .unit {
-                    font-size: 18px;
-                    vertical-align: bottom;
-                }
+                // span {
+                //     display: inline-block;
+                //     height: 100%;
+                //     line-height: 71px;
+                // }
+                // .max {
+                //     font-size: 48px;
+                //     vertical-align: bottom;
+                //     width: 75px;
+                //     text-align: center;
+                // }
+                // .unit {
+                //     font-size: 18px;
+                //     vertical-align: bottom;
+                // }
             }
         }
     }
@@ -451,14 +462,14 @@ export default {
 }
 
 .userImg {
-    width: 100%;
-    height: 38px;
+    height: 34px;
 }
 .username {
     width: 100%;
     text-align: center;
     font-size: 10px;
     line-height: 12px;
+    color: #fff;
 }
 .top-box {
     margin-top: 15.5px;
@@ -474,16 +485,17 @@ export default {
         border: 1px solid #4f85ff;
         filter: blur(0px);
         position: absolute;
-        &::after {
-            position: absolute;
-            content: "";
-            height: 10px;
-            width: 1px;
-            background: #4f85ff;
-            left: 50%;
-            transform: translateX(-50%);
-            bottom: -11px;
-        }
+        text-align: center;
+        // &::after {
+        //     position: absolute;
+        //     content: "";
+        //     height: 10px;
+        //     width: 1px;
+        //     background: #4f85ff;
+        //     left: 50%;
+        //     transform: translateX(-50%);
+        //     bottom: -11px;
+        // }
     }
 }
 .two-box {
@@ -502,16 +514,17 @@ export default {
         border: 1px solid #4f85ff;
         filter: blur(0px);
         position: absolute;
-        &::after {
-            position: absolute;
-            content: "";
-            height: 10px;
-            width: 1px;
-            background: #4f85ff;
-            left: 50%;
-            transform: translateX(-50%);
-            top: -11px;
-        }
+        text-align: center;
+        // &::after {
+        //     position: absolute;
+        //     content: "";
+        //     height: 10px;
+        //     width: 1px;
+        //     background: #4f85ff;
+        //     left: 50%;
+        //     transform: translateX(-50%);
+        //     top: -11px;
+        // }
     }
 }
 

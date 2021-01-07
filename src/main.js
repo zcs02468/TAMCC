@@ -5,7 +5,7 @@ import store from "./store";
 import echarts from "echarts";
 import axios from "axios";
 import "./assets/js/flexible";
-import { Select, Icon } from 'ant-design-vue';
+import { Select, Icon, Dropdown, Menu } from 'ant-design-vue';
 import { Pagination } from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 
@@ -17,8 +17,8 @@ const MyIcon = Icon.createFromIconfontCN({
 });
 
 Vue.use(Pagination);
-// Vue.use(Carousel);
-// Vue.use(CarouselItem);
+Vue.use(Dropdown);
+Vue.use(Menu);
 Vue.use(Select);
 Vue.use(Icon);
 Vue.use(MyIcon);

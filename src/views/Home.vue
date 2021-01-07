@@ -2,8 +2,16 @@
     <div class="home-container">
         <div class="wrap" ref="editor">
             <header>
-                <div class="title">虹桥国际机场T1航站楼能源总控平台</div>
-                <div class="line"></div>
+                <!-- <div class="title">虹桥国际机场T1航站楼能源总控平台</div>
+                <div class="line"></div> -->
+                 <a-dropdown :trigger="['click']" @visibleChange="openSelect">
+                    <div class="title" @click="e => e.preventDefault()">虹桥国际机场T1航站楼能源总控平台</div>
+                    <a-menu slot="overlay">
+                        <a-menu-item v-for="item in list" :key="item.id">
+                            <a :href="getUrl(item.href)">{{item.name}}</a>
+                        </a-menu-item>
+                    </a-menu>
+                </a-dropdown>
             </header>
             <div class="main-box">
                 <div class="colum">
@@ -21,7 +29,6 @@
                     <Emissions />
                     <Monitoring />
                     <EquipmentState />
-                    
                 </div>
             </div>
         </div>
@@ -42,6 +49,8 @@ import Emissions from "../components/home/Emissions"
 import Monitoring from "../components/home/Monitoring"
 import EquipmentState from "../components/home/EquipmentState"
 
+import {postNav} from "@/axios/index"
+
 
 export default {
     name: "Home",
@@ -59,6 +68,27 @@ export default {
         Monitoring,
         EquipmentState,
     },
+    data() {
+        return {
+            visible: false,
+            list:[]
+        }
+    },
+    methods:{
+        getUrl(value) {
+            let url = value;
+            if( url.indexOf("https://") != 0 || url.indexOf("http://") != 0 ) {
+                url = `//${url}`
+            }
+            return url;
+        },
+        async openSelect() {
+            let [res] = await postNav();
+            if( !res ) return;
+            this.list = res.data;
+            this.list.splice();
+        }
+    }
 };
 </script>
 
@@ -85,6 +115,7 @@ header{
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    cursor: pointer;
     .title {
         font-size: 35px;
         height: 47.5px;
