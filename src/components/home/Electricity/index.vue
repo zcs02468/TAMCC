@@ -83,6 +83,7 @@ export default {
         },
         async getData() {
             let [res] = await getEnergyProportion();
+            if( !res ) return;
             // let res = ajaxData;
             let data =  JSON.parse(res.message);
             // electricList	电力对象

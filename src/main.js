@@ -11,7 +11,7 @@ import "element-ui/lib/theme-chalk/index.css";
 
 import "@/assets/styles/base.scss";
 import "@/assets/styles/common.scss";
-
+import _ from 'lodash'
 const MyIcon = Icon.createFromIconfontCN({
     scriptUrl: './assets/js/iconfont.js', // 在 iconfont.cn 上生成
 });
@@ -23,6 +23,7 @@ Vue.use(Select);
 Vue.use(Icon);
 Vue.use(MyIcon);
 
+Vue.prototype._ = _
 Vue.prototype.$axios = axios;
 Vue.prototype.$echarts = echarts;
 Vue.config.productionTip = false;

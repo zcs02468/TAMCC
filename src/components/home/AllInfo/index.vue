@@ -139,6 +139,7 @@ export default {
             //能源系统保障信息
             isShow: false,
             count: 0,
+            emcDutyPhone: '无数据'
         };
     },
     mixins: [comMinxins],
@@ -157,6 +158,7 @@ export default {
         },
         async getMetadata() {
             let [res] = await getMetaInfo();
+            if( !res ) return;
             // let res = {"result":"true","message":"{\"metar\":{\"orderBy\":null,\"isNewRecord\":false,\"id\":\"1297772791943258112\",\"pageSize\":null,\"pageNo\":null,\"createByName\":null,\"createDate\":null,\"status\":null,\"updateBy\":null,\"updateDate\":null,\"lastUpdateDateTime\":null,\"updateByName\":null,\"remarks\":null,\"createBy\":null,\"metarId\":\"1297772791943258112\",\"date\":\"2020-10-26 00:00:00\",\"weather\":\"晴\",\"temperature\":21.0,\"humidity\":35.0,\"highTemperature\":36.0,\"lowTemperature\":28.0,\"illuminance\":20.0,\"rainfall\":0.0,\"windDirection\":\"正北\",\"aqi\":130,\"weatherImagePath\":\"http://192.168.1.10/smartEnergy/profile/1297771563383967746.jpg\",\"createDate_between\":null,\"createDate_lte\":null,\"updateDate_between\":null,\"createDate_gte\":null,\"updateDate_lte\":null,\"updateDate_gte\":null,\"status_in\":null,\"id_in\":null},\"airList\":[{\"orderBy\":null,\"isNewRecord\":false,\"id\":\"1295887375621595136\",\"pageSize\":null,\"pageNo\":null,\"createByName\":null,\"createDate\":\"2020-08-19 08:56\",\"status\":\"0\",\"updateBy\":\"system\",\"updateDate\":\"2020-08-19 08:56\",\"lastUpdateDateTime\":null,\"updateByName\":null,\"remarks\":\"绿色\",\"createBy\":\"system\",\"parentCodes\":\"0,\",\"treeSorts\":\"0000000030,\",\"isQueryChildren\":null,\"treeLevel\":0,\"childList\":null,\"treeLeaf\":\"1\",\"treeSort\":30,\"treeNames\":\"优\",\"description\":\"0~50\",\"isSys\":\"1\",\"dictCode\":\"1295887375621595136\",\"dictLabelOrig\":\"优\",\"dictType\":\"air_quality_index\",\"cssClass\":\"\",\"cssStyle\":\"\",\"extend\":{\"extendF1\":null,\"extendS1\":\"\",\"extendS8\":\"\",\"extendS4\":\"\",\"extendS2\":\"\",\"extendF3\":null,\"extendD2\":null,\"extendS7\":\"\",\"extendF4\":null,\"extendI4\":null,\"extendF2\":null,\"extendI3\":null,\"extendS5\":\"\",\"extendD3\":null,\"extendS6\":\"\",\"extendI2\":null,\"extendI1\":null,\"extendD1\":null,\"extendS3\":\"\",\"extendD4\":null},\"dictValue\":\"1\",\"dictLabel\":\"优\",\"isRoot\":true,\"parentCode\":\"0\",\"isTreeLeaf\":true,\"createDate_between\":null,\"createDate_lte\":null,\"updateDate_between\":null,\"createDate_gte\":null,\"updateDate_lte\":null,\"updateDate_gte\":null,\"status_in\":null,\"id_in\":null},{\"orderBy\":null,\"isNewRecord\":false,\"id\":\"1295887639296516096\",\"pageSize\":null,\"pageNo\":null,\"createByName\":null,\"createDate\":\"2020-08-19 08:57\",\"status\":\"0\",\"updateBy\":\"system\",\"updateDate\":\"2020-08-19 08:57\",\"lastUpdateDateTime\":null,\"updateByName\":null,\"remarks\":\"黄色\",\"createBy\":\"system\",\"parentCodes\":\"0,\",\"treeSorts\":\"0000000060,\",\"isQueryChildren\":null,\"treeLevel\":0,\"childList\":null,\"treeLeaf\":\"1\",\"treeSort\":60,\"treeNames\":\"良\",\"description\":\"51~100\",\"isSys\":\"1\",\"dictCode\":\"1295887639296516096\",\"dictLabelOrig\":\"良\",\"dictType\":\"air_quality_index\",\"cssClass\":\"\",\"cssStyle\":\"\",\"extend\":{\"extendF1\":null,\"extendS1\":\"\",\"extendS8\":\"\",\"extendS4\":\"\",\"extendS2\":\"\",\"extendF3\":null,\"extendD2\":null,\"extendS7\":\"\",\"extendF4\":null,\"extendI4\":null,\"extendF2\":null,\"extendI3\":null,\"extendS5\":\"\",\"extendD3\":null,\"extendS6\":\"\",\"extendI2\":null,\"extendI1\":null,\"extendD1\":null,\"extendS3\":\"\",\"extendD4\":null},\"dictValue\":\"2\",\"dictLabel\":\"良\",\"isRoot\":true,\"parentCode\":\"0\",\"isTreeLeaf\":true,\"createDate_between\":null,\"createDate_lte\":null,\"updateDate_between\":null,\"createDate_gte\":null,\"updateDate_lte\":null,\"updateDate_gte\":null,\"status_in\":null,\"id_in\":null},{\"orderBy\":null,\"isNewRecord\":false,\"id\":\"1295887877545566208\",\"pageSize\":null,\"pageNo\":null,\"createByName\":null,\"createDate\":\"2020-08-19 08:58\",\"status\":\"0\",\"updateBy\":\"system\",\"updateDate\":\"2020-08-19 08:58\",\"lastUpdateDateTime\":null,\"updateByName\":null,\"remarks\":\"橙色\",\"createBy\":\"system\",\"parentCodes\":\"0,\",\"treeSorts\":\"0000000090,\",\"isQueryChildren\":null,\"treeLevel\":0,\"childList\":null,\"treeLeaf\":\"1\",\"treeSort\":90,\"treeNames\":\"轻度污染\",\"description\":\"101~150\",\"isSys\":\"1\",\"dictCode\":\"1295887877545566208\",\"dictLabelOrig\":\"轻度污染\",\"dictType\":\"air_quality_index\",\"cssClass\":\"\",\"cssStyle\":\"\",\"extend\":{\"extendF1\":null,\"extendS1\":\"\",\"extendS8\":\"\",\"extendS4\":\"\",\"extendS2\":\"\",\"extendF3\":null,\"extendD2\":null,\"extendS7\":\"\",\"extendF4\":null,\"extendI4\":null,\"extendF2\":null,\"extendI3\":null,\"extendS5\":\"\",\"extendD3\":null,\"extendS6\":\"\",\"extendI2\":null,\"extendI1\":null,\"extendD1\":null,\"extendS3\":\"\",\"extendD4\":null},\"dictValue\":\"3\",\"dictLabel\":\"轻度污染\",\"isRoot\":true,\"parentCode\":\"0\",\"isTreeLeaf\":true,\"createDate_between\":null,\"createDate_lte\":null,\"updateDate_between\":null,\"createDate_gte\":null,\"updateDate_lte\":null,\"updateDate_gte\":null,\"status_in\":null,\"id_in\":null},{\"orderBy\":null,\"isNewRecord\":false,\"id\":\"1295888088141570048\",\"pageSize\":null,\"pageNo\":null,\"createByName\":null,\"createDate\":\"2020-08-19 08:59\",\"status\":\"0\",\"updateBy\":\"system\",\"updateDate\":\"2020-08-19 08:59\",\"lastUpdateDateTime\":null,\"updateByName\":null,\"remarks\":\"红色\",\"createBy\":\"system\",\"parentCodes\":\"0,\",\"treeSorts\":\"0000000120,\",\"isQueryChildren\":null,\"treeLevel\":0,\"childList\":null,\"treeLeaf\":\"1\",\"treeSort\":120,\"treeNames\":\"中度污染\",\"description\":\"151~200\",\"isSys\":\"1\",\"dictCode\":\"1295888088141570048\",\"dictLabelOrig\":\"中度污染\",\"dictType\":\"air_quality_index\",\"cssClass\":\"\",\"cssStyle\":\"\",\"extend\":{\"extendF1\":null,\"extendS1\":\"\",\"extendS8\":\"\",\"extendS4\":\"\",\"extendS2\":\"\",\"extendF3\":null,\"extendD2\":null,\"extendS7\":\"\",\"extendF4\":null,\"extendI4\":null,\"extendF2\":null,\"extendI3\":null,\"extendS5\":\"\",\"extendD3\":null,\"extendS6\":\"\",\"extendI2\":null,\"extendI1\":null,\"extendD1\":null,\"extendS3\":\"\",\"extendD4\":null},\"dictValue\":\"4\",\"dictLabel\":\"中度污染\",\"isRoot\":true,\"parentCode\":\"0\",\"isTreeLeaf\":true,\"createDate_between\":null,\"createDate_lte\":null,\"updateDate_between\":null,\"createDate_gte\":null,\"updateDate_lte\":null,\"updateDate_gte\":null,\"status_in\":null,\"id_in\":null},{\"orderBy\":null,\"isNewRecord\":false,\"id\":\"1295888348410716160\",\"pageSize\":null,\"pageNo\":null,\"createByName\":null,\"createDate\":\"2020-08-19 09:00\",\"status\":\"0\",\"updateBy\":\"system\",\"updateDate\":\"2020-08-19 09:00\",\"lastUpdateDateTime\":null,\"updateByName\":null,\"remarks\":\"紫色\",\"createBy\":\"system\",\"parentCodes\":\"0,\",\"treeSorts\":\"0000000150,\",\"isQueryChildren\":null,\"treeLevel\":0,\"childList\":null,\"treeLeaf\":\"1\",\"treeSort\":150,\"treeNames\":\"重度污染\",\"description\":\"201~300\",\"isSys\":\"1\",\"dictCode\":\"1295888348410716160\",\"dictLabelOrig\":\"重度污染\",\"dictType\":\"air_quality_index\",\"cssClass\":\"\",\"cssStyle\":\"\",\"extend\":{\"extendF1\":null,\"extendS1\":\"\",\"extendS8\":\"\",\"extendS4\":\"\",\"extendS2\":\"\",\"extendF3\":null,\"extendD2\":null,\"extendS7\":\"\",\"extendF4\":null,\"extendI4\":null,\"extendF2\":null,\"extendI3\":null,\"extendS5\":\"\",\"extendD3\":null,\"extendS6\":\"\",\"extendI2\":null,\"extendI1\":null,\"extendD1\":null,\"extendS3\":\"\",\"extendD4\":null},\"dictValue\":\"5\",\"dictLabel\":\"重度污染\",\"isRoot\":true,\"parentCode\":\"0\",\"isTreeLeaf\":true,\"createDate_between\":null,\"createDate_lte\":null,\"updateDate_between\":null,\"createDate_gte\":null,\"updateDate_lte\":null,\"updateDate_gte\":null,\"status_in\":null,\"id_in\":null},{\"orderBy\":null,\"isNewRecord\":false,\"id\":\"1295888664791261184\",\"pageSize\":null,\"pageNo\":null,\"createByName\":null,\"createDate\":\"2020-08-19 09:01\",\"status\":\"0\",\"updateBy\":\"system\",\"updateDate\":\"2020-08-19 09:01\",\"lastUpdateDateTime\":null,\"updateByName\":null,\"remarks\":\"褐红色\",\"createBy\":\"system\",\"parentCodes\":\"0,\",\"treeSorts\":\"0000000180,\",\"isQueryChildren\":null,\"treeLevel\":0,\"childList\":null,\"treeLeaf\":\"1\",\"treeSort\":180,\"treeNames\":\"严重污染\",\"description\":\"＞300\",\"isSys\":\"1\",\"dictCode\":\"1295888664791261184\",\"dictLabelOrig\":\"严重污染\",\"dictType\":\"air_quality_index\",\"cssClass\":\"\",\"cssStyle\":\"\",\"extend\":{\"extendF1\":null,\"extendS1\":\"\",\"extendS8\":\"\",\"extendS4\":\"\",\"extendS2\":\"\",\"extendF3\":null,\"extendD2\":null,\"extendS7\":\"\",\"extendF4\":null,\"extendI4\":null,\"extendF2\":null,\"extendI3\":null,\"extendS5\":\"\",\"extendD3\":null,\"extendS6\":\"\",\"extendI2\":null,\"extendI1\":null,\"extendD1\":null,\"extendS3\":\"\",\"extendD4\":null},\"dictValue\":\"6\",\"dictLabel\":\"严重污染\",\"isRoot\":true,\"parentCode\":\"0\",\"isTreeLeaf\":true,\"createDate_between\":null,\"createDate_lte\":null,\"updateDate_between\":null,\"createDate_gte\":null,\"updateDate_lte\":null,\"updateDate_gte\":null,\"status_in\":null,\"id_in\":null}]}"}
             let data = JSON.parse(res.message);
             let {
@@ -221,6 +223,7 @@ export default {
             //         '{"emcDutyPhone":"13888886eee868","t1DutyList":[{"pageNo":null,"orderBy":null,"isNewRecord":false,"pageSize":null,"id":"1296331931154653184","status":null,"remarks":null,"createByName":null,"createDate":null,"updateDate":null,"lastUpdateDateTime":null,"updateBy":null,"createBy":null,"updateByName":null,"dutyId":"1296331931154653184","userCode":"user15_1g7d","userName":"用户15","tier":2,"avatar":"http://192.168.1.10/smartEnergy/userfiles/avatar/0/employee/user15_1g7d.jpg","status_in":null,"createDate_gte":null,"createDate_lte":null,"updateDate_lte":null,"createDate_between":null,"updateDate_between":null,"updateDate_gte":null,"id_in":null}],"totalDutyPhone":"021-24348742"}',
             // };
             let [res] = await getT1Duty();
+            if( !res ) return;
             let data = JSON.parse(res.message);
             this.totalDutyPhone = data.totalDutyPhone;
             this.emcDutyPhone = data.emcDutyPhone;
@@ -358,22 +361,8 @@ export default {
                 div:nth-child(2) {
                     margin-top: 7.5px;
                     line-height: 28px;
+                    font-size: 13px;
                 }
-                // span {
-                //     display: inline-block;
-                //     height: 100%;
-                //     line-height: 71px;
-                // }
-                // .max {
-                //     font-size: 48px;
-                //     vertical-align: bottom;
-                //     width: 75px;
-                //     text-align: center;
-                // }
-                // .unit {
-                //     font-size: 18px;
-                //     vertical-align: bottom;
-                // }
             }
         }
     }
@@ -442,8 +431,6 @@ export default {
         line-height: 20px;
         .marginTop15 {
             margin-top: 13px;
-        }
-        .weather-left {
         }
         .weather-right {
             margin-left: 16.5px;

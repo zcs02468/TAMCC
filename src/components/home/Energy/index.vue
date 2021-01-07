@@ -62,6 +62,7 @@ export default {
         },
         async getData() {
             let [res] = await getSumElectricList();
+            if( !res ) return;
             // let res = ajaxData;
             let data = JSON.parse(res.message);
             // let res = this.getAjaxData();

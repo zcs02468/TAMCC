@@ -71,6 +71,7 @@ export default {
         },
         async getData(type) {
             let [res] = await getEmissionType();
+            if( !res ) return;
             // let res = {"result":"true","message":"{\"typeList\":[\"类目1\",\"类目2\"]}"};
             let data = JSON.parse(res.message);
             let newArr = this.gertNewTypeArr( data.typeList );
@@ -86,6 +87,7 @@ export default {
         },
         async getAssginType(type) {
             let [res] = await getEmissionIndex({type: type});
+            if( !res ) return;
             // let res;
             // if( type == '类目1' ) {
             //     res = {"result":"true","message":"{\"emissionIndexList\":[{\"pageNo\":null,\"orderBy\":null,\"isNewRecord\":false,\"pageSize\":null,\"id\":\"1296621640815190016\",\"status\":null,\"remarks\":null,\"createByName\":null,\"createDate\":null,\"updateDate\":null,\"lastUpdateDateTime\":null,\"updateBy\":null,\"createBy\":null,\"updateByName\":null,\"emissionId\":\"1296621640815190016\",\"indexName\":\"指标A\",\"type\":\"类目1\",\"indexValue\":12.23,\"factValue\":12.21,\"createTime\":\"2020-08-21 09:38:46\",\"createDate_between\":null,\"createDate_gte\":null,\"createDate_lte\":null,\"updateDate_gte\":null,\"updateDate_lte\":null,\"updateDate_between\":null,\"status_in\":null,\"id_in\":null},{\"pageNo\":null,\"orderBy\":null,\"isNewRecord\":false,\"pageSize\":null,\"id\":\"1296683509832265728\",\"status\":null,\"remarks\":null,\"createByName\":null,\"createDate\":null,\"updateDate\":null,\"lastUpdateDateTime\":null,\"updateBy\":null,\"createBy\":null,\"updateByName\":null,\"emissionId\":\"1296683509832265728\",\"indexName\":\"指标B\",\"type\":\"类目1\",\"indexValue\":23.23,\"factValue\":23.21,\"createTime\":\"2020-08-21 13:40:14\",\"createDate_between\":null,\"createDate_gte\":null,\"createDate_lte\":null,\"updateDate_gte\":null,\"updateDate_lte\":null,\"updateDate_between\":null,\"status_in\":null,\"id_in\":null},{\"pageNo\":null,\"orderBy\":null,\"isNewRecord\":false,\"pageSize\":null,\"id\":\"1296683624714252288\",\"status\":null,\"remarks\":null,\"createByName\":null,\"createDate\":null,\"updateDate\":null,\"lastUpdateDateTime\":null,\"updateBy\":null,\"createBy\":null,\"updateByName\":null,\"emissionId\":\"1296683624714252288\",\"indexName\":\"指标C\",\"type\":\"类目1\",\"indexValue\":55.32,\"factValue\":53.23,\"createTime\":\"2020-08-21 13:40:42\",\"createDate_between\":null,\"createDate_gte\":null,\"createDate_lte\":null,\"updateDate_gte\":null,\"updateDate_lte\":null,\"updateDate_between\":null,\"status_in\":null,\"id_in\":null}]}"}

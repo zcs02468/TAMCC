@@ -62,6 +62,7 @@ export default {
         },
         async getData() {
             let [res] = await getEnergyIndex();
+            if( !res ) return;
             // let res = energyConsumption;
             let {quotaList,realisticList} = JSON.parse( res.message );
             let {radarIndicator,radarChartsSeries0,radarChartsSeries1,quotaArr,factArr} = this.getRadarChartsData(quotaList);

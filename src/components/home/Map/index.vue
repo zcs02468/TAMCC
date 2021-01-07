@@ -38,6 +38,7 @@ export default {
         },
         async getData() {
             let [res] = await getTodayFlightsNumber();
+            if( !res ) return;
             let data = JSON.parse(res.message).flights;
             this.flights = data;
             // setTimeout(()=> {

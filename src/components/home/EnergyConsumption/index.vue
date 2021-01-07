@@ -5,16 +5,6 @@
         <div class="box">
             <div class="radar-charts-box">
                 <div class="charts" id="energy_consumption_radar"></div>
-                <!-- <div class="guide-box">
-                    <div>
-                        <span class="block" style="background: #385CA5;"></span>
-                        <span>指标值</span>
-                    </div>
-                    <div>
-                        <span class="block" style="background: RGBA(189, 26, 26, 1);"></span>
-                        <span>实际值</span>
-                    </div>
-                </div> -->
                 <div class="direction-box" :style="`${directionStyle}`" v-show="isShowDirection">
                     <div class="direction-left">
                         <div style="opacity:0">111</div>
@@ -29,20 +19,6 @@
                         <div v-for="(item,index) in factArr" :key="`${index}_${item}fact`">{{item}}</div>
                     </div>
                 </div>
-                <!-- <div class="guide-box">
-                    <div class="child-guide first-guide" @mouseenter="guideEnter(0)" @mouseleave="guideLeave"></div>
-                    <div class="child-guide two-guide" @mouseenter="guideEnter(2)" @mouseleave="guideLeave"></div>
-                    <div class="child-guide three-guide" @mouseenter="guideEnter(1)" @mouseleave="guideLeave"></div>
-                    <div class="guide-show" v-show="guide.isShow" :style="guide.style">
-                        <span class="rand" style="background: #385CA5;"></span>
-                        <span>指标值: </span>
-                        <span>{{guide.targetValue}}</span>
-                        <br>
-                        <span class="rand" style="background: RGBA(189, 26, 26, 1);"></span>
-                        <span>实际值: </span>
-                        <span>{{guide.nowValue}}</span>
-                    </div>
-                </div> -->
             </div>
             <div class="line-charts-box">
                 <div class="charts" id="energy_consumption_line"></div>
@@ -55,7 +31,6 @@
 import {getEnergyIndex} from "../../../axios"
 import comMinxins from "@/components/common/comMinxins.js"
 import {mapMutations} from "vuex"
-// import energyConsumption from "@/json/energyConsumption.json"
 export default {
     mixins:[ comMinxins ],
     data() {
@@ -64,7 +39,9 @@ export default {
             quotaArr:[],
             factArr:[],
             directionStyle:``,
-            isShowDirection: false
+            isShowDirection: false,
+            quotaObj:{},
+            actualYData:{}
             // guide:{
             //     isShow: false,
             //     style: 'top:20%;left:60%;',
@@ -85,12 +62,11 @@ export default {
         },
         async getData() {
             let [res] = await getEnergyIndex();
-            // let res = energyConsumption;
-
+            if( !res ) return;
 
 
             let {quotaList,realisticList} = JSON.parse( res.message );
-            let {radarIndicator,radarChartsSeries0,radarChartsSeries1,quotaArr,factArr} = this.getRadarChartsData(quotaList);
+            let {radarIndicator,radarChartsSeries0,radarChartsSeries1,quotaArr,factArr,quotaObj} = this.getRadarChartsData(quotaList);
 
             
             //新增
@@ -112,15 +88,10 @@ export default {
             this.radarIndicator.splice();
             this.quotaArr.splice();
             this.factArr.splice();
-
-
-
-            // this.radarOption.series[0].data[0].value = radarChartsSeries0;
-            // this.radarOption.series[0].data[1].value = radarChartsSeries1;
-            // this.radarOption.radar[0].indicator = radarIndicator;
+            this.quotaObj = quotaObj
             this.myRadarChart.setOption(this.radarOption);
-
-            let {xAxisLine,yAxisLine} = this.getLineChartsData(realisticList,radarIndicator);
+            let {xAxisLine,yAxisLine,actualYData} = this.getLineChartsData(realisticList,quotaObj);
+            this.actualYData = actualYData;
             this.lineOption.xAxis[0].data = xAxisLine;
             let index = 0;
             let series = [];
@@ -128,8 +99,6 @@ export default {
                 if (yAxisLine.hasOwnProperty(key)) {
                     const element = yAxisLine[key];
                     series.push( this.getSeriesData( key, element ) );
-                    // this.lineOption.series[index].name = key;
-                    // this.lineOption.series[index].data = element;
                     index++;
                 }
             }
@@ -142,6 +111,7 @@ export default {
             let radarIndicator = [];
             let quotaArr = [];
             let factArr = [];
+            let quotaObj = {}
             data.forEach(item => {
                 // radarChartsSeries0.push(item.quotaValue);
                 // radarChartsSeries1.push(item.factValue);
@@ -152,6 +122,7 @@ export default {
                 quotaArr.push( item.quotaValue );
                 factArr.push( item.factValue );
                 let num = Math.round((item.factValue/item.quotaValue) * 1000) / 1000;
+                quotaObj[item.quotaKey] = item.quotaValue;
                 radarChartsSeries0.push(100);
                 radarChartsSeries1.push(num*100);
                 radarIndicator.push({
@@ -159,22 +130,32 @@ export default {
                     min: 0,
                 })
             });
-            return {radarIndicator,radarChartsSeries0,radarChartsSeries1,quotaArr,factArr};
+            return {radarIndicator,radarChartsSeries0,radarChartsSeries1,quotaArr,factArr,quotaObj};
         },
-        getLineChartsData(data,radarIndicator) {
+        getLineChartsData(data,quotaObj) {
             let xArr = []
             let obj = {}
+            let actualYData = {}
             data.forEach(item => {
                 if( !obj[item.quotaKey] ) {
                     obj[item.quotaKey] = []
                 }
+                if( !actualYData[item.quotaKey] ) {
+                    actualYData[item.quotaKey] = []
+                }
+                
                 xArr.unshift(item.collectionDate)
-                obj[item.quotaKey].unshift(item.realisticValue)
+                // obj[item.quotaKey].unshift(item.realisticValue)
+                let a = this._.divide(item.realisticValue*100/quotaObj[item.quotaKey]*100);
+                    a = this._.round(a,2)
+                obj[item.quotaKey].unshift(a)
+                actualYData[item.quotaKey].unshift(item.realisticValue)
             });
             let xAxis = [...new Set(xArr)];
             return {
                 yAxisLine: obj,
-                xAxisLine: xAxis
+                xAxisLine: xAxis,
+                actualYData: actualYData
             }
         },
         drawRadarCharts() {
@@ -317,9 +298,20 @@ export default {
             });
         },
         drawLineCharts() {
+            let _this = this;
             this.lineOption = {
                 tooltip: {
                     trigger: "axis",
+                     formatter: function (params) {
+                        let name = params[0].name;
+                        var res = `<div>${params[0].name}</div>`
+                        for(var i=0;i<params.length;i++){
+                            let seriesName = params[i].seriesName;
+                            let data = _this.actualYData[seriesName][params[i].dataIndex]
+                            res += `<p><span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:${params[i].color};"></span>${seriesName}:${data}</p>`
+                        }
+                        return res;
+                    }
                 },
                 grid: {
                     top: "10%",
@@ -368,152 +360,7 @@ export default {
                         },
                     },
                 ],
-                series: [
-                    // {
-                    //     name: "数据1",
-                    //     type: "line",
-                    //     // smooth: true, //是否平滑
-                    //     showAllSymbol: true,
-                    //     // symbol: 'image://./static/images/guang-circle.png',
-                    //     symbol: "circle",
-                    //     symbolSize: 5,
-                    //     lineStyle: {
-                    //         // normal: {
-                    //         //     color: "#5B8FF9",
-                    //         // },
-                    //     },
-                    //     label: {
-                    //         show: false,
-                    //     },
-                    //     // itemStyle: {
-                    //     //     color: "#2C7AFA",
-                    //     //     borderColor: "#5B8FF9",
-                    //     //     borderWidth: 1,
-                    //     // },
-                    //     tooltip: {
-                    //         show: true,
-                    //     },
-                    //     areaStyle: {
-                    //         opacity: 0.2
-                    //         // normal: {
-                    //         //     color: new this.$echarts.graphic.LinearGradient(
-                    //         //         0,
-                    //         //         0,
-                    //         //         0,
-                    //         //         1,
-                    //         //         [
-                    //         //             {
-                    //         //                 offset: 0,
-                    //         //                 color: "RGBA(72, 116, 204, .3)",
-                    //         //             },
-                    //         //             {
-                    //         //                 offset: 1,
-                    //         //                 color: "rgba(0,179,244,0)",
-                    //         //             },
-                    //         //         ],
-                    //         //         false
-                    //         //     ),
-                    //         // },
-                    //     },
-                    //     data: [100, 120, 110, 120, 130, 140],
-                    // },
-                    // {
-                    //     name: "数据2",
-                    //     type: "line",
-                    //     // smooth: true, //是否平滑
-                    //     showAllSymbol: true,
-                    //     // symbol: 'image://./static/images/guang-circle.png',
-                    //     symbol: "circle",
-                    //     symbolSize: 5,
-                    //     lineStyle: {
-                    //         // normal: {
-                    //         //     color: "#5AD8A6",
-                    //         // },
-                    //     },
-                    //     label: {
-                    //         show: false,
-                    //     },
-                    //     itemStyle: {
-                    //         color: "#67C3A2",
-                    //         borderColor: "#5AD8A6",
-                    //         borderWidth: 3,
-                    //     },
-                    //     tooltip: {
-                    //         show: true,
-                    //     },
-                    //     areaStyle: {
-                    //         opacity: 0.1
-                    //         // normal: {
-                    //         //     color: new this.$echarts.graphic.LinearGradient(
-                    //         //         0,
-                    //         //         0,
-                    //         //         0,
-                    //         //         1,
-                    //         //         [
-                    //         //             {
-                    //         //                 offset: 0,
-                    //         //                 color: "RGBA(90, 216, 166, .3)",
-                    //         //             },
-                    //         //             {
-                    //         //                 offset: 1,
-                    //         //                 color: "rgba(0,202,149,0)",
-                    //         //             },
-                    //         //         ],
-                    //         //         false
-                    //         //     ),
-                    //         // },
-                    //     },
-                    //     data: [150, 170, 160, 170, 180, 190],
-                    // },
-                    // {
-                    //     name: "数据1",
-                    //     type: "line",
-                    //     // smooth: true, //是否平滑
-                    //     showAllSymbol: true,
-                    //     // symbol: 'image://./static/images/guang-circle.png',
-                    //     symbol: "circle",
-                    //     symbolSize: 5,
-                    //     lineStyle: {
-                    //         // normal: {
-                    //         //     color: "#5B8FF9",
-                    //         // },
-                    //     },
-                    //     label: {
-                    //         show: false,
-                    //     },
-                    //     itemStyle: {
-                    //         color: "#2C7AFA",
-                    //         borderColor: "#5B8FF9",
-                    //         borderWidth: 1,
-                    //     },
-                    //     tooltip: {
-                    //         show: true,
-                    //     },
-                    //     areaStyle: {
-                    //         opacity: 0.1
-                    //         // normal: {
-                    //         //     color: new this.$echarts.graphic.LinearGradient(
-                    //         //         0,
-                    //         //         0,
-                    //         //         0,
-                    //         //         1,
-                    //         //         [
-                    //         //             {
-                    //         //                 offset: 0,
-                    //         //                 color: "RGBA(72, 116, 204, .3)",
-                    //         //             },
-                    //         //             {
-                    //         //                 offset: 1,
-                    //         //                 color: "rgba(0,179,244,0)",
-                    //         //             },
-                    //         //         ],
-                    //         //         false
-                    //         //     ),
-                    //         // },
-                    //     },
-                    //     data: [200, 220, 210, 220, 230, 240],
-                    // },
-                ],
+                series: [],
             };
             // 基于准备好的dom，初始化this.$echarts实例
             this.myLineChart = this.$echarts.init(
@@ -614,72 +461,6 @@ export default {
             margin: 0 10px;
         }
     }
-    // .guide-box {
-    //     position: absolute;
-    //     right: 0;
-    //     top: 0;
-    //     span {
-    //         display: inline-block;
-    //     }
-    //     .block {
-    //         width: 10px;
-    //         height: 10px;
-    //         border-radius: 2px;
-    //         margin-right: 10px;
-    //     }
-    // }
-    // .guide-box {
-    //     width: 100%;
-    //     height: 100%;
-    //     // border: 1px solid red;
-    //     position: absolute;
-    //     top: 0;
-    //     pointer-events: none;
-    //     .child-guide {
-    //         position: absolute;
-    //         width: 16%;
-    //         height: 12%;
-    //         // border: 1px solid green;
-    //         pointer-events: auto;
-    //         cursor: pointer;
-    //         // opacity: 0;
-    //     }
-    //     .first-guide {
-    //         position: absolute;
-    //         transform: translateX(-50%);
-    //         top: 7%;
-    //         left: 50%;
-    //     }
-    //     .two-guide {
-    //         left: 9%;
-    //         bottom: 13%;
-    //     }
-    //     .three-guide {
-    //         bottom: 13%;
-    //         right: 9%;
-    //     }
-    //     .guide-show {
-    //         position: absolute;
-    //         border-style: solid;
-    //         white-space: nowrap;
-    //         z-index: 9999999;
-    //         transition: left 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s, top 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s;
-    //         background-color: rgba(27, 15, 15, 0.7);
-    //         border-width: 0px;
-    //         border-color: rgb(51, 51, 51);
-    //         border-radius: 4px;
-    //         color: rgb(255, 255, 255);
-    //         font: 14px / 21px "Microsoft YaHei";
-    //         padding: 5px;
-    //         .rand {
-    //             display: inline-block;
-    //             margin-right: 5px;
-    //             border-radius: 10px;
-    //             width: 10px;
-    //             height: 10px;
-    //         }
-    //     }
-    // }
 }
 .line-charts-box {
     width: 268px;
