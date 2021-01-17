@@ -40,7 +40,7 @@ export default {
         // height: 70px;
         height: 100%;
         width: 100%;
-        background: url("../../../assets/image/title.jpg");
+        background: url("../../../assets/image/title.png");
         background-size: 100% 100%;
         color: #fff;
         font-size: 35px;

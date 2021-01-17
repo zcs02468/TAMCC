@@ -93,10 +93,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .main-box {
     min-width: 1920px;
     padding: 0 20px;
     display: flex;
+    margin-top: 15px;
     .column {
         flex: 3;
     }
@@ -108,18 +110,20 @@ header{
     height: 67px;
     width: 100%;
     text-align: center;
-    // font-size: ;
     color: #fff;
-    padding-top:14px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
     cursor: pointer;
-    .title {
-        font-size: 35px;
-        height: 47.5px;
-        line-height: 47.5px;
+    background: url("../assets/image/title.png");
+    background-size: 100% 100%;
+    .title {    
+        font-size: 40px;
+        height: 67px;
+        line-height: 56px;
+        font-family: PangMenZhengDao25b6197d7422e8e;
+        color: #00ffff;
     }
     .line {
         width: 532.5px;

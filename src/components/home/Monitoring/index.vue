@@ -126,39 +126,6 @@ export default {
         async getDeviceList(type) {
             let [res] = await getDeviceList({window: type});
             if( !res ) return;
-            // let res = {
-            //     result: "true",
-            //     data: [
-            //         {
-            //             isNewRecord: false,
-            //             id: "1331149452718415872",
-            //             createDate: "2020-11-24 16:15",
-            //             updateDate: "2020-11-24 16:26",
-            //             deviceName: "冷站房进出口",
-            //             deviceIp: "192.168.1.1",
-            //             window: "1",
-            //         },
-            //         {
-            //             isNewRecord: false,
-            //             id: "13311494527184158721111",
-            //             createDate: "2020-11-24 16:15",
-            //             updateDate: "2020-11-24 16:26",
-            //             deviceName: "冷站房进出口1112222",
-            //             deviceIp: "192.168.1.1",
-            //             window: "1",
-            //         },
-            //         {
-            //             isNewRecord: false,
-            //             id: "13311494527184158722222",
-            //             createDate: "2020-11-24 16:15",
-            //             updateDate: "2020-11-24 16:26",
-            //             deviceName: "冷站房进出口3333",
-            //             deviceIp: "192.168.1.1",
-            //             window: "1",
-            //         },
-            //     ],
-            //     message: "请求成功",
-            // };
             let data = res.data;
             // deviceName	设备显示名称
             // deviceIp	设备IP地址
