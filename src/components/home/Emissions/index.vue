@@ -361,7 +361,7 @@ export default {
     width: 537.5px;
     height: 277.5px;
     position: relative;
-    margin-top: 15px;
+    margin-top: 10px;
 }
 .title {
     color: #c6d6fb;

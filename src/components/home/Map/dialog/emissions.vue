@@ -361,7 +361,7 @@ export default {
     width: 100%;
     height: 100%;
     position: relative;
-    margin-top: 15px;
+    // margin-top: 15px;
     background: rgb(1, 23, 68);
 }
 .title {

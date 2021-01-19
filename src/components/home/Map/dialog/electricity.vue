@@ -215,7 +215,8 @@ export default {
 }
 .ping-box {
     width: 620px;
-    height: 520px;
+    // height: 520px;
+    height: 510px;
     .charts {
         width: 100%;
         height: 100%;

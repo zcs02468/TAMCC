@@ -60,7 +60,8 @@ export default {
 <style lang="scss" scoped>
 .map-panel {
     width: 100%;
-    height: 678.5px;
+    // height: 678.5px;
+    height: 668px;
     position: relative;
 }
 .map-box {

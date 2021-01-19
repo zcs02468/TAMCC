@@ -175,7 +175,7 @@ export default {
 .panel {
     width: 537.5px;
     height: 258px;
-    margin-top: 15px;
+    margin-top: 10px;
     position: relative;
 }
 .title {
@@ -206,12 +206,12 @@ export default {
             width: 100%;
             height: 100%;
         }
-        .fixed {
+        .fixed { 
             position: fixed;
-            top: 67px;
+            top: 105px;
             left: 575px;
             width: 765px;
-            height: 678.5px;
+            height: 657.5px;
         }
         img {
             width: 100%;

@@ -218,7 +218,7 @@ export default {
     width: 535.5px;
     height: 353px;
     position: relative;
-    margin-top: 15px;
+    margin-top: 10px;
 }
 .title {
     font-size: 22px;

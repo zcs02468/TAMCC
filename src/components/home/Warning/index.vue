@@ -141,7 +141,7 @@ export default {
     width: 535.5px;
     height: 130px;
     position: relative;
-    margin-top: 15px;
+    margin-top: 10px;
 }
 .panel-header {
     display: flex;

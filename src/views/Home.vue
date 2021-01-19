@@ -4,14 +4,17 @@
             <header>
                 <!-- <div class="title">虹桥国际机场T1航站楼能源总控平台</div>
                 <div class="line"></div> -->
-                 <a-dropdown :trigger="['click']" @visibleChange="openSelect">
+                 <!-- <a-dropdown :trigger="['click']" @visibleChange="openSelect"> -->
                     <div class="title" @click="e => e.preventDefault()">虹桥国际机场T1航站楼能源总控平台</div>
-                    <a-menu slot="overlay">
+                    <!-- <a-menu slot="overlay">
                         <a-menu-item v-for="item in list" :key="item.id">
                             <a :href="getUrl(item.href)">{{item.name}}</a>
                         </a-menu-item>
                     </a-menu>
-                </a-dropdown>
+                </a-dropdown> -->
+                <ul class="nav-box">
+                    <li v-for="item in list" :key="item.id"><a :href="getUrl(item.href)">{{item.name}}</a></li>
+                </ul>
             </header>
             <div class="main-box">
                 <div class="colum">
@@ -98,7 +101,7 @@ export default {
     min-width: 1920px;
     padding: 0 20px;
     display: flex;
-    margin-top: 15px;
+    margin-top: 5px;
     .column {
         flex: 3;
     }
@@ -107,7 +110,7 @@ export default {
     }
 }
 header{
-    height: 67px;
+    height: 100px;
     width: 100%;
     text-align: center;
     color: #fff;
@@ -118,10 +121,10 @@ header{
     cursor: pointer;
     background: url("../assets/image/title.png");
     background-size: 100% 100%;
-    .title {    
-        font-size: 40px;
+    .title {
+        font-size: 50px;
         height: 67px;
-        line-height: 56px;
+        line-height: 48px;
         font-family: PangMenZhengDao25b6197d7422e8e;
         color: #00ffff;
     }
@@ -130,6 +133,27 @@ header{
         height: 1px;
         background: #719EED;
         margin-top: 3.5px;
+    }
+}
+.nav-box {
+    position: absolute;
+    left: 20px;
+    top: 72px;
+    display: flex;
+    height: 40px;
+    li {
+        width: 80px;
+        height: 27px;
+        font-size: 15px;
+        border: 1px solid #4f85ff;
+        background: rgba(119, 161, 255, 0.14);
+        box-shadow: 0.5px 0.5px 17.5px 0px rgba(88, 185, 255, 0.41) inset;
+        text-align: center;
+        line-height: 27px;
+        margin-right: 15px;
+        a {
+            color: #fff;
+        }
     }
 }
 </style>

@@ -6,15 +6,13 @@
                  autoplay
                  style="width: 100%;height: 100%;"
                  data-setup='{"html5" : { "nativeTextTracks" : false }}'>
-            <source :src="videoSrc" type="rtmp/flv">
+            <source :src="videoSrc" type="application/x-mpegURL">>
         </video>
     </div>
 </template>
 <script>
 import videojs from 'video.js'
 import 'video.js/dist/video-js.css'
-import SWF_URL from 'videojs-swf/dist/video-js.swf'
-videojs.options.flash.swf = SWF_URL
 export default {
     name:'QnvideoPlayer',
     props:{
@@ -53,7 +51,7 @@ export default {
             this.videoPlayer = videojs(this.videoId);// 关联video标签的id
             this.videoPlayer.src({
                src: this.videoSrc,
-               type: 'rtmp/flv'
+            //    type: 'rtmp/flv'
             });
             this.videoPlayer.play();
             this.videoPlayer.pause();

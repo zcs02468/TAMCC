@@ -30,7 +30,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 .header-box {
-    height: 67px;
+    // height: 67px;
+    height: 84px;
     margin: 0 20px;
     position: relative;
     .header-back {
