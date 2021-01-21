@@ -1,12 +1,13 @@
 <template>
     <div class="video">
-        <video :id="videoId"
-               class="video-js vjs-default-skin vjs-big-play-centered"
-                 preload="auto"
-                 autoplay
-                 style="width: 100%;height: 100%;"
-                 data-setup='{"html5" : { "nativeTextTracks" : false }}'>
-            <source :src="videoSrc" type="application/x-mpegURL">>
+        <video
+            :id="videoId"
+            class="video-js vjs-default-skin vjs-big-play-centered"
+            preload="auto"
+            autoplay
+            style="width: 100%;height: 100%;"
+            data-setup='{"html5" : { "nativeTextTracks" : false }}'>
+            <source :src="videoSrc" type="application/x-mpegURL">
         </video>
     </div>
 </template>
@@ -34,8 +35,6 @@ export default {
            videoPlayer: undefined,
         }
     },
-    created(){
-    },
     mounted(){ 
        this.$nextTick(()=>{ 
            if(this.videoShow){
@@ -62,7 +61,6 @@ export default {
             } 
        } 
      },
-    components:{            }, 
     watch:{
         videoShow(n){ 
            if(n){

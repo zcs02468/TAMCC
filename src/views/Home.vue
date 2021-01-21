@@ -4,7 +4,7 @@
             <header>
                 <!-- <div class="title">虹桥国际机场T1航站楼能源总控平台</div>
                 <div class="line"></div> -->
-                 <!-- <a-dropdown :trigger="['click']" @visibleChange="openSelect"> -->
+                <!-- <a-dropdown :trigger="['click']" @visibleChange="openSelect"> -->
                     <div class="title" @click="e => e.preventDefault()">虹桥国际机场T1航站楼能源总控平台</div>
                     <!-- <a-menu slot="overlay">
                         <a-menu-item v-for="item in list" :key="item.id">
@@ -51,12 +51,14 @@ import EnergyConsumption from "../components/home/EnergyConsumption"
 import Emissions from "../components/home/Emissions"
 import Monitoring from "../components/home/Monitoring"
 import EquipmentState from "../components/home/EquipmentState"
+import comMinxins from "@/components/common/comMinxins";
 
 import {postNav} from "@/axios/index"
 
 
 export default {
     name: "Home",
+    mixins:[comMinxins],
     components: {
         AllInfo,
         Electricity,
@@ -77,7 +79,16 @@ export default {
             list:[]
         }
     },
+    mounted() {
+        this.getData();
+    },
     methods:{
+        updateData() {
+            this.getData();
+        },
+        getData() {
+            this.openSelect();
+        },
         getUrl(value) {
             let url = value;
             if( url.indexOf("https://") != 0 || url.indexOf("http://") != 0 ) {
