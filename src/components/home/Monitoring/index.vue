@@ -75,7 +75,6 @@
 import myVideo from "./myVideo";
 import { getDeviceList, getRTMPUrl } from "@/axios";
 import { mapState, mapMutations } from "vuex";
-import { log } from 'video.js';
 export default {
   components: {
     myVideo,
