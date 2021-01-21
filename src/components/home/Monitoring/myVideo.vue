@@ -5,6 +5,7 @@
             class="video-js vjs-default-skin vjs-big-play-centered"
             preload="auto"
             autoplay
+            muted
             style="width: 100%;height: 100%;"
             data-setup='{"html5" : { "nativeTextTracks" : false }}'>
             <source :src="videoSrc" type="application/x-mpegURL">
@@ -46,14 +47,29 @@ export default {
         this.disposeVideo();
     },
     methods: {
-      selectVideo() {
-            this.videoPlayer = videojs(this.videoId);// 关联video标签的id
-            this.videoPlayer.src({
-               src: this.videoSrc,
-            //    type: 'rtmp/flv'
-            });
-            this.videoPlayer.play();
-            this.videoPlayer.pause();
+        selectVideo() {
+            if( this.videoPlayer ) {
+                this.videoPlayer.src(this.videoSrc);  //重置video的src
+                this.videoPlayer.load(this.videoSrc);  //使video重新加载
+            }else {
+                console.log( 'this.videoId', this.videoId );
+                this.videoPlayer = videojs(this.videoId);// 关联video标签的id
+                this.videoPlayer.src({
+                    src: this.videoSrc,
+                // type: 'rtmp/flv'
+                });
+            }
+            // this.$nextTick(()=>{
+            
+                // this.disposeVideo();
+                // console.log( 'this.videoId', this.videoId );
+                // this.videoPlayer = videojs(this.videoId);// 关联video标签的id
+                // this.videoPlayer.src({
+                //     src: this.videoSrc,
+                // // type: 'rtmp/flv'
+                // });
+                // this.videoPlayer.play();
+            // })
         },
         disposeVideo(){
             if(this.videoPlayer){
