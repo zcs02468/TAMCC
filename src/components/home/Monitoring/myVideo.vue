@@ -29,7 +29,11 @@ export default {
         videoShow:{
             type:Boolean,
             default:true,
-        } 
+        },
+        videoIp:{
+            type: String,
+            default: ''
+        }
    },
     data(){
         return {
@@ -47,29 +51,21 @@ export default {
         this.disposeVideo();
     },
     methods: {
+        videoReset() {
+            this.videoPlayer.reset();
+            this.videoPlayer.src(this.videoSrc);  //重置video的src
+            this.videoPlayer.load(this.videoSrc);  //使video重新加载
+        },
         selectVideo() {
             if( this.videoPlayer ) {
                 this.videoPlayer.src(this.videoSrc);  //重置video的src
                 this.videoPlayer.load(this.videoSrc);  //使video重新加载
             }else {
-                console.log( 'this.videoId', this.videoId );
                 this.videoPlayer = videojs(this.videoId);// 关联video标签的id
                 this.videoPlayer.src({
                     src: this.videoSrc,
-                // type: 'rtmp/flv'
                 });
             }
-            // this.$nextTick(()=>{
-            
-                // this.disposeVideo();
-                // console.log( 'this.videoId', this.videoId );
-                // this.videoPlayer = videojs(this.videoId);// 关联video标签的id
-                // this.videoPlayer.src({
-                //     src: this.videoSrc,
-                // // type: 'rtmp/flv'
-                // });
-                // this.videoPlayer.play();
-            // })
         },
         disposeVideo(){
             if(this.videoPlayer){
@@ -84,10 +80,10 @@ export default {
             }else{
                 this.disposeVideo();
             } 
-       },
-       videoSrc(){
-            this.selectVideo();
-       } 
+        },
+        videoIp() {
+            this.videoReset();
+        }
    }
 }
 </script>

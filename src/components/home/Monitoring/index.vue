@@ -12,8 +12,9 @@
           >
             <myVideo
               v-if="leftVideoSrc"
-              :videoId="leftVideoId"
+              videoId="leftVideoId"
               :videoSrc="leftVideoSrc"
+              :videoIp="leftIp"
             ></myVideo>
           </div>
         </div>
@@ -43,8 +44,9 @@
           >
             <myVideo
               v-if="rightVideoSrc"
-              :videoId="rightVideoId"
+              videoId="rightVideoId"
               :videoSrc="rightVideoSrc"
+              :videoIp="rightIp"
             ></myVideo>
           </div>
         </div>
@@ -82,12 +84,12 @@ export default {
     return {
       leftSelectList: [],
       rightSelectList: [],
-      leftVideoId: "leftVideoId",
-      rightVideoId: "rightVideoId",
       leftVideoSrc: "",
       rightVideoSrc: "",
       leftVideoType: false,
       rightVideoType: false,
+      leftIp:'',
+      rightIp:''
     };
   },
   async created() {
@@ -127,76 +129,76 @@ export default {
     async getDeviceList(type) {
       let [res] = await getDeviceList({window: type});
       if( !res ) return;
-    //   let res;
-    //   if (type == 1) {
-    //     res = {
-    //       result: "true",
-    //       data: [
-    //         {
-    //           id: "1",
-    //           isNewRecord: false,
-    //           createDate: "2020-11-25 15:42",
-    //           updateDate: "2021-01-04 11:08",
-    //           deviceName: "给水泵房2号（红外）",
-    //           deviceIp: "192.168.1.115",
-    //           window: "1",
-    //         },
-    //         {
-    //           id: "1337370101303373824",
-    //           isNewRecord: false,
-    //           createDate: "2020-12-11 20:14",
-    //           updateDate: "2020-12-22 15:28",
-    //           deviceName: "冷站房进出口",
-    //           deviceIp: "192.168.1.107",
-    //           window: "1",
-    //         },
-    //         {
-    //           id: "3",
-    //           isNewRecord: false,
-    //           createDate: "2020-11-25 18:26",
-    //           updateDate: "2020-12-11 15:23",
-    //           deviceName: "冷站房",
-    //           deviceIp: "192.168.1.114",
-    //           window: "1",
-    //         },
-    //       ],
-    //       message: "请求成功",
-    //     };
-    //   } else {
-    //     res = {
-    //       result: "true",
-    //       data: [
-    //         {
-    //           id: "1337370165287481344",
-    //           isNewRecord: false,
-    //           createDate: "2020-12-11 20:14",
-    //           updateDate: "2020-12-22 15:29",
-    //           deviceName: "热交换机房",
-    //           deviceIp: "192.168.1.108",
-    //           window: "2",
-    //         },
-    //         {
-    //           id: "1337370238360645632",
-    //           isNewRecord: false,
-    //           createDate: "2020-12-11 20:14",
-    //           updateDate: "2020-12-22 15:28",
-    //           deviceName: "给水泵房通道",
-    //           deviceIp: "192.168.1.109",
-    //           window: "2",
-    //         },
-    //         {
-    //           id: "2",
-    //           isNewRecord: false,
-    //           createDate: "2020-11-25 18:22",
-    //           updateDate: "2020-12-11 15:33",
-    //           deviceName: "锅炉房进出通道",
-    //           deviceIp: "192.168.1.113",
-    //           window: "2",
-    //         },
-    //       ],
-    //       message: "请求成功",
-    //     };
-    //   }
+      // let res;
+      // if (type == 1) {
+      //   res = {
+      //     result: "true",
+      //     data: [
+      //       {
+      //         id: "1",
+      //         isNewRecord: false,
+      //         createDate: "2020-11-25 15:42",
+      //         updateDate: "2021-01-04 11:08",
+      //         deviceName: "给水泵房2号（红外）",
+      //         deviceIp: "192.168.1.115",
+      //         window: "1",
+      //       },
+      //       {
+      //         id: "1337370101303373824",
+      //         isNewRecord: false,
+      //         createDate: "2020-12-11 20:14",
+      //         updateDate: "2020-12-22 15:28",
+      //         deviceName: "冷站房进出口",
+      //         deviceIp: "192.168.1.107",
+      //         window: "1",
+      //       },
+      //       {
+      //         id: "3",
+      //         isNewRecord: false,
+      //         createDate: "2020-11-25 18:26",
+      //         updateDate: "2020-12-11 15:23",
+      //         deviceName: "冷站房",
+      //         deviceIp: "192.168.1.114",
+      //         window: "1",
+      //       },
+      //     ],
+      //     message: "请求成功",
+      //   };
+      // } else {
+      //   res = {
+      //     result: "true",
+      //     data: [
+      //       {
+      //         id: "1337370165287481344",
+      //         isNewRecord: false,
+      //         createDate: "2020-12-11 20:14",
+      //         updateDate: "2020-12-22 15:29",
+      //         deviceName: "热交换机房",
+      //         deviceIp: "192.168.1.108",
+      //         window: "2",
+      //       },
+      //       {
+      //         id: "1337370238360645632",
+      //         isNewRecord: false,
+      //         createDate: "2020-12-11 20:14",
+      //         updateDate: "2020-12-22 15:28",
+      //         deviceName: "给水泵房通道",
+      //         deviceIp: "192.168.1.109",
+      //         window: "2",
+      //       },
+      //       {
+      //         id: "2",
+      //         isNewRecord: false,
+      //         createDate: "2020-11-25 18:22",
+      //         updateDate: "2020-12-11 15:33",
+      //         deviceName: "锅炉房进出通道",
+      //         deviceIp: "192.168.1.113",
+      //         window: "2",
+      //       },
+      //     ],
+      //     message: "请求成功",
+      //   };
+      // }
       let data = res.data;
       // deviceName	设备显示名称
       // deviceIp	设备IP地址
@@ -212,30 +214,23 @@ export default {
 
       let [res] = await getRTMPUrl(params);
       if( !res ) return;
-    //   let res = {
-    //     result: "true",
-    //     // data: "rtmp://192.168.1.200:1935/live/1",
-    //     data:
-    //       "https://open.ys7.com/v3/openlive/E92779081_1_1.m3u8?expire=1611344195&id=271045132019093504&t=6e702ce13d409ec4727b5572e9a84be90410ac876e518869f6b383db468b9cc3&ev=100",
-    //     message: "请求成功",
-    //   };
-    //     console.log( 'ip', ip );
-    //   if( ip == '192.168.1.115' ) res.data = "https://open.ys7.com/v3/openlive/E92779081_1_1.m3u8?expire=1611344195&id=271045132019093504&t=6e702ce13d409ec4727b5572e9a84be90410ac876e518869f6b383db468b9cc3&ev=100";
-    //   if( ip == '192.168.1.107' ) res.data = "https://open.ys7.com/v3/openlive/E92779073_1_1.m3u8?expire=1611738213&id=272410875018993664&t=e4e1afde8aa2f82d0101c0bd60af13a1cba4a754cfd3da3b6288feb9ea471197&ev=100";
-    //   if( ip == '192.168.1.108' ) res.data = "https://open.ys7.com/v3/openlive/E92779075_1_1.m3u8?expire=1611738241&id=272410992397987840&t=617a3dcdd50e88347943b57b95d80a1fde1e22e60299daa651fabcd9bcd221ce&ev=100";
-    //   if( ip == '192.168.1.109' ) res.data = "https://open.ys7.com/v3/openlive/E92779075_1_1.m3u8?expire=1611738271&id=272411116930838528&t=ad3e1657bea23fc2056a0fd08780667eb0428550185d06a9661db4dbafc15737&ev=100";
+      // let res = {
+      //   result: "true",
+      //   // data: "rtmp://192.168.1.200:1935/live/1",
+      //   data:"https://open.ys7.com/v3/openlive/E92779081_1_1.m3u8?expire=1611344195&id=271045132019093504&t=6e702ce13d409ec4727b5572e9a84be90410ac876e518869f6b383db468b9cc3&ev=100",
+      //   message: "请求成功",
+      // };
+      // console.log( 'ip', ip );
+      // if( ip == '192.168.1.115' ) res.data = "https://open.ys7.com/v3/openlive/E92779081_1_1.m3u8?expire=1611344195&id=271045132019093504&t=6e702ce13d409ec4727b5572e9a84be90410ac876e518869f6b383db468b9cc3&ev=100";
+      // if( ip == '192.168.1.107' ) res.data = "https://open.ys7.com/v3/openlive/E92779073_1_1.m3u8?expire=1611738213&id=272410875018993664&t=e4e1afde8aa2f82d0101c0bd60af13a1cba4a754cfd3da3b6288feb9ea471197&ev=100";
+      // if( ip == '192.168.1.108' ) res.data = "https://open.ys7.com/v3/openlive/E92779075_1_1.m3u8?expire=1611738241&id=272410992397987840&t=617a3dcdd50e88347943b57b95d80a1fde1e22e60299daa651fabcd9bcd221ce&ev=100";
+      // if( ip == '192.168.1.109' ) res.data = "https://open.ys7.com/v3/openlive/E92779075_1_1.m3u8?expire=1611738271&id=272411116930838528&t=ad3e1657bea23fc2056a0fd08780667eb0428550185d06a9661db4dbafc15737&ev=100";
       if (type == 1) {
-        // this.leftVideoId = Math.random()
-        //   .toString(32)
-        //   .substr(2)
-        //   .padStart(12, "left963852");
         this.leftVideoSrc = res.data;
+        this.leftIp = ip;
       } else {
-        // this.rightVideoId = Math.random()
-        //   .toString(32)
-        //   .substr(2)
-        //   .padStart(12, "right963852");
         this.rightVideoSrc = res.data;
+        this.rightIp = ip;
       }
     },
   },
