@@ -1,11 +1,10 @@
 <template>
     <div class="video">
-        <video :id="videoId"></video>
-        <!-- <video :id="videoId" 
+        <video :id="videoId" 
 
             style="width: 100%;height: 100%;"
             class="video-js vjs-default-skin vjs-big-play-centered">
-        </video> -->
+        </video>
         <!-- <video
             :id="videoId"
             class="video-js vjs-default-skin vjs-big-play-centered"
@@ -19,7 +18,8 @@
     </div>
 </template>
 <script>
-import flvjs from 'flv.js'
+  window.videojs = require('video.js')
+  videojs = videojs.default || videojs
 export default {
     name:'QnvideoPlayer',
     props:{
@@ -73,22 +73,49 @@ export default {
         this.disposeVideo();
     },
     methods: {
-        // videoReset() {
-        //     this.videoPlayer.reset();
-        //     this.videoPlayer.src(this.videoSrc);  //重置video的src
-        //     this.videoPlayer.load(this.videoSrc);  //使video重新加载
-        // },
+        videoReset() {
+            this.videoPlayer.reset();
+            this.videoPlayer.src(this.videoSrc);  //重置video的src
+            this.videoPlayer.load(this.videoSrc);  //使video重新加载
+        },
         selectVideo() {
-            if (flvjs.isSupported()) {
-                var videoElement = document.getElementById(this.videoId);
-                var flvPlayer = flvjs.createPlayer({
-                    type: 'flv',
-                    // url: "http://1011.hlsplay.aodianyun.com/demo/game.flv"
-                    url: this.videoSrc
-                });
-                flvPlayer.attachMediaElement(videoElement);
-                flvPlayer.load();
-                flvPlayer.play();
+            this.videoOptions.sources[0].src = this.videoSrc;
+            if( this.videoPlayer ) {
+                this.videoOptions.autoplay = true
+                this.videoPlayer.src(this.videoSrc);  //重置video的src
+                this.videoPlayer.load(this.videoSrc);  //使video重新加载
+            }else {
+                let self =this;
+                var emitPlayerState = function(event, value) {}
+                this.videoPlayer = videojs(this.videoId,this.videoOptions, function() {
+                    // player readied
+                    var _this = this
+                    self.$emit('ready', self.player)
+
+                    events
+                    var events = ['loadeddata',
+                                    'canplay', 
+                                    'canplaythrough', 
+                                    'play', 
+                                    'pause', 
+                                    'waiting', 
+                                    'playing', 
+                                    'ended',
+                                    'error']
+                    for (var i = 0; i < events.length; i++) {
+                        (function(event) {
+                        _this.on(event, function() {
+                            emitPlayerState(event, true)
+                        })
+                        })(events[i])
+                    }
+
+                    this.on('timeupdate', function() {
+                        emitPlayerState('timeupdate', this.currentTime())
+                    })
+                })
+                this.videoOptions.autoplay = true
+                // this.videoPlayer.play();
             }
         },
         disposeVideo(){
@@ -106,7 +133,7 @@ export default {
             } 
         },
         videoIp() {
-            this.selectVideo();
+            this.videoReset();
         }
    }
 }
@@ -116,11 +143,6 @@ export default {
     width: 100%;
     height: 100%;
     pointer-events: none;
-    background: #000;
-}
-video {
-    width: 100%;
-    height: 100%;
 }
 </style>
 

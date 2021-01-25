@@ -225,7 +225,7 @@ export default {
       // if( ip == '192.168.1.108' ) res.data = "https://open.ys7.com/v3/openlive/E92779075_1_1.m3u8?expire=1611738241&id=272410992397987840&t=617a3dcdd50e88347943b57b95d80a1fde1e22e60299daa651fabcd9bcd221ce&ev=100";
       // if( ip == '192.168.1.109' ) res.data = "https://open.ys7.com/v3/openlive/E92779075_1_1.m3u8?expire=1611738271&id=272411116930838528&t=ad3e1657bea23fc2056a0fd08780667eb0428550185d06a9661db4dbafc15737&ev=100";
 
-      // res.data = "https://open.ys7.com/v3/openlive/E92779075_1_1.m3u8?expire=1611738241&id=272410992397987840&t=617a3dcdd50e88347943b57b95d80a1fde1e22e60299daa651fabcd9bcd221ce&ev=100";
+      // res.data = "https://open.ys7.com/v3/openlive/E92779075_1_1.m3u8?expire=1612068119&id=273794600178536448&t=dd84848a4eae552ac8f2a75297b4d07289e20effe432477ac46e53f337963b56&ev=100";
       if (type == 1) {
         this.leftVideoSrc = res.data;
         this.leftIp = ip;
