@@ -45,24 +45,7 @@ export default {
    },
     data(){
         return {
-            videoPlayer: undefined,
-            videoOptions:{
-                overNative: true,
-                autoplay: true,
-                controls: true,
-                techOrder: ['html5'],
-                sourceOrder: true,
-                language: 'en',
-                muted: true,
-                html5: { hls: { withCredentials: false } },
-                sources: [
-                    {
-                        withCredentials: false,
-                        type: 'application/x-mpegURL',
-                        src: 'https://open.ys7.com/v3/openlive/E92779075_1_1.m3u8?expire=1611738271&id=272411116930838528&t=ad3e1657bea23fc2056a0fd08780667eb0428550185d06a9661db4dbafc15737&ev=100'
-                    }
-                ]
-            }
+            videoPlayer: undefined
         }
     },
     mounted(){ 
@@ -77,6 +60,9 @@ export default {
     },
     methods: {
         selectVideo() {
+            if( this.videoPlayer ) {
+                this.videoPlayer.destroy()
+            }
             this.videoPlayer = new FlvPlayer({
                 id: this.videoId,
                 url: 'http://1011.hlsplay.aodianyun.com/demo/game.flv',
@@ -84,7 +70,8 @@ export default {
                 playsinline: true,
                 autoplay: true,
                 width: "100%",
-                height: "100%"
+                height: "100%",
+		        volume: 0
             });
         },
         disposeVideo(){
