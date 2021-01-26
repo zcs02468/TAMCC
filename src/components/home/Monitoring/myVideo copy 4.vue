@@ -1,7 +1,6 @@
 <template>
     <div class="video">
-        <div class="vdieoBox" :id="videoId"></div>
-        <!-- <video :id="videoId"></video> -->
+        <video :id="videoId"></video>
         <!-- <video :id="videoId" 
 
             style="width: 100%;height: 100%;"
@@ -20,9 +19,7 @@
     </div>
 </template>
 <script>
-import 'xgplayer';
-import FlvPlayer from 'xgplayer-flv';
-
+import flvjs from 'flv.js'
 export default {
     name:'QnvideoPlayer',
     props:{
@@ -76,20 +73,27 @@ export default {
         this.disposeVideo();
     },
     methods: {
+        // videoReset() {
+        //     this.videoPlayer.reset();
+        //     this.videoPlayer.src(this.videoSrc);  //重置video的src
+        //     this.videoPlayer.load(this.videoSrc);  //使video重新加载
+        // },
         selectVideo() {
-            this.videoPlayer = new FlvPlayer({
-                id: this.videoId,
-                url: 'http://1011.hlsplay.aodianyun.com/demo/game.flv',
-                isLive: true,
-                playsinline: true,
-                autoplay: true,
-                width: "100%",
-                height: "100%"
-            });
+            if (flvjs.isSupported()) {
+                var videoElement = document.getElementById(this.videoId);
+                var flvPlayer = flvjs.createPlayer({
+                    type: 'flv',
+                    // url: "http://1011.hlsplay.aodianyun.com/demo/game.flv"
+                    url: this.videoSrc
+                });
+                flvPlayer.attachMediaElement(videoElement);
+                flvPlayer.load();
+                flvPlayer.play();
+            }
         },
         disposeVideo(){
             if(this.videoPlayer){
-                this.videoPlayer.destroy()
+                this.videoPlayer.dispose()
             } 
        } 
      },
@@ -114,7 +118,7 @@ export default {
     pointer-events: none;
     background: #000;
 }
-.vdieoBox {
+video {
     width: 100%;
     height: 100%;
 }
