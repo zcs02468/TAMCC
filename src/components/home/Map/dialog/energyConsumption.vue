@@ -37,7 +37,6 @@
 import {getEnergyIndex} from "@/axios"
 import comMinxins from "@/components/common/comMinxins.js"
 import {mapMutations} from "vuex"
-// import energyConsumption from "@/json/energyConsumption.json"
 export default {
     mixins:[ comMinxins ],
     data() {
@@ -64,7 +63,6 @@ export default {
         },
         async getData() {
             let [res] = await getEnergyIndex();
-            // let res = energyConsumption;
             if( !res ) return;
             let {quotaList,realisticList} = JSON.parse( res.message );
             let {radarIndicator,radarChartsSeries0,radarChartsSeries1,quotaArr,factArr,quotaObj} = this.getRadarChartsData(quotaList);

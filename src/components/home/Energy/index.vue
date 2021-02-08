@@ -18,7 +18,6 @@
 <script>
 import { getSumElectricList } from "../../../axios";
 import comMinxins from "../../common/comMinxins";
-import ajaxData from "./data.json"
 export default {
     data() {
         return {

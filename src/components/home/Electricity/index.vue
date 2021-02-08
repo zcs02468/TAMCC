@@ -50,7 +50,6 @@
 import {getEnergyProportion} from "../../../axios/index"
 import comMinxins from "../../common/comMinxins";
 import {mapMutations} from "vuex"
-// import ajaxData from "@/components/home/Electricity/data.json"
 export default {
     data() {
         return {
@@ -84,13 +83,11 @@ export default {
         async getData() {
             let [res] = await getEnergyProportion();
             if( !res ) return;
-            // let res = ajaxData;
             let data =  JSON.parse(res.message);
             // electricList	电力对象
             // waterList	市政水对象
             // fengitemname	分项名称
             // fusedvalue	日用能
-            // let {electricList,waterList} = data;
             let electricData = this.sortingData(data.electricList);
             let waterData = this.sortingData(data.waterList);
             let gasData = this.sortingData(data.naturalGas);
@@ -127,7 +124,6 @@ export default {
         },
         drawLine() {
             this.option = {
-                // color:['#5B8FF9','#5AD8A6','#5D7092','#F6BD16','#E8684A','#6DC8EC','#9270CA','#FF9D4D','#269A99','#FF99C3'],
                 color:['#3d8bc4','#cc4c1f','#bb7f11','#5f9877','#74418e','#c7a537','#205d96','#882e31','#22837d','#FF99C3'],
                 tooltip: {
                     trigger: "item",
@@ -174,22 +170,6 @@ export default {
                                 color: "#888",
                             },
                         },
-                        // itemStyle: {
-                        //     normal: {
-                        //         color: function(params) {
-                        //             var colorList = [
-                        //                 "#ffff99",
-                        //                 "#00ffcc",
-                        //                 "#00ff99",
-                        //                 "#33ccff",
-                        //                 "#388df6",
-                        //             ];
-                        //             return colorList[
-                        //                 params.dataIndex % colorList.length
-                        //             ];
-                        //         },
-                        //     },
-                        // },
                         animationType: "scale",
                         animationEasing: "elasticOut",
                         animationDelay: function(idx) {
