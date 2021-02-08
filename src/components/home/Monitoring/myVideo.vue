@@ -50,9 +50,9 @@ export default {
     },
     mounted(){ 
        this.$nextTick(()=>{ 
-           if(this.videoShow){
-                this.selectVideo(); 
-           }
+            if(this.videoShow){
+                    this.selectVideo(); 
+            }
        })
     },
     destroyed(){
@@ -60,12 +60,15 @@ export default {
     },
     methods: {
         selectVideo() {
+            // return
             if( this.videoPlayer ) {
-                this.videoPlayer.destroy()
+                this.videoPlayer.destroy();
             }
+            console.warn("播放器初始化");
+            let self = this;
             this.videoPlayer = new FlvPlayer({
                 id: this.videoId,
-                url: 'http://1011.hlsplay.aodianyun.com/demo/game.flv',
+                url: this.videoSrc,
                 isLive: true,
                 playsinline: true,
                 autoplay: true,
@@ -73,6 +76,18 @@ export default {
                 height: "100%",
 		        volume: 0
             });
+            this.videoPlayer.on('ended',function(config){
+                setTimeout(()=>{
+                    console.warn("ended",config);
+                    self.selectVideo()
+                },1000)
+            })
+            this.videoPlayer.on('error',function(config){
+                setTimeout(()=>{
+                    console.warn( 'error', config );
+                    self.selectVideo()
+                },1000)
+            })
         },
         disposeVideo(){
             if(this.videoPlayer){
@@ -88,7 +103,8 @@ export default {
                 this.disposeVideo();
             } 
         },
-        videoIp() {
+        videoIp(value) {
+            console.warn("ip变化", value );
             this.selectVideo();
         }
    }
