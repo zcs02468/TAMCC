@@ -64,7 +64,7 @@ export default {
             if( this.videoPlayer ) {
                 this.videoPlayer.destroy();
             }
-            console.warn("播放器初始化");
+            // console.warn("播放器初始化");
             let self = this;
             this.videoPlayer = new FlvPlayer({
                 id: this.videoId,
