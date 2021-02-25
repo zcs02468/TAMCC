@@ -77,7 +77,7 @@ import { getDeviceList, getRTMPUrl } from "@/axios";
 import { mapState, mapMutations } from "vuex";
 export default {
   components: {
-    myVideo,
+    myVideo
   },
   data() {
     return {
@@ -87,19 +87,19 @@ export default {
       rightVideoSrc: "",
       leftVideoType: false,
       rightVideoType: false,
-      leftIp:'',
-      rightIp:''
+      leftIp: "",
+      rightIp: ""
     };
   },
   async created() {
-    this.getDeviceList(1).then((res) => {
+    this.getDeviceList(1).then(res => {
       if (res) {
         this.leftSelectList = res;
         this.leftSelectList.splice();
         this.getVideoUrl(1, this.leftSelectList[0].deviceIp);
       }
     });
-    this.getDeviceList(2).then((res) => {
+    this.getDeviceList(2).then(res => {
       if (res) {
         this.rightSelectList = res;
         this.rightSelectList.splice();
@@ -126,8 +126,8 @@ export default {
       this.getVideoUrl(2, this.rightSelectList[value].deviceIp);
     },
     async getDeviceList(type) {
-      let [res] = await getDeviceList({window: type});
-      if( !res ) return;
+      let [res] = await getDeviceList({ window: type });
+      if (!res) return false;
       // let res;
       // if (type == 1) {
       //   res = {
@@ -208,11 +208,11 @@ export default {
       // ip	设备ip
       const params = {
         window: type,
-        ip: ip,
+        ip: ip
       };
 
       let [res] = await getRTMPUrl(params);
-      if( !res ) return;
+      if (!res) return;
       // let res = {
       //   result: "true",
       //   // data: "rtmp://192.168.1.200:1935/live/1",
@@ -224,7 +224,6 @@ export default {
       // if( ip == '192.168.1.107' ) res.data = "https://open.ys7.com/v3/openlive/E92779073_1_1.m3u8?expire=1611738213&id=272410875018993664&t=e4e1afde8aa2f82d0101c0bd60af13a1cba4a754cfd3da3b6288feb9ea471197&ev=100";
       // if( ip == '192.168.1.108' ) res.data = "https://open.ys7.com/v3/openlive/E92779075_1_1.m3u8?expire=1611738241&id=272410992397987840&t=617a3dcdd50e88347943b57b95d80a1fde1e22e60299daa651fabcd9bcd221ce&ev=100";
       // if( ip == '192.168.1.109' ) res.data = "https://open.ys7.com/v3/openlive/E92779075_1_1.m3u8?expire=1611738271&id=272411116930838528&t=ad3e1657bea23fc2056a0fd08780667eb0428550185d06a9661db4dbafc15737&ev=100";
-
       // res.data = "http://1011.hlsplay.aodianyun.com/demo/game.flv";
       if (type == 1) {
         this.leftVideoSrc = res.data;
@@ -233,13 +232,13 @@ export default {
         this.rightVideoSrc = res.data;
         this.rightIp = ip;
       }
-    },
+    }
   },
   computed: {
     ...mapState({
-      mapDialogType: (state) => state.home.mapDialogType,
-    }),
-  },
+      mapDialogType: state => state.home.mapDialogType
+    })
+  }
 };
 </script>
 
@@ -273,7 +272,6 @@ export default {
 
 .box {
   width: 240px;
-  // height: 384px;
   .video-box {
     width: 100%;
     height: 145px;
