@@ -55,7 +55,7 @@ export default {
   methods: {
     loadVideo() {
       this.disposeVideo();
-      // console.warn("播放器初始化");
+      console.warn("播放器初始化");
       let self = this;
       try {
         this.videoPlayer = new FlvPlayer({
@@ -68,15 +68,15 @@ export default {
           height: "100%",
           volume: 0
         });
-        this.videoPlayer.on("ended", function() {
+        this.videoPlayer.on("ended", function(config) {
           setTimeout(() => {
-            //   console.warn("ended", config);
+            console.warn("ended", config);
             self.loadVideo();
           }, 1000);
         });
-        this.videoPlayer.on("error", function() {
+        this.videoPlayer.on("error", function(config) {
           setTimeout(() => {
-            //   console.warn("error", config);
+            console.warn("error", config);
             self.loadVideo();
           }, 1000);
         });
